@@ -1,0 +1,24 @@
+﻿:root {
+  --color-pet-blue: #1a9cb7;
+  --color-pet-teal: #30c9c9;
+  --color-pet-pink: #ff6b8b;
+  --color-pet-orange: #ff9666;
+  --color-pet-yellow: #ffd166;
+  --color-pet-green: #4ecca3;
+}
+
+/* Diğer CSS kodları ve sınıflar... */
+
+.bg-pet-blue {
+  background-color: var(--color-pet-blue);
+}
+
+.bg-pet-teal {
+  background-color: var(--color-pet-teal);
+}
+
+.bg-pet-pink {
+  background-color: var(--color-pet-pink);
+}
+
+/* Diğer renk ve stil sınıfları... */
