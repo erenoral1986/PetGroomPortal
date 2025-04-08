@@ -101,6 +101,18 @@ a {
     color: var(--color-pet-yellow);
 }
 
+.text-white {
+    color: #ffffff;
+}
+
+.text-secondary {
+    color: #6c757d;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
 /* Border Colors */
 .border-pet-blue {
     border-color: var(--color-pet-blue);
@@ -123,12 +135,20 @@ a {
     color: var(--color-pet-teal);
 }
 
+.hover-text-white:hover {
+    color: #ffffff;
+}
+
 .hover-bg-pet-blue:hover {
     background-color: var(--color-pet-blue);
 }
 
 .hover-bg-pet-teal:hover {
     background-color: var(--color-pet-teal);
+}
+
+.hover-bg-light:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Gradients */
@@ -530,6 +550,26 @@ a {
     height: 100%;
 }
 
+.w-8 {
+    width: 2rem;
+}
+
+.h-8 {
+    width: 2rem;
+}
+
+.h-10 {
+    height: 2.5rem;
+}
+
+.w-10 {
+    width: 2.5rem;
+}
+
+.h-16 {
+    height: 4rem;
+}
+
 .py-12 {
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -538,6 +578,18 @@ a {
 .my-12 {
     margin-top: 3rem;
     margin-bottom: 3rem;
+}
+
+.space-y-2 > * + * {
+    margin-top: 0.5rem;
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+
+.transition {
+    transition: all 0.3s ease;
 }
 
 .rounded-pill {
@@ -554,6 +606,14 @@ a {
 
 .shadow-lg {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.bg-gray-800 {
+    background-color: #1f2937;
+}
+
+.border-secondary {
+    border-color: #6c757d;
 }
 
 /* Media Queries */
