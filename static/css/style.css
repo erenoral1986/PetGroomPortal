@@ -46,6 +46,25 @@ h2.fs-1.fw-bold.text-pet-blue + .bg-pet-teal.mx-auto.my-3 {
   display: none !important;
 }
 
+/* Yeni aşırı net çizgi temizleme */
+section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2 {
+  border-bottom: none !important;
+  position: relative;
+}
+
+section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::after,
+section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Diğer tüm çizgiler için */
+section .text-center.mb-5 h2::after,
+section .text-center.mb-5 h2::before {
+  content: none !important;
+  display: none !important;
+}
+
 /* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
