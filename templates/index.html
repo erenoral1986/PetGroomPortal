@@ -16,10 +16,10 @@
                 </p>
                 
                 <div class="d-flex flex-wrap gap-3 mb-5">
-                    <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-4 py-3 fw-bold rounded-3 shadow-sm">
+                    <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-4 py-3 fw-bold rounded-3 shadow-sm" id="kuaforBulBtn">
                         Kuaför Bul
                     </a>
-                    <a href="{{ url_for('salons') }}" class="btn border-2 border-pet-blue text-pet-blue px-4 py-3 fw-bold rounded-3">
+                    <a href="{{ url_for('salons') }}" class="btn border-2 border-pet-blue text-pet-blue px-4 py-3 fw-bold rounded-3" id="hizmetlerBtn">
                         Hizmetleri İncele
                     </a>
                 </div>
@@ -153,7 +153,7 @@
                                 <i class="fas fa-check text-pet-teal me-2"></i> Kulak temizliği
                             </li>
                         </ul>
-                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3">
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3 service-btn">
                             Daha Fazla Bilgi
                         </a>
                     </div>
@@ -183,7 +183,7 @@
                                 <i class="fas fa-check text-pet-teal me-2"></i> Özel tasarım kesimler
                             </li>
                         </ul>
-                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3">
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3 service-btn">
                             Daha Fazla Bilgi
                         </a>
                     </div>
@@ -213,7 +213,7 @@
                                 <i class="fas fa-check text-pet-teal me-2"></i> Lüks bakım ürünleri
                             </li>
                         </ul>
-                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3">
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3 service-btn">
                             Daha Fazla Bilgi
                         </a>
                     </div>
@@ -222,7 +222,7 @@
         </div>
         
         <div class="text-center mt-5">
-            <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-5 py-3 fw-bold rounded-pill d-inline-flex align-items-center">
+            <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-5 py-3 fw-bold rounded-pill d-inline-flex align-items-center" id="allServicesBtn">
                 Tüm Hizmetleri Görüntüle <i class="fas fa-arrow-right ms-2"></i>
             </a>
         </div>
