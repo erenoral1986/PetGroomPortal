@@ -456,7 +456,9 @@ a {
 }
 
 .bg-pet-blue:hover {
-    background-color: var(--color-pet-blue-dark);
+    background-color: #0c7992 !important; /* Daha koyu mavi */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Kenarlıklı butonlar */
@@ -471,8 +473,10 @@ a {
 }
 
 .btn.border-pet-blue:hover {
-    background-color: var(--color-pet-blue);
-    color: white;
+    background-color: var(--color-pet-blue) !important;
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Servis butonları */
@@ -481,8 +485,10 @@ a {
 }
 
 .service-btn:hover {
-    background-color: var(--color-pet-blue-dark);
+    background-color: #0c7992 !important; /* Daha koyu mavi */
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Forms */
