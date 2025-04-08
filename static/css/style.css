@@ -1,27 +1,35 @@
-/* Custom styles for PetKuaför - Professional European Style Pet Grooming Platform */
+/* Custom styles for PetKuaför - Based on petkuaforlerim.com styles */
 :root {
-    /* European Professional Style Color Palette - Refined & Elegant */
-    --primary-color: #2c3e50;    /* Koyu prussian mavi - ana renk */
-    --secondary-color: #3498db;  /* Açık mavi - ikincil renk */
-    --accent-color: #1abc9c;     /* Turkuaz yeşil - vurgu rengi */
-    --success-color: #2ecc71;    /* Yeşil */
-    --warning-color: #f39c12;    /* Amber */
-    --danger-color: #e74c3c;     /* Kırmızı */
-    --dark-bg: #1a2530;          /* Koyu lacivert */
-    --light-bg: #f5f7f9;         /* Açık gri arka plan */
-    --text-color: #2c3e50;       /* Koyu mavi yazı */
-    --light-text: #7f8c8d;       /* Orta gri yazı */
+    /* PetKuaför Renk Paleti */
+    --pet-blue: #1a9cb7;      /* Ana mavi renk */
+    --pet-teal: #30c9c9;      /* Turkuaz renk */
+    --pet-pink: #ff6b8b;      /* Pembe renk */
+    --pet-orange: #ff9666;    /* Turuncu renk */
+    --pet-yellow: #ffd166;    /* Sarı renk */
+    --pet-green: #4ecca3;     /* Yeşil renk */
+    
+    /* Eski değişkenlerle uyumluluk için yeniden tanımlama */
+    --primary-color: var(--pet-blue);    /* Ana renk */
+    --secondary-color: var(--pet-teal);  /* İkincil renk */
+    --accent-color: var(--pet-pink);     /* Vurgu rengi */
+    --success-color: var(--pet-green);   /* Başarı rengi */
+    --warning-color: var(--pet-yellow);  /* Uyarı rengi */
+    --danger-color: #e74c3c;             /* Kırmızı */
+    --dark-bg: #1f2937;                  /* Koyu arka plan (footer için) */
+    --light-bg: #f9fafb;                 /* Açık gri arka plan */
+    --text-color: #374151;               /* Ana yazı rengi */
+    --light-text: #6b7280;               /* Açık gri yazı rengi */
     
     /* UI Elements */
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Kart gölgesi */
-    --transition-speed: 0.25s;   /* Geçiş hızı */
-    --font-family: 'Open Sans', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif; /* Yazı tipi */
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Kart gölgesi */
+    --transition-speed: 0.2s;    /* Geçiş hızı */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Yazı tipi */
     --border-radius: 0.375rem;   /* Kenar yuvarlaklığı */
-    --container-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); /* Konteyner gölgesi */
+    --container-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Konteyner gölgesi */
     
     /* Interface Spacing */
-    --section-spacing: 5rem;  /* Bölümler arası boşluk */
-    --card-spacing: 1.5rem;   /* Kart içi boşluk */
+    --section-spacing: 4rem;  /* Bölümler arası boşluk */
+    --card-spacing: 1.25rem;  /* Kart içi boşluk */
 }
 
 /* General styling - European Professional Style */
@@ -787,5 +795,59 @@ p {
     
     .dashboard-stat .stat-number {
         font-size: 1.8rem;
+    }
+}
+
+/* Pet Renk Paleti için opacity ve hover sınıfları */
+.bg-pet-blue\/5 { background-color: rgba(26, 156, 183, 0.05); }
+.bg-pet-blue\/10 { background-color: rgba(26, 156, 183, 0.1); }
+.bg-pet-teal\/5 { background-color: rgba(48, 201, 201, 0.05); }
+.bg-pet-teal\/10 { background-color: rgba(48, 201, 201, 0.1); }
+.bg-pet-pink\/5 { background-color: rgba(255, 107, 139, 0.05); }
+.bg-pet-pink\/10 { background-color: rgba(255, 107, 139, 0.1); }
+.bg-pet-orange\/5 { background-color: rgba(255, 150, 102, 0.05); }
+.bg-pet-orange\/10 { background-color: rgba(255, 150, 102, 0.1); }
+.bg-pet-yellow\/5 { background-color: rgba(255, 209, 102, 0.05); }
+.bg-pet-yellow\/10 { background-color: rgba(255, 209, 102, 0.1); }
+
+.from-pet-blue\/5 { background-image: linear-gradient(to bottom, rgba(26, 156, 183, 0.05), transparent); }
+.from-sky-50\/30 { background-image: linear-gradient(to bottom, rgba(240, 249, 255, 0.3), transparent); }
+
+.hover-pet-blue:hover { color: var(--pet-blue); }
+.hover-pet-teal:hover { color: var(--pet-teal); }
+.hover-text-pet-teal:hover { color: var(--pet-teal); }
+.hover-bg-pet-teal:hover { background-color: var(--pet-teal); }
+.text-pet-blue { color: var(--pet-blue); }
+.text-pet-teal { color: var(--pet-teal); }
+.text-pet-pink { color: var(--pet-pink); }
+.text-pet-orange { color: var(--pet-orange); }
+
+.border-pet-blue { border-color: var(--pet-blue); }
+.rounded-3 { border-radius: 0.5rem; }
+.rounded-4 { border-radius: 0.75rem; }
+.rounded-pill { border-radius: 50rem; }
+
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+.mt-n5 { margin-top: -3rem; }
+
+.bg-gradient-to-b {
+    background-image: linear-gradient(to bottom, var(--tw-gradient-stops));
+}
+
+.transition {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+}
+
+@media (min-width: 768px) {
+    .py-12 {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
     }
 }

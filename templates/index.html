@@ -3,199 +3,252 @@
 {% block title %}PetKuaför - Evcil Hayvan Güzellik Salonu{% endblock %}
 
 {% block content %}
-<!-- Hero Section - Turkish Style -->
-<div class="hero-section">
-    <div class="container">
-        <h1>Profesyonel Evcil Hayvan Kuaför Hizmetleri</h1>
-        <p>Size en yakın pet kuaför salonlarını bulun ve randevu alın. Evcil dostunuza hak ettiği bakımı sunun!</p>
-        <div class="d-flex justify-content-center gap-3">
-            <a href="{{ url_for('salons') }}" class="btn btn-primary btn-lg">Salon Bul</a>
-            {% if not current_user.is_authenticated %}
-                <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Üye Ol</a>
-            {% endif %}
+<!-- Hero Bölümü -->
+<section class="bg-gradient-to-b from-pet-blue/5 to-white">
+    <div class="container py-12">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-5 mb-md-0">
+                <h1 class="text-4xl font-bold text-pet-blue mb-4">
+                    Evcil Hayvanınız İçin <span style="color: var(--pet-teal);">Profesyonel Bakım</span> Hizmetleri
+                </h1>
+                <p class="fs-5 text-secondary mb-4">
+                    PetKuaför ile evcil hayvanınıza özel profesyonel bakım hizmetleri alın. Kuaför seçin, randevu oluşturun ve sevimli dostunuza en iyi bakımı sağlayın.
+                </p>
+                
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{{ url_for('salons') }}" class="btn px-4 py-2 bg-pet-blue text-white fw-bold rounded-3 transition">
+                        Kuaför Bul
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('register') }}" class="btn px-4 py-2 border-2 border-pet-blue text-pet-blue fw-bold rounded-3 transition">
+                        Üye Ol
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <div class="d-flex align-items-center flex-wrap gap-4">
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-pet-teal/10 p-2 me-2">
+                            <i class="fas fa-check text-pet-teal"></i>
+                        </div>
+                        <span>5.000+ Mutlu Evcil Hayvan</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div class="rounded-circle bg-pet-pink/10 p-2 me-2">
+                            <i class="fas fa-check text-pet-pink"></i>
+                        </div>
+                        <span>200+ Profesyonel Salon</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <img src="https://images.unsplash.com/photo-1560743641-3914f2c45636?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                     alt="Evcil Hayvan Bakımı" class="img-fluid rounded-4 shadow">
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 <div class="container">
-    <!-- Search Form - Turkish Style -->
-    <div class="row justify-content-center mb-5">
-        <div class="col-lg-8 col-md-10">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title text-center mb-0">Size En Yakın Pet Kuaförlerini Bulun</h5>
+    <!-- Arama Formu -->
+    <div class="bg-white rounded-4 shadow-sm py-4 px-3 mt-n5 position-relative mb-5">
+        <div class="container">
+            <h5 class="text-center mb-4 text-pet-blue fw-bold">Size En Yakın Pet Kuaförlerini Bulun</h5>
+            <form action="{{ url_for('salons') }}" method="post" class="row g-3">
+                {{ form.hidden_tag() }}
+                <div class="col-md-9">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        {{ form.location(class="form-control border-start-0 py-3", placeholder="Şehir veya posta kodu giriniz") }}
+                    </div>
                 </div>
-                <div class="card-body p-4">
-                    <form action="{{ url_for('salons') }}" method="post" class="row g-3">
-                        {{ form.hidden_tag() }}
-                        <div class="col-md-9">
-                            {{ form.location(class="form-control form-control-lg", placeholder="Şehir veya posta kodu giriniz") }}
-                        </div>
-                        <div class="col-md-3">
-                            {{ form.submit(class="btn btn-primary btn-lg w-100", value="Ara") }}
-                        </div>
-                    </form>
+                <div class="col-md-3">
+                    {{ form.submit(class="btn bg-pet-blue text-white w-100 py-3 fw-medium", value="Kuaför Bul") }}
                 </div>
-            </div>
+            </form>
         </div>
     </div>
     
-    <!-- Turkish Pattern Divider -->
-    <div class="turkish-pattern"></div>
-    
-    <!-- Features Section - Turkish Style -->
-    <h2 class="section-title text-center">Neden PetKuaför'ü Seçmelisiniz?</h2>
-    <div class="row mb-5">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body p-4">
-                    <div class="feature-icon mb-4">
-                        <i class="fas fa-search fa-3x mb-3" style="color: var(--primary-color);"></i>
-                    </div>
-                    <h4 class="card-title">Kolayca Bulun</h4>
-                    <p class="card-text">Basit arama özelliğimizle size en yakın evcil hayvan kuaför salonlarını hızlıca bulun.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body p-4">
-                    <div class="feature-icon mb-4">
-                        <i class="fas fa-calendar-alt fa-3x mb-3" style="color: var(--primary-color);"></i>
-                    </div>
-                    <h4 class="card-title">Kolay Randevu</h4>
-                    <p class="card-text">İstediğiniz zaman, istediğiniz yerden sadece birkaç tıklama ile online randevu alın.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center">
-                <div class="card-body p-4">
-                    <div class="feature-icon mb-4">
-                        <i class="fas fa-paw fa-3x mb-3" style="color: var(--primary-color);"></i>
-                    </div>
-                    <h4 class="card-title">Kaliteli Hizmet</h4>
-                    <p class="card-text">Evcil hayvanınızın en iyi bakımı almasını sağlamak için profesyonel kuaförlerle çalışıyoruz.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Turkish Pattern Divider -->
-    <div class="turkish-pattern"></div>
-    
-    <!-- Service Categories -->
-    <h2 class="section-title text-center">Hizmetlerimiz</h2>
-    <div class="row mb-5">
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card service-card text-center">
-                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                     class="card-img-top" alt="Kedi Bakımı">
-                <div class="card-body">
-                    <h5 class="card-title">Kedi Bakımı</h5>
-                    <p class="card-text">Kedinizin tüylerini, tırnaklarını ve kulak temizliğini yaptırın.</p>
-                    <a href="{{ url_for('salons') }}" class="btn btn-sm btn-outline-primary">Salon Bul</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card service-card text-center">
-                <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                     class="card-img-top" alt="Köpek Bakımı">
-                <div class="card-body">
-                    <h5 class="card-title">Köpek Bakımı</h5>
-                    <p class="card-text">Köpeğinizin ırkına uygun profesyonel tıraş ve bakım hizmetleri.</p>
-                    <a href="{{ url_for('salons') }}" class="btn btn-sm btn-outline-primary">Salon Bul</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card service-card text-center">
-                <img src="https://images.unsplash.com/photo-1596272875729-ed2ff7d6d9c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                     class="card-img-top" alt="Yıkama & Tıraş">
-                <div class="card-body">
-                    <h5 class="card-title">Yıkama & Tıraş</h5>
-                    <p class="card-text">Özel şampuanlar ve bakım ürünleriyle kapsamlı temizlik.</p>
-                    <a href="{{ url_for('salons') }}" class="btn btn-sm btn-outline-primary">Salon Bul</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card service-card text-center">
-                <img src="https://images.unsplash.com/photo-1605244863941-3a3ed921c0b6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-                     class="card-img-top" alt="Özel Bakım">
-                <div class="card-body">
-                    <h5 class="card-title">Özel Bakım</h5>
-                    <p class="card-text">Diş bakımı, tırnak kesimi ve kulak temizliği gibi özel işlemler.</p>
-                    <a href="{{ url_for('salons') }}" class="btn btn-sm btn-outline-primary">Salon Bul</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Turkish Pattern Divider -->
-    <div class="turkish-pattern"></div>
-    
-    <!-- How It Works Section - Turkish Style -->
-    <h2 class="section-title text-center">Nasıl Çalışır?</h2>
-    <div class="row mb-5">
-        <div class="col-md-3 mb-4">
-            <div class="card text-center">
-                <div class="card-body p-4">
-                    <div class="step-circle d-flex align-items-center justify-content-center mx-auto mb-4">
-                        <span>1</span>
-                    </div>
-                    <h5 class="card-title">Arama</h5>
-                    <p class="card-text">Bölgenizdeki pet kuaför salonlarını bulun.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card text-center">
-                <div class="card-body p-4">
-                    <div class="step-circle d-flex align-items-center justify-content-center mx-auto mb-4">
-                        <span>2</span>
-                    </div>
-                    <h5 class="card-title">Karşılaştırma</h5>
-                    <p class="card-text">Evcil hayvanınız için en uygun hizmet ve fiyatları seçin.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card text-center">
-                <div class="card-body p-4">
-                    <div class="step-circle d-flex align-items-center justify-content-center mx-auto mb-4">
-                        <span>3</span>
-                    </div>
-                    <h5 class="card-title">Randevu</h5>
-                    <p class="card-text">Uygun bir zaman dilimi seçin ve randevunuzu oluşturun.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card text-center">
-                <div class="card-body p-4">
-                    <div class="step-circle d-flex align-items-center justify-content-center mx-auto mb-4">
-                        <span>4</span>
-                    </div>
-                    <h5 class="card-title">Rahatlayın</h5>
-                    <p class="card-text">Evcil hayvanınızın kuaför randevusu onaylandı!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Call To Action - Turkish Style -->
-    <div class="cta-section text-center py-5 px-3 mb-5 rounded">
-        <h2 class="mb-4">Evcil Hayvanınız İçin Kuaför Randevusu Almaya Hazır mısınız?</h2>
-        <a href="{{ url_for('salons') }}" class="btn btn-primary btn-lg px-4 py-2">Hemen Salon Bul</a>
-        {% if not current_user.is_authenticated %}
-            <p class="mt-3">
-                <a href="{{ url_for('register') }}">Üye Ol</a> veya 
-                <a href="{{ url_for('login') }}">Giriş Yap</a> ve randevularınızı yönetin.
+    <!-- Özellikler Bölümü -->
+    <section class="py-12 my-5">
+        <div class="text-center mb-5">
+            <h2 class="fs-1 fw-bold text-pet-blue mb-2">Neden PetKuaför'ü Seçmelisiniz?</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">
+                Evcil hayvanınız için en iyi bakım hizmetlerini almanız için birçok sebebimiz var
             </p>
-        {% endif %}
-    </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4 mb-4">
+                <div class="bg-white rounded-4 shadow-sm p-5 h-100 text-center">
+                    <div class="rounded-circle bg-pet-teal/10 p-3 d-inline-flex mb-4">
+                        <i class="fas fa-search fa-2x text-pet-teal"></i>
+                    </div>
+                    <h4 class="fs-5 fw-bold mb-3">Kolayca Bulun</h4>
+                    <p class="text-secondary mb-0">Basit arama özelliğimizle size en yakın evcil hayvan kuaför salonlarını hızlıca bulun.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="bg-white rounded-4 shadow-sm p-5 h-100 text-center">
+                    <div class="rounded-circle bg-pet-pink/10 p-3 d-inline-flex mb-4">
+                        <i class="fas fa-calendar-alt fa-2x text-pet-pink"></i>
+                    </div>
+                    <h4 class="fs-5 fw-bold mb-3">Kolay Randevu</h4>
+                    <p class="text-secondary mb-0">İstediğiniz zaman, istediğiniz yerden sadece birkaç tıklama ile online randevu alın.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="bg-white rounded-4 shadow-sm p-5 h-100 text-center">
+                    <div class="rounded-circle bg-pet-orange/10 p-3 d-inline-flex mb-4">
+                        <i class="fas fa-paw fa-2x text-pet-orange"></i>
+                    </div>
+                    <h4 class="fs-5 fw-bold mb-3">Kaliteli Hizmet</h4>
+                    <p class="text-secondary mb-0">Evcil hayvanınızın en iyi bakımı almasını sağlamak için profesyonel kuaförlerle çalışıyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Hizmetler Bölümü -->
+    <section class="py-12 my-5">
+        <div class="text-center mb-5">
+            <h2 class="fs-1 fw-bold text-pet-blue mb-2">Hizmetlerimiz</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">
+                Evcil hayvanınız için sunduğumuz profesyonel bakım hizmetleri
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="bg-white rounded-4 shadow-sm h-100 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                         class="w-100" style="height: 200px; object-fit: cover;" alt="Kedi Bakımı">
+                    <div class="p-4 text-center">
+                        <h5 class="fw-bold fs-5 mb-3">Kedi Bakımı</h5>
+                        <p class="text-secondary mb-3">Kedinizin tüylerini, tırnaklarını ve kulak temizliğini yaptırın.</p>
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-4 py-2 rounded-pill">Salon Bul</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="bg-white rounded-4 shadow-sm h-100 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                         class="w-100" style="height: 200px; object-fit: cover;" alt="Köpek Bakımı">
+                    <div class="p-4 text-center">
+                        <h5 class="fw-bold fs-5 mb-3">Köpek Bakımı</h5>
+                        <p class="text-secondary mb-3">Köpeğinizin ırkına uygun profesyonel tıraş ve bakım hizmetleri.</p>
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-teal text-white px-4 py-2 rounded-pill">Salon Bul</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="bg-white rounded-4 shadow-sm h-100 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1596272875729-ed2ff7d6d9c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                         class="w-100" style="height: 200px; object-fit: cover;" alt="Yıkama & Tıraş">
+                    <div class="p-4 text-center">
+                        <h5 class="fw-bold fs-5 mb-3">Yıkama & Tıraş</h5>
+                        <p class="text-secondary mb-3">Özel şampuanlar ve bakım ürünleriyle kapsamlı temizlik.</p>
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-pink text-white px-4 py-2 rounded-pill">Salon Bul</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="bg-white rounded-4 shadow-sm h-100 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1605244863941-3a3ed921c0b6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                         class="w-100" style="height: 200px; object-fit: cover;" alt="Özel Bakım">
+                    <div class="p-4 text-center">
+                        <h5 class="fw-bold fs-5 mb-3">Özel Bakım</h5>
+                        <p class="text-secondary mb-3">Diş bakımı, tırnak kesimi ve kulak temizliği gibi özel işlemler.</p>
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-orange text-white px-4 py-2 rounded-pill">Salon Bul</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Nasıl Çalışır Bölümü -->
+    <section class="py-12 my-5 bg-gradient-to-b from-sky-50/30 to-white">
+        <div class="text-center mb-5">
+            <h2 class="fs-1 fw-bold text-pet-blue mb-2">Nasıl Çalışır?</h2>
+            <p class="text-secondary mx-auto" style="max-width: 600px;">
+                Sadece birkaç adımda evcil hayvanınız için kuaför randevusu alın
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-3 mb-4">
+                <div class="step-card bg-white rounded-4 shadow-sm p-4 text-center h-100 position-relative">
+                    <div class="step-number bg-pet-blue text-white rounded-circle fw-bold d-flex align-items-center justify-content-center mx-auto mb-4"
+                        style="width: 60px; height: 60px; font-size: 24px;">1</div>
+                    <h5 class="fw-bold fs-5 mb-3 text-pet-blue">Arama</h5>
+                    <p class="text-secondary mb-0">Bölgenizdeki pet kuaför salonlarını bulun.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="step-card bg-white rounded-4 shadow-sm p-4 text-center h-100 position-relative">
+                    <div class="step-number bg-pet-teal text-white rounded-circle fw-bold d-flex align-items-center justify-content-center mx-auto mb-4"
+                        style="width: 60px; height: 60px; font-size: 24px;">2</div>
+                    <h5 class="fw-bold fs-5 mb-3 text-pet-teal">Karşılaştırma</h5>
+                    <p class="text-secondary mb-0">Evcil hayvanınız için en uygun hizmet ve fiyatları seçin.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="step-card bg-white rounded-4 shadow-sm p-4 text-center h-100 position-relative">
+                    <div class="step-number bg-pet-pink text-white rounded-circle fw-bold d-flex align-items-center justify-content-center mx-auto mb-4"
+                        style="width: 60px; height: 60px; font-size: 24px;">3</div>
+                    <h5 class="fw-bold fs-5 mb-3 text-pet-pink">Randevu</h5>
+                    <p class="text-secondary mb-0">Uygun bir zaman dilimi seçin ve randevunuzu oluşturun.</p>
+                </div>
+            </div>
+            
+            <div class="col-md-3 mb-4">
+                <div class="step-card bg-white rounded-4 shadow-sm p-4 text-center h-100 position-relative">
+                    <div class="step-number bg-pet-orange text-white rounded-circle fw-bold d-flex align-items-center justify-content-center mx-auto mb-4"
+                        style="width: 60px; height: 60px; font-size: 24px;">4</div>
+                    <h5 class="fw-bold fs-5 mb-3 text-pet-orange">Rahatlayın</h5>
+                    <p class="text-secondary mb-0">Evcil hayvanınızın kuaför randevusu onaylandı!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Bölümü -->
+    <section class="my-5 py-12 bg-gradient-to-b from-pet-blue/5 to-white rounded-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fs-1 fw-bold text-pet-blue mb-4">Evcil Hayvanınız İçin Kuaför Randevusu Almaya Hazır mısınız?</h2>
+                    <p class="text-secondary mb-5 mx-auto" style="max-width: 600px;">
+                        Evcil dostunuz için profesyonel bakım hizmetlerine hemen şimdi ulaşın
+                    </p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-5 py-3 fw-bold rounded-pill">
+                            Hemen Salon Bul
+                        </a>
+                        {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn border-2 border-pet-blue text-pet-blue px-5 py-3 fw-bold rounded-pill">
+                            Üye Ol
+                        </a>
+                        {% endif %}
+                    </div>
+                    {% if not current_user.is_authenticated %}
+                    <p class="mt-4 text-center text-secondary">
+                        Zaten üye misiniz? <a href="{{ url_for('login') }}" class="text-pet-blue fw-medium">Giriş Yap</a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 {% block extra_css %}
