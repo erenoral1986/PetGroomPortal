@@ -22,10 +22,8 @@
 }
 
 /* Hizmetlerimiz bölümünde başlık çizgisini kaldır */
-.container section h2.text-pet-blue + .bg-pet-teal {
-  height: 0;
-  border-radius: 0;
-  opacity: 0.5;
+#hizmetlerimiz-divider {
+  display: none !important;
 }
 
 /* Global Styles */
