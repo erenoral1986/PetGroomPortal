@@ -26,6 +26,11 @@
   display: none !important;
 }
 
+/* Hide all dividers under 'Hizmetlerimiz' heading */
+section h2.text-pet-blue + .bg-pet-teal {
+  display: none !important;
+}
+
 /* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
