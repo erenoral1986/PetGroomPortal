@@ -141,10 +141,12 @@ a {
 
 .hover-bg-pet-blue:hover {
     background-color: var(--color-pet-blue);
+    color: #ffffff;
 }
 
 .hover-bg-pet-teal:hover {
     background-color: var(--color-pet-teal);
+    color: #ffffff;
 }
 
 .hover-bg-light:hover {
@@ -578,6 +580,10 @@ a {
 .my-12 {
     margin-top: 3rem;
     margin-bottom: 3rem;
+}
+
+.ms-12 {
+    margin-left: 3rem !important;
 }
 
 .space-y-2 > * + * {
