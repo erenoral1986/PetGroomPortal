@@ -34,17 +34,23 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0 d-flex align-items-center">
                         <a href="{{ url_for('index') }}" class="d-flex align-items-center text-decoration-none">
-                            <span class="fs-5 fw-bold" style="color: #00c3a5;">PetKuaför</span>
+                            <span class="fs-5 fw-bold" style="color: #00bed7;">PetKuaför</span>
                         </a>
                     </div>
                     
                     <!-- Ana Menü Linkleri (Desktop) -->
                     <div class="d-none d-md-flex ms-5">
-                        <a href="{{ url_for('index') }}" class="text-decoration-none me-4 {{ 'active' if request.path == url_for('index') }}" style="color: #333;">Ana Sayfa</a>
-                        <a href="{{ url_for('salons') }}" class="text-decoration-none me-4 {{ 'active' if request.path == url_for('salons') }}" style="color: #333;">Hizmetlerimiz</a>
-                        <a href="{{ url_for('salons') }}" class="text-decoration-none me-4" style="color: #333;">Randevu Al</a>
-                        <a href="#" class="text-decoration-none me-4" style="color: #333;">Hakkımızda</a>
-                        <a href="#" class="text-decoration-none me-4" style="color: #333;">İletişim</a>
+                        <a href="{{ url_for('index') }}" class="text-decoration-none me-4 hover-menu {{ 'active' if request.path == url_for('index') }}" style="color: #333;">Ana Sayfa</a>
+                        <a href="{{ url_for('salons') }}" class="text-decoration-none me-4 hover-menu {{ 'active' if request.path == url_for('salons') }}" style="color: #333;">Hizmetlerimiz</a>
+                        <a href="{{ url_for('salons') }}" class="text-decoration-none me-4 hover-menu" style="color: #333;">Randevu Al</a>
+                        <a href="#" class="text-decoration-none me-4 hover-menu" style="color: #333;">Hakkımızda</a>
+                        <a href="#" class="text-decoration-none me-4 hover-menu" style="color: #333;">İletişim</a>
+                        
+                        <style>
+                            .hover-menu:hover {
+                                color: #00bed7 !important;
+                            }
+                        </style>
                         {% if current_user.is_authenticated %}
                             <a href="{{ url_for('bookings') }}" class="px-4 py-2 rounded-md text-sm fw-medium text-secondary hover-text-pet-blue me-3 transition {{ 'fw-bold text-pet-blue' if request.path == url_for('bookings') }}">Randevularım</a>
                             {% if current_user.role in ['admin', 'salon_owner'] %}
@@ -70,7 +76,7 @@
                         <div class="dropdown position-relative">
                             <button type="button" class="d-flex text-sm rounded-full" id="user-menu-button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="sr-only">Kullanıcı menüsü</span>
-                                <div class="h-8 w-8 rounded-full" style="background-color: #00c3a5; display: flex; align-items: center; justify-content: center; color: white;">
+                                <div class="h-8 w-8 rounded-full" style="background-color: #00bed7; display: flex; align-items: center; justify-content: center; color: white;">
                                     {{ current_user.username[0] }}
                                 </div>
                             </button>
@@ -93,7 +99,7 @@
                         </div>
                     {% else %}
                         <a href="{{ url_for('login') }}" class="text-decoration-none me-3" style="color: #333;">Giriş Yap</a>
-                        <a href="{{ url_for('register') }}" class="btn btn-sm text-white rounded-0 px-3" style="background-color: #00c3a5;">Kayıt Ol</a>
+                        <a href="{{ url_for('register') }}" class="btn btn-sm text-white rounded-0 px-3" style="background-color: #00bed7;">Kayıt Ol</a>
                     {% endif %}
                 </div>
                 
