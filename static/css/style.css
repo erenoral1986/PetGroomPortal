@@ -622,6 +622,11 @@ a {
     border-color: #6c757d;
 }
 
+.active {
+    color: #00c3a5 !important;
+    font-weight: 600;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
     .hero-section {
