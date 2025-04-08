@@ -207,11 +207,11 @@
                 <div class="col-md-3 mb-4 mb-md-0">
                     <h5 class="fs-6 fw-semibold mb-3 text-pet-teal">Hızlı Linkler</h5>
                     <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><a href="{{ url_for('index') }}" class="text-white-50">Ana Sayfa</a></li>
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Hizmetlerimiz</a></li>
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Randevu Al</a></li>
-                        <li class="mb-2"><a href="#" class="text-white-50">Hakkımızda</a></li>
-                        <li class="mb-2"><a href="#" class="text-white-50">İletişim</a></li>
+                        <li class="mb-2"><a href="{{ url_for('index') }}" class="text-white-50 footer-link">Ana Sayfa</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Hizmetlerimiz</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Randevu Al</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 footer-link">Hakkımızda</a></li>
+                        <li class="mb-2"><a href="#" class="text-white-50 footer-link">İletişim</a></li>
                     </ul>
                 </div>
 
@@ -219,11 +219,11 @@
                 <div class="col-md-3 mb-4 mb-md-0">
                     <h5 class="fs-6 fw-semibold mb-3 text-pet-pink">Hizmetlerimiz</h5>
                     <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Temel Bakım Paketi</a></li>
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Premium Bakım</a></li>
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Köpek Kuaförü</a></li>
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Kedi Bakımı</a></li>
-                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50">Özel Irklar İçin Bakım</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Temel Bakım Paketi</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Premium Bakım</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Köpek Kuaförü</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Kedi Bakımı</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Özel Irklar İçin Bakım</a></li>
                     </ul>
                 </div>
 
@@ -260,9 +260,9 @@
                 </p>
                 <div>
                     <ul class="list-inline mb-0">
-                        <li class="list-inline-item me-3"><a href="#" class="text-white-50 small">Gizlilik Politikası</a></li>
-                        <li class="list-inline-item me-3"><a href="#" class="text-white-50 small">Kullanım Şartları</a></li>
-                        <li class="list-inline-item"><a href="#" class="text-white-50 small">Çerez Politikası</a></li>
+                        <li class="list-inline-item me-3"><a href="#" class="text-white-50 small footer-link">Gizlilik Politikası</a></li>
+                        <li class="list-inline-item me-3"><a href="#" class="text-white-50 small footer-link">Kullanım Şartları</a></li>
+                        <li class="list-inline-item"><a href="#" class="text-white-50 small footer-link">Çerez Politikası</a></li>
                     </ul>
                 </div>
             </div>
@@ -282,6 +282,7 @@
     
     <!-- Custom Scripts -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/footer.js') }}"></script>
     
     {% block extra_js %}{% endblock %}
 </body>

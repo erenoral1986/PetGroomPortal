@@ -342,8 +342,9 @@ a {
     transition: all 0.3s ease;
 }
 
-.footer ul li a:hover {
+.footer-link:hover {
     color: #ffffff !important;
+    text-decoration: none;
 }
 
 .footer-contact-item {
