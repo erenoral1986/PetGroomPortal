@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+
+{% block title %}Pet Grooming Salons - PetKuaför{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Find Pet Grooming Salons</h1>
+    
+    <!-- Search Form -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form action="{{ url_for('salons') }}" method="post" class="row g-3">
+                        {{ form.hidden_tag() }}
+                        <div class="col-md-9">
+                            {{ form.location(class="form-control", placeholder="Enter city or zip code", value=location if location else '') }}
+                        </div>
+                        <div class="col-md-3">
+                            {{ form.submit(class="btn btn-primary w-100") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results -->
+    <div class="row">
+        {% if location %}
+            <div class="col-12">
+                <h4 class="mb-4">Showing results for: {{ location }}</h4>
+            </div>
+        {% endif %}
+        
+        {% if salons %}
+            {% for salon in salons %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card card-salon h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ salon.name }}</h5>
+                            <p class="card-text">
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ salon.address }}, {{ salon.city }}, {{ salon.zip_code }}
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-phone me-2 text-primary"></i>{{ salon.phone }}
+                            </p>
+                            {% if salon.opens_at and salon.closes_at %}
+                                <p class="card-text">
+                                    <i class="fas fa-clock me-2 text-primary"></i>
+                                    {{ salon.opens_at.strftime('%I:%M %p') }} - {{ salon.closes_at.strftime('%I:%M %p') }}
+                                </p>
+                            {% endif %}
+                            <p class="card-text">{{ salon.description|truncate(100) }}</p>
+                            <a href="{{ url_for('salon_detail', salon_id=salon.id) }}" class="btn btn-primary mt-auto">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search fa-3x mb-3 text-muted"></i>
+                <h4 class="text-muted">No salons found</h4>
+                <p>Try searching for a different location or browse all available salons.</p>
+                <a href="{{ url_for('salons') }}" class="btn btn-outline-primary mt-2">Browse All Salons</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,303 @@
+{% extends "layout.html" %}
+
+{% block title %}Admin Dashboard - PetKuaför{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">
+        <i class="fas fa-tachometer-alt me-2"></i>
+        {% if current_user.role == 'salon_owner' %}
+            {{ salon.name }} Dashboard
+        {% else %}
+            Admin Dashboard
+        {% endif %}
+    </h1>
+    
+    <!-- Stats Overview -->
+    <div class="row mb-5">
+        {% if current_user.role == 'salon_owner' %}
+            <div class="col-md-4">
+                <div class="dashboard-stat">
+                    <i class="fas fa-calendar-check mb-3 fa-2x"></i>
+                    <div class="stat-number">{{ stats.total_appointments }}</div>
+                    <div class="stat-label">Total Appointments</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="dashboard-stat">
+                    <i class="fas fa-calendar-day mb-3 fa-2x"></i>
+                    <div class="stat-number">{{ stats.upcoming_appointments }}</div>
+                    <div class="stat-label">Upcoming Appointments</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="dashboard-stat">
+                    <i class="fas fa-list mb-3 fa-2x"></i>
+                    <div class="stat-number">{{ stats.total_services }}</div>
+                    <div class="stat-label">Services Offered</div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-md-4">
+                <div class="dashboard-stat">
+                    <i class="fas fa-store mb-3 fa-2x"></i>
+                    <div class="stat-number">{{ stats.total_salons }}</div>
+                    <div class="stat-label">Total Salons</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="dashboard-stat">
+                    <i class="fas fa-users mb-3 fa-2x"></i>
+                    <div class="stat-number">{{ stats.total_users }}</div>
+                    <div class="stat-label">Registered Users</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="dashboard-stat">
+                    <i class="fas fa-calendar-check mb-3 fa-2x"></i>
+                    <div class="stat-number">{{ stats.total_appointments }}</div>
+                    <div class="stat-label">Total Appointments</div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Main Dashboard Content -->
+    <div class="row">
+        {% if current_user.role == 'salon_owner' %}
+            <!-- Salon Owner Dashboard -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Salon Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <h6>Address</h6>
+                            <p>{{ salon.address }}<br>{{ salon.city }}, {{ salon.zip_code }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6>Contact</h6>
+                            <p>Phone: {{ salon.phone }}<br>Email: {{ salon.email }}</p>
+                        </div>
+                        <div class="mb-3">
+                            <h6>Operating Hours</h6>
+                            <p>
+                                {% if salon.opens_at and salon.closes_at %}
+                                    {{ salon.opens_at.strftime('%I:%M %p') }} - {{ salon.closes_at.strftime('%I:%M %p') }}
+                                {% else %}
+                                    Not set
+                                {% endif %}
+                            </p>
+                        </div>
+                        <a href="{{ url_for('admin_edit_salon') }}" class="btn btn-primary w-100">Edit Salon Details</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('admin_services') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-list me-2"></i>Manage Services
+                            </a>
+                            <a href="{{ url_for('admin_appointments') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-calendar-alt me-2"></i>View Appointments
+                            </a>
+                            <a href="{{ url_for('admin_availability') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-clock me-2"></i>Set Availability
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Recent Appointments</h5>
+                    </div>
+                    <div class="card-body">
+                        {% set recent_appointments = appointments|selectattr('appointment.salon_id', 'eq', salon.id)|list %}
+                        
+                        {% if recent_appointments %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date & Time</th>
+                                            <th>Customer</th>
+                                            <th>Service</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for appt in recent_appointments|sort(attribute='appointment.date')|slice(0, 5) %}
+                                            <tr>
+                                                <td>
+                                                    {{ appt.appointment.date.strftime('%b %d, %Y') }}<br>
+                                                    <small>{{ appt.appointment.start_time.strftime('%I:%M %p') }}</small>
+                                                </td>
+                                                <td>
+                                                    {{ appt.user.first_name }} {{ appt.user.last_name }}<br>
+                                                    <small>{{ appt.user.phone }}</small>
+                                                </td>
+                                                <td>{{ appt.service.name }}</td>
+                                                <td>
+                                                    <span class="badge 
+                                                        {% if appt.appointment.status == 'pending' %}bg-warning
+                                                        {% elif appt.appointment.status == 'confirmed' %}bg-success
+                                                        {% elif appt.appointment.status == 'cancelled' %}bg-danger
+                                                        {% else %}bg-secondary{% endif %}">
+                                                        {{ appt.appointment.status|capitalize }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ url_for('admin_update_appointment', appointment_id=appt.appointment.id) }}" class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="{{ url_for('admin_appointments') }}" class="btn btn-outline-primary">View All Appointments</a>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>
+                                <h5 class="text-muted">No appointments yet</h5>
+                                <p>You'll see appointments here when customers book with your salon.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Admin Dashboard -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Admin Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="{{ url_for('admin_create_salon') }}" class="list-group-item list-group-item-action">
+                                <i class="fas fa-plus-circle me-2"></i>Add New Salon
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">System Stats</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <canvas id="adminStatsChart" width="400" height="400"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Salons Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if salons %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Salon Name</th>
+                                            <th>Location</th>
+                                            <th>Contact</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for salon in salons %}
+                                            <tr>
+                                                <td>{{ salon.name }}</td>
+                                                <td>{{ salon.city }}, {{ salon.zip_code }}</td>
+                                                <td>{{ salon.phone }}</td>
+                                                <td>
+                                                    <div class="btn-group" role="group">
+                                                        <a href="{{ url_for('admin_edit_salon', salon_id=salon.id) }}" class="btn btn-sm btn-primary">
+                                                            <i class="fas fa-edit"></i>
+                                                        </a>
+                                                        <a href="{{ url_for('admin_services', salon_id=salon.id) }}" class="btn btn-sm btn-secondary">
+                                                            <i class="fas fa-list"></i>
+                                                        </a>
+                                                        <a href="{{ url_for('admin_appointments', salon_id=salon.id) }}" class="btn btn-sm btn-info">
+                                                            <i class="fas fa-calendar-alt"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4">
+                                <i class="fas fa-store-slash fa-3x mb-3 text-muted"></i>
+                                <h5 class="text-muted">No salons registered yet</h5>
+                                <a href="{{ url_for('admin_create_salon') }}" class="btn btn-primary mt-2">Add New Salon</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if current_user.role == 'admin' %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Simple chart for admin dashboard
+        const ctx = document.getElementById('adminStatsChart').getContext('2d');
+        const adminStatsChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Salons', 'Users', 'Appointments'],
+                datasets: [{
+                    data: [{{ stats.total_salons }}, {{ stats.total_users }}, {{ stats.total_appointments }}],
+                    backgroundColor: [
+                        'rgba(23, 162, 184, 0.8)',
+                        'rgba(108, 117, 125, 0.8)',
+                        'rgba(40, 167, 69, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(23, 162, 184, 1)',
+                        'rgba(108, 117, 125, 1)',
+                        'rgba(40, 167, 69, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endif %}
+{% endblock %}

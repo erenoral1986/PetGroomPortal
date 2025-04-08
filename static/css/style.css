@@ -1,0 +1,231 @@
+/* Custom styles for Pet Grooming Booking Platform */
+:root {
+    --primary-color: #17a2b8;
+    --secondary-color: #6c757d;
+    --accent-color: #ff9800;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --dark-bg: #343a40;
+    --light-bg: #f8f9fa;
+}
+
+/* General styling */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content {
+    flex: 1;
+}
+
+/* Card styling */
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-salon {
+    height: 100%;
+}
+
+.card-salon .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-salon .btn {
+    margin-top: auto;
+}
+
+/* Service pricing cards */
+.pricing-card {
+    border: none;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.pricing-card:hover {
+    transform: scale(1.03);
+}
+
+.pricing-card .price {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--bs-primary);
+}
+
+.pricing-card .duration {
+    font-size: 0.9rem;
+    color: var(--bs-secondary);
+}
+
+/* Salon details */
+.salon-info {
+    margin-bottom: 2rem;
+}
+
+.salon-map {
+    height: 300px;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+/* Appointment styles */
+.appointment-card {
+    margin-bottom: 1.5rem;
+}
+
+.appointment-card .status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.status-pending {
+    background-color: var(--warning-color);
+}
+
+.status-confirmed {
+    background-color: var(--success-color);
+}
+
+.status-cancelled {
+    background-color: var(--danger-color);
+}
+
+.status-completed {
+    background-color: var(--secondary-color);
+}
+
+/* Dashboard styles */
+.dashboard-stat {
+    padding: 1.5rem;
+    border-radius: 10px;
+    background-color: var(--dark-bg);
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-stat .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.dashboard-stat .stat-label {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Hero section */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+    background-size: cover;
+    padding: 100px 0;
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+}
+
+/* Availability calendar */
+.availability-calendar {
+    margin: 2rem 0;
+}
+
+.availability-day {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.availability-day.available {
+    background-color: rgba(40, 167, 69, 0.1);
+    border-left: 4px solid var(--success-color);
+}
+
+.availability-day.unavailable {
+    background-color: rgba(108, 117, 125, 0.1);
+    border-left: 4px solid var(--secondary-color);
+}
+
+/* Form styling */
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(23, 162, 184, 0.25);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--dark-bg);
+    color: white;
+    padding: 2rem 0;
+    margin-top: 3rem;
+}
+
+.footer a {
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s;
+}
+
+.footer a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+/* Scroll to top button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+    z-index: 1000;
+    display: none;
+}
+
+.scroll-to-top:hover {
+    opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1rem;
+    }
+    
+    .dashboard-stat .stat-number {
+        font-size: 1.8rem;
+    }
+}

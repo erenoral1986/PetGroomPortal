@@ -1,0 +1,183 @@
+{% extends "layout.html" %}
+
+{% block title %}My Profile - PetKuaför{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-user-circle fa-5x text-primary"></i>
+                    </div>
+                    <h4>{{ current_user.first_name }} {{ current_user.last_name }}</h4>
+                    <p class="text-muted">@{{ current_user.username }}</p>
+                    <ul class="list-group list-group-flush text-start">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-envelope me-2"></i> Email</span>
+                            <span>{{ current_user.email }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-phone me-2"></i> Phone</span>
+                            <span>{{ current_user.phone }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-calendar me-2"></i> Joined</span>
+                            <span>{{ current_user.date_joined.strftime('%b %d, %Y') }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Quick Links</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <a href="{{ url_for('bookings') }}" class="text-decoration-none">
+                                <i class="fas fa-calendar-check me-2"></i> My Appointments
+                            </a>
+                        </li>
+                        {% if current_user.role in ['admin', 'salon_owner'] %}
+                            <li class="list-group-item">
+                                <a href="{{ url_for('admin_dashboard') }}" class="text-decoration-none">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Admin Dashboard
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('salons') }}" class="text-decoration-none">
+                                <i class="fas fa-search me-2"></i> Find Salons
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Edit Profile</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('profile') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.first_name.label(class="form-label") }}
+                                {% if form.first_name.errors %}
+                                    {{ form.first_name(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.first_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.first_name(class="form-control") }}
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.last_name.label(class="form-label") }}
+                                {% if form.last_name.errors %}
+                                    {{ form.last_name(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.last_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.last_name(class="form-control") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {% if form.email.errors %}
+                                {{ form.email(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.email(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.phone.label(class="form-label") }}
+                            {% if form.phone.errors %}
+                                {{ form.phone(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.phone(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_user.appointments %}
+                        <h6 class="mb-3">Your Recent Appointments</h6>
+                        <div class="list-group">
+                            {% for appointment in current_user.appointments|sort(attribute='date', reverse=True)|slice(0, 3) %}
+                                {% set salon = appointment.salon %}
+                                {% set service = appointment.service %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ salon.name }} - {{ service.name }}</h6>
+                                        <small class="text-muted">{{ appointment.date.strftime('%b %d, %Y') }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ appointment.start_time.strftime('%I:%M %p') }} - {{ appointment.pet_name }}</p>
+                                    <small class="text-muted">
+                                        Status: 
+                                        <span class="badge 
+                                            {% if appointment.status == 'pending' %}bg-warning
+                                            {% elif appointment.status == 'confirmed' %}bg-success
+                                            {% elif appointment.status == 'cancelled' %}bg-danger
+                                            {% else %}bg-secondary{% endif %}">
+                                            {{ appointment.status|capitalize }}
+                                        </span>
+                                    </small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-3">
+                            <a href="{{ url_for('bookings') }}" class="btn btn-outline-primary">View All Appointments</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>
+                            <h6 class="text-muted">You don't have any appointments yet.</h6>
+                            <a href="{{ url_for('salons') }}" class="btn btn-primary mt-2">Book an Appointment</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+
+{% block title %}Manage Availability - {{ salon.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Availability</li>
+        </ol>
+    </nav>
+    
+    <h1 class="mb-4">Manage Availability for {{ salon.name }}</h1>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Weekly Schedule</h5>
+                </div>
+                <div class="card-body">
+                    <div class="availability-calendar">
+                        {% for day_num, day in days.items() %}
+                            <div class="availability-day {{ 'available' if day.available else 'unavailable' }}">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h5>{{ day.name }}</h5>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {% if day.available %}
+                                            <p class="mb-0">
+                                                <i class="fas fa-clock me-2"></i>
+                                                {{ day.start_time.strftime('%I:%M %p') }} - {{ day.end_time.strftime('%I:%M %p') }}
+                                            </p>
+                                        {% else %}
+                                            <p class="mb-0 text-muted">
+                                                <i class="fas fa-times-circle me-2"></i>
+                                                Closed
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-3 text-end">
+                                        {% if day.available %}
+                                            <form action="{{ url_for('admin_delete_availability', day_of_week=day_num) }}" method="post" 
+                                                  onsubmit="return confirmAction('Are you sure you want to remove availability for {{ day.name }}?')">
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i> Remove
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Set Availability</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('admin_availability') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.day_of_week.label(class="form-label") }}
+                            {% if form.day_of_week.errors %}
+                                {{ form.day_of_week(class="form-select is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.day_of_week.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.day_of_week(class="form-select") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.start_time.label(class="form-label") }}
+                            {% if form.start_time.errors %}
+                                {{ form.start_time(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.start_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.start_time(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.end_time.label(class="form-label") }}
+                            {% if form.end_time.errors %}
+                                {{ form.end_time(class="form-control is-invalid") }}
+                                <div class="invalid-feedback">
+                                    {% for error in form.end_time.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                {{ form.end_time(class="form-control") }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Information</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>
+                            Set your salon's availability for each day of the week.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-clock me-2 text-primary"></i>
+                            Times should be in 24-hour format (HH:MM).
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                            If a day is not set as available, customers won't be able to book on that day.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-exclamation-triangle me-2 text-primary"></i>
+                            Changing availability won't affect existing appointments.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

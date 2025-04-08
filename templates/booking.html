@@ -1,0 +1,223 @@
+{% extends "layout.html" %}
+
+{% block title %}Book Appointment - {{ salon.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('salons') }}">Salons</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('salon_detail', salon_id=salon.id) }}">{{ salon.name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Book Appointment</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Book an Appointment at {{ salon.name }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('book_appointment', salon_id=salon.id) }}">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" id="salon_id" value="{{ salon_id }}" />
+                        
+                        <div class="mb-4">
+                            <h5>1. Select a Service</h5>
+                            <div class="mb-3">
+                                {{ form.service_id.label(class="form-label") }}
+                                {% if form.service_id.errors %}
+                                    {{ form.service_id(class="form-select is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.service_id.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.service_id(class="form-select") }}
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-tag me-2 text-primary"></i>
+                                        <span>Price: <span id="service-price">-</span></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-clock me-2 text-primary"></i>
+                                        <span>Duration: <span id="service-duration">-</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>2. Choose a Date & Time</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.date.label(class="form-label") }}
+                                    {% if form.date.errors %}
+                                        {{ form.date(class="form-control datepicker is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.date.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.date(class="form-control datepicker") }}
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.time_slot.label(class="form-label") }}
+                                    {% if form.time_slot.errors %}
+                                        {{ form.time_slot(class="form-select is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.time_slot.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.time_slot(class="form-select") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>3. Pet Information</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.pet_name.label(class="form-label") }}
+                                    {% if form.pet_name.errors %}
+                                        {{ form.pet_name(class="form-control is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.pet_name.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.pet_name(class="form-control") }}
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    {{ form.pet_type.label(class="form-label") }}
+                                    {% if form.pet_type.errors %}
+                                        {{ form.pet_type(class="form-select is-invalid") }}
+                                        <div class="invalid-feedback">
+                                            {% for error in form.pet_type.errors %}
+                                                {{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        {{ form.pet_type(class="form-select") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.pet_breed.label(class="form-label") }}
+                                {% if form.pet_breed.errors %}
+                                    {{ form.pet_breed(class="form-control is-invalid") }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.pet_breed.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.pet_breed(class="form-control") }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>4. Additional Information</h5>
+                            <div class="mb-3">
+                                {{ form.notes.label(class="form-label") }}
+                                {% if form.notes.errors %}
+                                    {{ form.notes(class="form-control is-invalid", rows=3) }}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.notes.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {{ form.notes(class="form-control", rows=3) }}
+                                {% endif %}
+                                <div class="form-text">Any special requirements or information the groomer should know.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ salon.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ salon.address }}<br>
+                        {{ salon.city }}, {{ salon.zip_code }}
+                    </p>
+                    <p>
+                        <i class="fas fa-phone me-2"></i>
+                        {{ salon.phone }}
+                    </p>
+                    <p>
+                        <i class="fas fa-clock me-2"></i>
+                        {% if salon.opens_at and salon.closes_at %}
+                            {{ salon.opens_at.strftime('%I:%M %p') }} - {{ salon.closes_at.strftime('%I:%M %p') }}
+                        {% else %}
+                            Hours not available
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Booking Tips</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>
+                            Select the service that best fits your pet's needs.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-calendar-alt me-2 text-primary"></i>
+                            Choose a date and time that works for you.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-paw me-2 text-primary"></i>
+                            Provide accurate information about your pet.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-notes-medical me-2 text-primary"></i>
+                            Include any special needs or conditions in the notes.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+{% endblock %}
