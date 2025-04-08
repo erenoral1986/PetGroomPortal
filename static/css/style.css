@@ -1,47 +1,135 @@
-/* Custom styles for Pet Grooming Booking Platform */
+/* Custom styles for PetKuaför - Turkish Style Pet Grooming Platform */
 :root {
-    --primary-color: #17a2b8;
-    --secondary-color: #6c757d;
-    --accent-color: #ff9800;
-    --success-color: #28a745;
-    --warning-color: #ffc107;
-    --danger-color: #dc3545;
-    --dark-bg: #343a40;
-    --light-bg: #f8f9fa;
+    /* Turkish Style Color Palette */
+    --primary-color: #1a535c;    /* Koyu turkuaz - yeni ana renk */
+    --secondary-color: #4ecdc4;  /* Açık turkuaz */
+    --accent-color: #ff6b6b;     /* Mercan kırmızısı - vurgu rengi */
+    --success-color: #06d6a0;    /* Yeşil */
+    --warning-color: #ffd166;    /* Amber */
+    --danger-color: #ef476f;     /* Kırmızı */
+    --dark-bg: #19323c;          /* Koyu lacivert */
+    --light-bg: #f9f9f9;         /* Açık arka plan */
+    --text-color: #2b2d42;       /* Koyu gri */
+    --light-text: #8d99ae;       /* Açık gri */
+    --card-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Kart gölgesi */
+    --transition-speed: 0.3s;    /* Geçiş hızı */
+    --font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Yazı tipi */
 }
 
-/* General styling */
+/* General styling - Turkish Style Pet Salon */
 body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--light-bg);
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cGF0aCBkPSJNMjUgNDlDMTIuMzEyNSA0OSAyIDM4LjY4NzUgMiAyNlMxMi4zMTI1IDMgMjUgM3MyMyAxMC4zMTI1IDIzIDIzUzM3LjY4NzUgNDkgMjUgNDl6bTAtNDRDMTMuNDIxOSA1IDQgMTQuNDIxOSA0IDI2czEwLjA5MzggMjEgMjEgMjEgMjEtOS40MjE5IDIxLTIxUzM2LjU3ODEgNSAyNSA1eiIgZmlsbD0iI2ZmZCIgZmlsbC1vcGFjaXR5PSIuMDIiLz48L3N2Zz4=');
+    background-attachment: fixed;
+    line-height: 1.6;
 }
 
 .main-content {
     flex: 1;
+    padding-top: 20px;
 }
 
-/* Card styling */
+/* Türk tarzı dekoratif elementler */
+.turkish-pattern {
+    height: 30px;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCA0OCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMCAxMkMyLjUgMTYgNSAyMCA5LjUgMjAgMTQgMjAgMTYuNSAxNiAxOSAxMiAyMS41IDggMjQgNCAxOSA0IDE0IDQgMTEuNSA4IDkgMTIgNi41IDE2IDQgMjAgMCAyMCAtNCAxNiAtNi41IDEyIFoiIGZpbGw9IiNmZjZiNmIiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PHBhdGggZD0iTTI0IDEyQzI2LjUgMTYgMjkgMjAgMzMuNSAyMCAzOCAyMCA0MC41IDE2IDQzIDEyIDQ1LjUgOCA0OCA0IDQzIDQgMzggNCAzNS41IDggMzMgMTIgMzAuNSAxNiAyOCAyMCAyNCAyMCAyMCAxNiAxNy41IDEyIFoiIGZpbGw9IiM0ZWNkYzQiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+');
+    background-size: 48px 24px;
+    background-repeat: repeat-x;
+    margin: 30px 0;
+}
+
+/* Card styling - Turkish Style */
 .card {
     transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    background-color: white;
+}
+
+.card .card-header {
+    border-bottom: 3px solid var(--accent-color);
+    position: relative;
+    padding: 1.25rem 1.5rem;
+}
+
+.card .card-header::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 30%;
+    height: 3px;
+    background-color: var(--primary-color);
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-7px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .card-salon {
     height: 100%;
+    border-top: 4px solid var(--primary-color);
+    position: relative;
+}
+
+.card-salon::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    right: 0;
+    width: 30%;
+    height: 4px;
+    background-color: var(--secondary-color);
 }
 
 .card-salon .card-body {
     display: flex;
     flex-direction: column;
+    padding: 1.5rem;
 }
 
 .card-salon .btn {
     margin-top: auto;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s;
+}
+
+.card-salon .btn:hover {
+    background-color: var(--dark-bg);
+    border-color: var(--dark-bg);
+    transform: translateY(-2px);
+}
+
+/* Section titles - Turkish Style */
+.section-title {
+    position: relative;
+    margin-bottom: 2.5rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.section-title::after {
+    content: "";
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
 }
 
 /* Service pricing cards */
@@ -124,26 +212,56 @@ body {
     opacity: 0.8;
 }
 
-/* Hero section */
+/* Hero section - Turkish Style */
 .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
-                url('https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+    background: linear-gradient(to right, rgba(26, 83, 92, 0.8), rgba(26, 83, 92, 0.6)), 
+                url('https://images.unsplash.com/photo-1603796846097-bee99e4a601f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
     background-size: cover;
-    padding: 100px 0;
+    padding: 140px 0;
     color: white;
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiPjxwYXRoIGQ9Ik0yMCAyMGMtMTEuMDUgMC0yMCA4Ljk1LTIwIDIwaDQwYzAtMTEuMDUtOC45NS0yMC0yMC0yMHptMC0yMEMxNy45LTEuMSA3Ljk1IDggNy45NSAxOS4xaDQwYzAtMTEuMDUtOC45NS0yMC0yMC0yMHoiLz48L2c+PC9zdmc+');
+    opacity: 0.2;
 }
 
 .hero-section h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
 .hero-section p {
-    font-size: 1.25rem;
-    max-width: 700px;
-    margin: 0 auto 2rem;
+    font-size: 1.4rem;
+    max-width: 800px;
+    margin: 0 auto 2.5rem;
+    position: relative;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.hero-section .btn {
+    position: relative;
+    font-size: 1.1rem;
+    padding: 12px 30px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
 /* Availability calendar */
@@ -173,22 +291,268 @@ body {
     box-shadow: 0 0 0 0.25rem rgba(23, 162, 184, 0.25);
 }
 
-/* Footer */
-.footer {
+/* Top Bar - Turkish Style */
+.top-bar {
     background-color: var(--dark-bg);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top-bar a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.top-bar a:hover {
+    color: var(--accent-color);
+}
+
+.top-social a {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.top-social a:hover {
+    background-color: var(--accent-color);
     color: white;
-    padding: 2rem 0;
-    margin-top: 3rem;
+    transform: translateY(-3px);
+}
+
+/* Navbar - Turkish Style */
+.navbar {
+    padding: 1rem 0;
+    background: linear-gradient(to right, var(--primary-color), var(--dark-bg)) !important;
+    border-bottom: 3px solid var(--accent-color);
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+    position: relative;
+    padding-left: 10px;
+}
+
+.navbar-brand::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    background-color: var(--accent-color);
+    border-radius: 2px;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 1rem;
+    margin: 0 0.2rem;
+}
+
+.navbar-dark .navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: all 0.3s;
+    transform: translateX(-50%);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover::after {
+    width: 80%;
+}
+
+.navbar-dark .navbar-nav .active .nav-link::after {
+    width: 80%;
+}
+
+/* Footer - Turkish Style */
+.footer {
+    background: linear-gradient(to right, var(--dark-bg), #0f3438);
+    color: white;
+    padding: 3rem 0 2rem;
+    margin-top: 4rem;
+    position: relative;
+    border-top: 5px solid var(--accent-color);
+}
+
+.footer::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 30%;
+    height: 5px;
+    background-color: var(--primary-color);
+}
+
+.footer .footer-title {
+    position: relative;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.footer .footer-title::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background-color: var(--accent-color);
 }
 
 .footer a {
     color: rgba(255, 255, 255, 0.8);
-    transition: color 0.3s;
+    transition: all 0.3s;
+    position: relative;
+    padding-left: 15px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.footer a::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent-color);
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .footer a:hover {
     color: white;
     text-decoration: none;
+    transform: translateX(5px);
+}
+
+.footer-contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.footer-contact-icon {
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 15px;
+    color: var(--accent-color);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Step Circle - Turkish Style */
+.step-circle {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(to right bottom, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+/* Service Card - Turkish Style */
+.service-card {
+    transition: all 0.3s;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.service-card .card-body {
+    padding: 1.5rem;
+}
+
+.service-card .card-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.service-card .btn {
+    background-color: transparent;
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transition: all 0.3s;
+    border-radius: 30px;
+}
+
+.service-card .btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* CTA Section - Turkish Style */
+.cta-section {
+    background: linear-gradient(135deg, rgba(26, 83, 92, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
+    border: 1px solid rgba(26, 83, 92, 0.1);
+    border-radius: 15px;
+    padding: 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
 }
 
 /* Scroll to top button */

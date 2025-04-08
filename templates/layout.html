@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="tr" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Pet Grooming{% endblock %}</title>
+    <title>{% block title %}Pet Kuaför - Evcil Hayvan Güzellik Salonu{% endblock %}</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
     
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Flatpickr CSS (for date/time picker) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -20,8 +23,30 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <!-- Top Bar -->
+    <div class="top-bar py-2 d-none d-md-block">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="top-contact d-flex align-items-center">
+                        <span class="me-3"><i class="fas fa-phone-alt me-1"></i> +90 545 123 4567</span>
+                        <span><i class="fas fa-envelope me-1"></i> info@petkuafor.com</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="top-social text-end">
+                        <a href="#" class="me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-2"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-paw me-2"></i>PetKuaför
@@ -31,34 +56,34 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                        <a class="nav-link {{ 'active' if request.path == url_for('index') }}" href="{{ url_for('index') }}">Anasayfa</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('salons') }}">Find Salons</a>
+                        <a class="nav-link {{ 'active' if request.path == url_for('salons') }}" href="{{ url_for('salons') }}">Salonlar</a>
                     </li>
                     {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('bookings') }}">My Appointments</a>
+                            <a class="nav-link {{ 'active' if request.path == url_for('bookings') }}" href="{{ url_for('bookings') }}">Randevularım</a>
                         </li>
                         {% if current_user.role in ['admin', 'salon_owner'] %}
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" 
                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Admin
+                                    Yönetim
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('admin_services') }}">Services</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('admin_appointments') }}">Appointments</a></li>
-                                    <li><a class="dropdown-item" href="{{ url_for('admin_availability') }}">Availability</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_dashboard') }}">Gösterge Paneli</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_services') }}">Hizmetler</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_appointments') }}">Randevular</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('admin_availability') }}">Müsaitlik</a></li>
                                 </ul>
                             </li>
                         {% endif %}
                     {% endif %}
                 </ul>
-                <ul class="navbar-nav">
+                <div class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
@@ -66,21 +91,21 @@
                                 <i class="fas fa-user-circle me-1"></i>{{ current_user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{{ url_for('profile') }}">My Profile</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('bookings') }}">My Appointments</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profilim</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('bookings') }}">Randevularım</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Çıkış Yap</a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                            <a class="nav-link btn-outline-light rounded-pill px-3 me-2" href="{{ url_for('login') }}">Giriş</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                            <a class="nav-link btn-primary rounded-pill px-3" href="{{ url_for('register') }}">Üye Ol</a>
                         </li>
                     {% endif %}
-                </ul>
+                </div>
             </div>
         </div>
     </nav>
@@ -104,74 +129,118 @@
         {% block content %}{% endblock %}
     </main>
     
-    <!-- Footer -->
-    <footer class="footer text-center text-lg-start">
+    <!-- Turkish Pattern Divider -->
+    <div class="turkish-pattern"></div>
+
+    <!-- Footer - Turkish Style -->
+    <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase mb-4">PetKuaför</h5>
-                    <p>
-                        Find the perfect grooming salon for your pet. Book appointments easily and manage your pet's grooming schedule all in one place.
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <h5 class="footer-title">PetKuaför</h5>
+                    <p class="mb-4">
+                        Evcil hayvanınız için en uygun kuaför salonunu bulun. Kolayca randevu alın ve evcil hayvanınızın bakım programını tek bir yerden yönetin.
                     </p>
+                    <div class="mt-4">
+                        <div class="footer-contact-item">
+                            <div class="footer-contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>+90 545 123 4567</div>
+                        </div>
+                        <div class="footer-contact-item">
+                            <div class="footer-contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>info@petkuafor.com</div>
+                        </div>
+                        <div class="footer-contact-item">
+                            <div class="footer-contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>Bağdat Caddesi No:123, Kadıköy, İstanbul</div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="col-lg-4 col-md-6 mb-4 mb-md-0">
-                    <h5 class="text-uppercase mb-4">Quick Links</h5>
+                <div class="col-lg-2 col-md-6 mb-5">
+                    <h5 class="footer-title">Hızlı Linkler</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <a href="{{ url_for('index') }}" class="text-decoration-none">Home</a>
+                        <li>
+                            <a href="{{ url_for('index') }}">Anasayfa</a>
                         </li>
-                        <li class="mb-2">
-                            <a href="{{ url_for('salons') }}" class="text-decoration-none">Find Salons</a>
+                        <li>
+                            <a href="{{ url_for('salons') }}">Salonlar</a>
                         </li>
                         {% if current_user.is_authenticated %}
-                            <li class="mb-2">
-                                <a href="{{ url_for('bookings') }}" class="text-decoration-none">My Appointments</a>
+                            <li>
+                                <a href="{{ url_for('bookings') }}">Randevularım</a>
                             </li>
-                            <li class="mb-2">
-                                <a href="{{ url_for('profile') }}" class="text-decoration-none">Profile</a>
+                            <li>
+                                <a href="{{ url_for('profile') }}">Profilim</a>
                             </li>
                         {% else %}
-                            <li class="mb-2">
-                                <a href="{{ url_for('login') }}" class="text-decoration-none">Login</a>
+                            <li>
+                                <a href="{{ url_for('login') }}">Giriş</a>
                             </li>
-                            <li class="mb-2">
-                                <a href="{{ url_for('register') }}" class="text-decoration-none">Register</a>
+                            <li>
+                                <a href="{{ url_for('register') }}">Üye Ol</a>
                             </li>
                         {% endif %}
                     </ul>
                 </div>
                 
-                <div class="col-lg-4 col-md-12 mb-4 mb-md-0">
-                    <h5 class="text-uppercase mb-4">Contact Us</h5>
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <h5 class="footer-title">Hizmetlerimiz</h5>
                     <ul class="list-unstyled">
-                        <li class="mb-2">
-                            <i class="fas fa-map-marker-alt me-2"></i>123 Grooming St, Pet City
+                        <li><a href="#">Kedi Bakımı</a></li>
+                        <li><a href="#">Köpek Bakımı</a></li>
+                        <li><a href="#">Yıkama & Tıraş</a></li>
+                        <li><a href="#">Tırnak Kesimi</a></li>
+                        <li><a href="#">Kulak Temizliği</a></li>
+                        <li><a href="#">Diş Bakımı</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <h5 class="footer-title">Çalışma Saatleri</h5>
+                    <ul class="list-unstyled mb-4">
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>Pazartesi - Cuma:</span>
+                            <span>09:00 - 20:00</span>
                         </li>
-                        <li class="mb-2">
-                            <i class="fas fa-envelope me-2"></i>info@petkuafor.com
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>Cumartesi:</span>
+                            <span>10:00 - 18:00</span>
                         </li>
-                        <li class="mb-2">
-                            <i class="fas fa-phone me-2"></i>+1 (555) 123-4567
+                        <li class="d-flex justify-content-between mb-2">
+                            <span>Pazar:</span>
+                            <span>10:00 - 16:00</span>
                         </li>
                     </ul>
-                    <div class="mt-4">
-                        <a href="#" class="me-3 text-reset">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="me-3 text-reset">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="me-3 text-reset">
-                            <i class="fab fa-instagram"></i>
-                        </a>
+                    <h5 class="footer-title">Bizi Takip Edin</h5>
+                    <div class="d-flex mt-3">
+                        <a href="#" class="me-3" style="font-size: 1.5rem;"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="me-3" style="font-size: 1.5rem;"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3" style="font-size: 1.5rem;"><i class="fab fa-instagram"></i></a>
+                        <a href="#" style="font-size: 1.5rem;"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
         </div>
         
-        <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023 PetKuaför. All rights reserved.
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        &copy; 2023 PetKuaför. Tüm hakları saklıdır.
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="#">Gizlilik Politikası</a> | 
+                        <a href="#">Kullanım Koşulları</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
     
