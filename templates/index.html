@@ -51,25 +51,24 @@
 
 <div class="container">
     <!-- Arama Formu -->
-    <div class="bg-white rounded-4 shadow-sm py-4 px-3 mt-n5 position-relative mb-5">
-        <div class="container">
-            <h5 class="text-center mb-4 text-pet-blue fw-bold">Size En Yakın Pet Kuaförlerini Bulun</h5>
-            <form action="{{ url_for('salons') }}" method="post" class="row g-3">
-                {{ form.hidden_tag() }}
-                <div class="col-md-9">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i class="fas fa-search text-muted"></i>
-                        </span>
-                        {{ form.location(class="form-control border-start-0 py-3", placeholder="Şehir veya posta kodu giriniz") }}
-                    </div>
+    <div class="bg-white rounded-4 shadow-sm py-4 px-md-4 px-3 position-relative" style="margin-top: -25px;">
+        <h5 class="text-center mb-4 text-pet-blue fw-bold">Size En Yakın Pet Kuaförlerini Bulun</h5>
+        <form action="{{ url_for('salons') }}" method="post" class="row g-3">
+            {{ form.hidden_tag() }}
+            <div class="col-md-9">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                        <i class="fas fa-search text-muted"></i>
+                    </span>
+                    {{ form.location(class="form-control border-start-0 py-3", placeholder="Şehir veya posta kodu giriniz") }}
                 </div>
-                <div class="col-md-3">
-                    {{ form.submit(class="btn bg-pet-blue text-white w-100 py-3 fw-medium", value="Kuaför Bul") }}
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="col-md-3">
+                {{ form.submit(class="btn bg-pet-blue text-white w-100 py-3 fw-medium", value="Kuaför Bul") }}
+            </div>
+        </form>
     </div>
+    <div class="py-4"></div>
     
     <!-- Özellikler Bölümü -->
     <section class="py-12 my-5">
@@ -223,29 +222,27 @@
     
     <!-- CTA Bölümü -->
     <section class="my-5 py-12 bg-gradient-to-b from-pet-blue/5 to-white rounded-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 text-center">
-                    <h2 class="fs-1 fw-bold text-pet-blue mb-4">Evcil Hayvanınız İçin Kuaför Randevusu Almaya Hazır mısınız?</h2>
-                    <p class="text-secondary mb-5 mx-auto" style="max-width: 600px;">
-                        Evcil dostunuz için profesyonel bakım hizmetlerine hemen şimdi ulaşın
-                    </p>
-                    <div class="d-flex flex-wrap justify-content-center gap-3">
-                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-5 py-3 fw-bold rounded-pill">
-                            Hemen Salon Bul
-                        </a>
-                        {% if not current_user.is_authenticated %}
-                        <a href="{{ url_for('register') }}" class="btn border-2 border-pet-blue text-pet-blue px-5 py-3 fw-bold rounded-pill">
-                            Üye Ol
-                        </a>
-                        {% endif %}
-                    </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="fs-1 fw-bold text-pet-blue mb-4">Evcil Hayvanınız İçin Kuaför Randevusu Almaya Hazır mısınız?</h2>
+                <p class="text-secondary mb-5 mx-auto" style="max-width: 600px;">
+                    Evcil dostunuz için profesyonel bakım hizmetlerine hemen şimdi ulaşın
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white px-5 py-3 fw-bold rounded-pill">
+                        Hemen Salon Bul
+                    </a>
                     {% if not current_user.is_authenticated %}
-                    <p class="mt-4 text-center text-secondary">
-                        Zaten üye misiniz? <a href="{{ url_for('login') }}" class="text-pet-blue fw-medium">Giriş Yap</a>
-                    </p>
+                    <a href="{{ url_for('register') }}" class="btn border-2 border-pet-blue text-pet-blue px-5 py-3 fw-bold rounded-pill">
+                        Üye Ol
+                    </a>
                     {% endif %}
                 </div>
+                {% if not current_user.is_authenticated %}
+                <p class="mt-4 text-center text-secondary">
+                    Zaten üye misiniz? <a href="{{ url_for('login') }}" class="text-pet-blue fw-medium">Giriş Yap</a>
+                </p>
+                {% endif %}
             </div>
         </div>
     </section>

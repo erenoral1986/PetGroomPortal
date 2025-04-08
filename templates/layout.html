@@ -28,10 +28,10 @@
     <!-- Üst Navigasyon -->
     <header class="bg-white shadow-sm">
         <div class="container">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center">
+            <div class="d-flex justify-content-between align-items-center py-4">
+                <div class="d-flex align-items-center">
                     <!-- Logo -->
-                    <div class="flex-shrink-0 me-6">
+                    <div class="me-6">
                         <a href="{{ url_for('index') }}" class="d-flex align-items-center text-decoration-none">
                             <span class="fs-4 fw-bold text-pet-blue">Pet<span class="text-pet-teal">Kuaför</span></span>
                         </a>
@@ -39,13 +39,13 @@
                     
                     <!-- Ana Menü Linkleri (Desktop) -->
                     <div class="d-none d-md-flex">
-                        <a href="{{ url_for('index') }}" class="px-3 py-2 rounded-pill text-decoration-none text-gray-700 hover-pet-blue me-1 {{ 'fw-bold text-pet-blue' if request.path == url_for('index') }}">Ana Sayfa</a>
-                        <a href="{{ url_for('salons') }}" class="px-3 py-2 rounded-pill text-decoration-none text-gray-700 hover-pet-blue me-1 {{ 'fw-bold text-pet-blue' if request.path == url_for('salons') }}">Salonlar</a>
+                        <a href="{{ url_for('index') }}" class="px-3 py-2 rounded-pill text-decoration-none text-secondary hover-pet-blue me-1 {{ 'fw-bold text-pet-blue' if request.path == url_for('index') }}">Ana Sayfa</a>
+                        <a href="{{ url_for('salons') }}" class="px-3 py-2 rounded-pill text-decoration-none text-secondary hover-pet-blue me-1 {{ 'fw-bold text-pet-blue' if request.path == url_for('salons') }}">Salonlar</a>
                         {% if current_user.is_authenticated %}
-                            <a href="{{ url_for('bookings') }}" class="px-3 py-2 rounded-pill text-decoration-none text-gray-700 hover-pet-blue me-1 {{ 'fw-bold text-pet-blue' if request.path == url_for('bookings') }}">Randevularım</a>
+                            <a href="{{ url_for('bookings') }}" class="px-3 py-2 rounded-pill text-decoration-none text-secondary hover-pet-blue me-1 {{ 'fw-bold text-pet-blue' if request.path == url_for('bookings') }}">Randevularım</a>
                             {% if current_user.role in ['admin', 'salon_owner'] %}
                                 <div class="dropdown">
-                                    <a class="px-3 py-2 rounded-pill text-decoration-none text-gray-700 hover-pet-blue dropdown-toggle me-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <a class="px-3 py-2 rounded-pill text-decoration-none text-secondary hover-pet-blue dropdown-toggle me-1" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         Yönetim
                                     </a>
                                     <ul class="dropdown-menu">
@@ -64,7 +64,7 @@
                 <div class="d-flex align-items-center">
                     {% if current_user.is_authenticated %}
                         <div class="dropdown">
-                            <a class="d-flex align-items-center text-decoration-none text-gray-700 dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="d-flex align-items-center text-decoration-none text-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user-circle me-2"></i>{{ current_user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
@@ -75,8 +75,8 @@
                             </ul>
                         </div>
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="px-4 py-2 text-sm fw-medium text-pet-blue hover-text-pet-teal me-2">Giriş Yap</a>
-                        <a href="{{ url_for('register') }}" class="px-4 py-2 text-sm fw-medium text-white bg-pet-blue hover-bg-pet-teal rounded-pill">Kayıt Ol</a>
+                        <a href="{{ url_for('login') }}" class="px-4 py-2 text-sm fw-medium text-pet-blue hover-text-pet-teal me-2 text-decoration-none">Giriş Yap</a>
+                        <a href="{{ url_for('register') }}" class="px-4 py-2 text-sm fw-medium text-white bg-pet-blue hover-bg-pet-teal rounded-pill text-decoration-none">Kayıt Ol</a>
                     {% endif %}
                 </div>
                 
@@ -92,15 +92,15 @@
         <!-- Mobil Menü -->
         <div class="collapse navbar-collapse d-md-none" id="mobile-menu">
             <div class="container py-2">
-                <a href="{{ url_for('index') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue {{ 'fw-bold text-pet-blue' if request.path == url_for('index') }}">Ana Sayfa</a>
-                <a href="{{ url_for('salons') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue {{ 'fw-bold text-pet-blue' if request.path == url_for('salons') }}">Salonlar</a>
+                <a href="{{ url_for('index') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue {{ 'fw-bold text-pet-blue' if request.path == url_for('index') }}">Ana Sayfa</a>
+                <a href="{{ url_for('salons') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue {{ 'fw-bold text-pet-blue' if request.path == url_for('salons') }}">Salonlar</a>
                 {% if current_user.is_authenticated %}
-                    <a href="{{ url_for('bookings') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue {{ 'fw-bold text-pet-blue' if request.path == url_for('bookings') }}">Randevularım</a>
+                    <a href="{{ url_for('bookings') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue {{ 'fw-bold text-pet-blue' if request.path == url_for('bookings') }}">Randevularım</a>
                     {% if current_user.role in ['admin', 'salon_owner'] %}
-                        <a href="{{ url_for('admin_dashboard') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue">Gösterge Paneli</a>
-                        <a href="{{ url_for('admin_services') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue">Hizmetler</a>
-                        <a href="{{ url_for('admin_appointments') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue">Randevular</a>
-                        <a href="{{ url_for('admin_availability') }}" class="d-block py-2 text-decoration-none text-gray-700 hover-pet-blue">Müsaitlik</a>
+                        <a href="{{ url_for('admin_dashboard') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue">Gösterge Paneli</a>
+                        <a href="{{ url_for('admin_services') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue">Hizmetler</a>
+                        <a href="{{ url_for('admin_appointments') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue">Randevular</a>
+                        <a href="{{ url_for('admin_availability') }}" class="d-block py-2 text-decoration-none text-secondary hover-pet-blue">Müsaitlik</a>
                     {% endif %}
                 {% endif %}
             </div>
