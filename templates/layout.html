@@ -176,98 +176,93 @@
     <div class="section-divider"></div>
 
     <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-10">
+    <footer class="bg-gray-800 text-white py-5">
         <div class="container">
-            <div class="row g-4">
-                <!-- Logo ve Kısa Açıklama -->
-                <div class="col-lg-3 col-md-6">
-                    <div class="d-flex align-items-center mb-4">
+            <div class="row mb-4">
+                <!-- Sol Kolon - Logo ve Açıklama -->
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <div class="mb-3">
                         <span class="fs-4 fw-bold"><span class="text-pet-blue">Pet</span><span class="text-pet-teal">Kuaför</span></span>
                     </div>
-                    <p class="text-secondary small">
+                    <p class="text-secondary small mb-4">
                         Evcil hayvanınız için profesyonel bakım ve kuaför hizmetleri sunan platformumuzda, sevimli dostunuza en iyi hizmeti vermekten gurur duyuyoruz.
                     </p>
-                    <div class="d-flex gap-4 mt-4">
-                        <a href="#" class="text-secondary hover-text-white">
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white" aria-label="Facebook">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="text-secondary hover-text-white">
+                        <a href="#" class="text-white" aria-label="Twitter">
                             <i class="fab fa-twitter"></i>
                         </a>
-                        <a href="#" class="text-secondary hover-text-white">
+                        <a href="#" class="text-white" aria-label="Instagram">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="text-secondary hover-text-white">
+                        <a href="#" class="text-white" aria-label="YouTube">
                             <i class="fab fa-youtube"></i>
                         </a>
                     </div>
                 </div>
 
                 <!-- Hızlı Linkler -->
-                <div class="col-lg-3 col-md-6">
-                    <h5 class="fs-5 fw-semibold mb-4 text-pet-teal">Hızlı Linkler</h5>
-                    <ul class="list-unstyled space-y-2">
-                        <li><a href="{{ url_for('index') }}" class="text-secondary hover-text-white transition">Ana Sayfa</a></li>
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Hizmetlerimiz</a></li>
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Randevu Al</a></li>
-                        {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('bookings') }}" class="text-secondary hover-text-white transition">Randevularım</a></li>
-                            <li><a href="{{ url_for('profile') }}" class="text-secondary hover-text-white transition">Profilim</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('login') }}" class="text-secondary hover-text-white transition">Giriş</a></li>
-                            <li><a href="{{ url_for('register') }}" class="text-secondary hover-text-white transition">Üye Ol</a></li>
-                        {% endif %}
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="fs-6 fw-semibold mb-3 text-pet-teal">Hızlı Linkler</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a href="{{ url_for('index') }}" class="text-secondary">Ana Sayfa</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Hizmetlerimiz</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Randevu Al</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary">Hakkımızda</a></li>
+                        <li class="mb-2"><a href="#" class="text-secondary">İletişim</a></li>
                     </ul>
                 </div>
 
                 <!-- Hizmetler -->
-                <div class="col-lg-3 col-md-6">
-                    <h5 class="fs-5 fw-semibold mb-4 text-pet-pink">Hizmetlerimiz</h5>
-                    <ul class="list-unstyled space-y-2">
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Temel Bakım Paketi</a></li>
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Premium Bakım</a></li>
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Köpek Kuaförü</a></li>
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Kedi Bakımı</a></li>
-                        <li><a href="{{ url_for('salons') }}" class="text-secondary hover-text-white transition">Özel Irklar İçin Bakım</a></li>
+                <div class="col-md-3 mb-4 mb-md-0">
+                    <h5 class="fs-6 fw-semibold mb-3 text-pet-pink">Hizmetlerimiz</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Temel Bakım Paketi</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Premium Bakım</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Köpek Kuaförü</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Kedi Bakımı</a></li>
+                        <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-secondary">Özel Irklar İçin Bakım</a></li>
                     </ul>
                 </div>
 
                 <!-- İletişim Bilgileri -->
-                <div class="col-lg-3 col-md-6">
-                    <h5 class="fs-5 fw-semibold mb-4 text-pet-yellow">İletişim</h5>
-                    <ul class="list-unstyled space-y-3">
-                        <li class="d-flex align-items-start">
-                            <i class="fas fa-map-marker-alt mt-1 me-3 text-pet-teal"></i>
-                            <span>Bahçelievler Mah. Atatürk Cad. No:123, İstanbul, Türkiye</span>
+                <div class="col-md-3">
+                    <h5 class="fs-6 fw-semibold mb-3 text-warning">İletişim</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-3 d-flex">
+                            <i class="fas fa-map-marker-alt text-pet-teal me-2 mt-1"></i>
+                            <span class="text-secondary">Bahçelievler Mah. Atatürk Cad. No:123, İstanbul, Türkiye</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-phone-alt text-pet-teal me-2"></i>
+                            <span class="text-secondary">+90 (212) 123 45 67</span>
+                        </li>
+                        <li class="mb-3 d-flex align-items-center">
+                            <i class="fas fa-envelope text-pet-teal me-2"></i>
+                            <span class="text-secondary">info@petkuafor.com</span>
                         </li>
                         <li class="d-flex align-items-center">
-                            <i class="fas fa-phone-alt me-3 text-pet-teal"></i>
-                            <span>+90 (212) 123 45 67</span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                            <i class="fas fa-envelope me-3 text-pet-teal"></i>
-                            <span>info@petkuafor.com</span>
-                        </li>
-                        <li class="d-flex align-items-center">
-                            <i class="fas fa-clock me-3 text-pet-teal"></i>
-                            <span>Pazartesi - Cumartesi: 09:00 - 19:00</span>
+                            <i class="fas fa-clock text-pet-teal me-2"></i>
+                            <span class="text-secondary">Pazartesi - Cumartesi: 09:00 - 19:00</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <hr class="my-5 border-secondary">
+            <hr class="border-secondary my-4">
 
             <!-- Alt Footer -->
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <p class="text-sm text-secondary">
-                    &copy; 2023 PetKuaför - Tüm Hakları Saklıdır.
+                <p class="text-secondary small mb-3 mb-md-0">
+                    &copy; 2025 PetKuaför - Tüm Hakları Saklıdır.
                 </p>
-                <div class="mt-3 mt-md-0">
-                    <ul class="d-flex gap-4">
-                        <li><a href="#" class="text-sm text-secondary hover-text-pet-teal">Gizlilik Politikası</a></li>
-                        <li><a href="#" class="text-sm text-secondary hover-text-pet-teal">Kullanım Şartları</a></li>
-                        <li><a href="#" class="text-sm text-secondary hover-text-pet-teal">Çerez Politikası</a></li>
+                <div>
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item me-3"><a href="#" class="text-secondary small">Gizlilik Politikası</a></li>
+                        <li class="list-inline-item me-3"><a href="#" class="text-secondary small">Kullanım Şartları</a></li>
+                        <li class="list-inline-item"><a href="#" class="text-secondary small">Çerez Politikası</a></li>
                     </ul>
                 </div>
             </div>
