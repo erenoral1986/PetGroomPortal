@@ -31,6 +31,23 @@ section h2.text-pet-blue + .bg-pet-teal {
   display: none !important;
 }
 
+/* Hizmetlerimiz başlığı altındaki tüm çizgiler */
+h2.fs-1.fw-bold.text-pet-blue + .bg-pet-teal.mx-auto.my-3 {
+  display: none !important;
+}
+
+/* Kedi resmi için özel stiller */
+#cat-grooming-img {
+  border: 4px solid white !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.5rem !important;
+  width: 96px !important;
+  height: 96px !important;
+  object-fit: cover !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 /* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
