@@ -65,6 +65,31 @@ section .text-center.mb-5 h2::before {
   display: none !important;
 }
 
+/* Tam ekran sırasında hizmetlerimiz başlığı altındaki çizgi için özel kural */
+@media (min-width: 1200px) {
+  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2,
+  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::before,
+  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::after,
+  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2 * {
+    border: none !important;
+    border-bottom: none !important;
+    border-top: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+  }
+  
+  h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2 {
+    display: inline-block !important;
+  }
+}
+
+/* Kedi resmi görsel için */
+.cat-grooming-image {
+  background-image: url('https://petkuaforlerim.com/assets/images/cat-grooming.jpg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+}
+
 /* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
