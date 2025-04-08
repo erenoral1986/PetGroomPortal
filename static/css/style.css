@@ -343,8 +343,7 @@ a {
 }
 
 .footer ul li a:hover {
-    color: var(--color-pet-blue);
-    padding-left: 5px;
+    color: #ffffff !important;
 }
 
 .footer-contact-item {
@@ -380,7 +379,7 @@ a {
 }
 
 .footer-bottom a:hover {
-    color: var(--color-pet-blue);
+    color: #ffffff !important;
 }
 
 /* Scroll to Top Button */
