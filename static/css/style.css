@@ -90,6 +90,48 @@ section .text-center.mb-5 h2::before {
   background-position: center !important;
 }
 
+/* Hizmetlerimiz bölümü için özel stiller */
+#hizmetlerimiz-heading {
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  text-decoration: none !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Hizmetlerimiz bölümü - bölümler arası çizgi sorunu fix */
+.mt-0 {
+  border-top: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.no-border {
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+/* Form ve Hizmetlerimiz bölümü arasında çizgi fix */
+.container section:nth-of-type(1) {
+  margin-top: 0 !important;
+  border-top: none !important;
+}
+
+/* Bu önemli */
+.py-12.mt-0.mb-5::before,
+.py-12.mt-0.mb-5::after {
+  display: none !important;
+  content: none !important;
+  height: 0 !important;
+  border: none !important;
+  border-top: none !important;
+  border-bottom: none !important;
+}
+
 /* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
