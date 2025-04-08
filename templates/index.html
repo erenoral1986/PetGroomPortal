@@ -47,7 +47,7 @@
             </div>
             
             <div class="col-lg-6 position-relative">
-                <img src="https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" 
                      alt="Evcil Hayvan Bakımı" class="w-100 rounded-lg shadow-lg">
                 
                 <!-- İlk bilgi kartı -->
@@ -84,7 +84,7 @@
                 
                 <!-- Üçüncü bilgi kartı - KÜÇÜK RESİM -->
                 <div class="position-absolute d-none d-lg-block" style="top: 50%; right: 0; transform: translate(25%, -50%);">
-                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                    <img src="{{ url_for('static', filename='img/dog-grooming.jpg') }}" 
                          alt="Köpek Bakımı" class="rounded-lg shadow-lg border-4 border-white" style="width: 128px; height: 128px; object-fit: cover;">
                 </div>
                 

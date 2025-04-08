@@ -21,6 +21,13 @@
   --pet-green: #4ecca3;
 }
 
+/* Hizmetlerimiz bölümünde başlık çizgisini kaldır */
+.container section h2.text-pet-blue + .bg-pet-teal {
+  height: 0;
+  border-radius: 0;
+  opacity: 0.5;
+}
+
 /* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
