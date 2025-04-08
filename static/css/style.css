@@ -4,6 +4,7 @@
   --color-pet-blue: #1a9cb7;
   --color-pet-teal: #30c9c9;
   --color-pet-blue-dark: #167f95; /* Koyu mavi, hover için */
+  --color-pet-turquoise: #27D1C5; /* Turkuaz, hover için */
   --color-pet-pink: #ff6b8b;
   --color-pet-orange: #ff9666;
   --color-pet-yellow: #ffd166;
@@ -13,6 +14,7 @@
   --pet-blue: #1a9cb7;
   --pet-teal: #30c9c9;
   --pet-blue-dark: #167f95;
+  --pet-turquoise: #27D1C5;
   --pet-pink: #ff6b8b;
   --pet-orange: #ff9666;
   --pet-yellow: #ffd166;
@@ -456,7 +458,7 @@ a {
 }
 
 .bg-pet-blue:hover {
-    background-color: #0c7992 !important; /* Daha koyu mavi */
+    background-color: var(--color-pet-turquoise) !important; /* Turkuaz (tiffany mavisi) */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -485,7 +487,7 @@ a {
 }
 
 .service-btn:hover {
-    background-color: #0c7992 !important; /* Daha koyu mavi */
+    background-color: var(--color-pet-turquoise) !important; /* Turkuaz (tiffany mavisi) */
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
