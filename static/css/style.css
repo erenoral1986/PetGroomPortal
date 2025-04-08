@@ -450,6 +450,41 @@ a {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
+/* Ana mavi butonlar */
+.bg-pet-blue {
+    background-color: var(--color-pet-blue);
+}
+
+.bg-pet-blue:hover {
+    background-color: var(--color-pet-blue-dark);
+}
+
+/* Kenarlıklı butonlar */
+.border-pet-blue {
+    border-color: var(--color-pet-blue);
+}
+
+.btn.border-pet-blue {
+    color: var(--color-pet-blue);
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn.border-pet-blue:hover {
+    background-color: var(--color-pet-blue);
+    color: white;
+}
+
+/* Servis butonları */
+.service-btn {
+    transition: all 0.3s ease;
+}
+
+.service-btn:hover {
+    background-color: var(--color-pet-blue-dark);
+    color: white;
+}
+
 /* Forms */
 .form-control:focus {
     border-color: var(--color-pet-blue);
