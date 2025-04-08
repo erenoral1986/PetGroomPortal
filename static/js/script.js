@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Scroll to top button
+    // Scroll to top button - European Professional Style
     const scrollToTopBtn = document.querySelector('.scroll-to-top');
     if (scrollToTopBtn) {
         window.addEventListener('scroll', function() {
-            if (window.pageYOffset > 100) {
-                scrollToTopBtn.style.display = 'block';
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.classList.add('active');
             } else {
-                scrollToTopBtn.style.display = 'none';
+                scrollToTopBtn.classList.remove('active');
             }
         });
 
