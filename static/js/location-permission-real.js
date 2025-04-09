@@ -121,19 +121,65 @@ function getGeolocation() {
     // Konum alındı olarak işaretle
     localStorage.setItem('locationPermissionGranted', 'true');
     
-    // Tarayıcıdan konum iste
+    // Tarayıcıdan konum iste - WhatsApp'ın kullandığı gibi yüksek hassasiyetli ayarlar kullanarak
     navigator.geolocation.getCurrentPosition(
         // Başarılı olursa
         function(position) {
             // Tarayıcıdan gelen gerçek konum bilgisini kullan
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
+            const accuracy = position.coords.accuracy;
             
-            // Test için konum bilgilerini ekrana yazdır
+            console.log("Konum hassasiyeti:", accuracy, "metre");
+            
+            // Konum bilgilerini detaylı olarak göster
             showLocationDebugInfo(latitude, longitude);
             
-            // En yakın şehri bul
-            findNearestCity(latitude, longitude, locationInput);
+            // Hassasiyet çok düşükse (>100m) daha hassas konum almayı dene
+            if (accuracy > 100) {
+                console.log("Konum hassasiyeti düşük, daha yüksek hassasiyetli konum almaya çalışılıyor...");
+                
+                // Konum izlemeyi başlat - tek seferlik değil, sürekli izleme (WhatsApp gibi)
+                const watchId = navigator.geolocation.watchPosition(
+                    function(betterPosition) {
+                        // Daha hassas konum bilgisi alındığında
+                        const betterAccuracy = betterPosition.coords.accuracy;
+                        console.log("Yeni konum hassasiyeti:", betterAccuracy, "metre");
+                        
+                        // Yeni konum daha hassas mı kontrol et
+                        if (betterAccuracy < accuracy) {
+                            const newLatitude = betterPosition.coords.latitude;
+                            const newLongitude = betterPosition.coords.longitude;
+                            
+                            console.log("Daha hassas konum bilgisi alındı:", newLatitude, newLongitude);
+                            
+                            // En yakın şehri bul
+                            findNearestCity(newLatitude, newLongitude, locationInput);
+                            
+                            // İzlemeyi durdur
+                            navigator.geolocation.clearWatch(watchId);
+                        }
+                    },
+                    function(error) {
+                        console.error("İzleme hatası:", error);
+                        navigator.geolocation.clearWatch(watchId);
+                    },
+                    { 
+                        enableHighAccuracy: true, 
+                        timeout: 15000, 
+                        maximumAge: 0 
+                    }
+                );
+                
+                // 15 saniye sonra izlemeyi durdur (zaman aşımı)
+                setTimeout(function() {
+                    navigator.geolocation.clearWatch(watchId);
+                }, 15000);
+            } else {
+                // Hassasiyet yeterliyse hemen işlem yap
+                // En yakın şehri bul
+                findNearestCity(latitude, longitude, locationInput);
+            }
             
             // İzin durumunu kaydet
             localStorage.setItem('locationPermissionGranted', 'true');
@@ -159,9 +205,9 @@ function getGeolocation() {
             }
         },
         {
-            enableHighAccuracy: true,
-            timeout: 10000,
-            maximumAge: 0
+            enableHighAccuracy: true,  // WhatsApp gibi yüksek hassasiyet iste
+            timeout: 15000,            // Biraz daha uzun timeout süresi (15 sn)
+            maximumAge: 0              // Her zaman güncel konum bilgisi iste
         }
     );
 }
@@ -470,7 +516,11 @@ function showLocationDebugInfo(latitude, longitude) {
         { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
     ];
     
-    // En yakın şehri ve mahalleyi bul
+    // WhatsApp seviyesinde hassas konum tespiti için
+    // Önce Nominatim API'den gerçek mahalle bilgisini almayı deneriz
+    // Alamazsak en yakın konumu hesaplarız
+    
+    // En yakın şehri ve mahalleyi hesapla (API başarısız olursa yedek olarak)
     let closestCity = null;
     let minCityDistance = Infinity;
     let cityDistance = 0;
@@ -496,6 +546,9 @@ function showLocationDebugInfo(latitude, longitude) {
                 closestNeighborhood = nh;
             }
         }
+        
+        console.log("En yakın mahalle hesaplandı:", closestNeighborhood ? closestNeighborhood.name : "Bulunamadı");
+        console.log("Mahalle mesafesi:", minNeighborhoodDistance.toFixed(2), "km");
     }
     
     // Debug bilgilerini göstermek için banner oluştur
@@ -537,8 +590,10 @@ function showLocationDebugInfo(latitude, longitude) {
     
     // Servis üzerinden adres bilgisini almayı dene
     try {
-        // Nominatim servisini kullanarak adres bilgisini alma (açık kaynak)
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`)
+        // WhatsApp'ın kullandığı gibi yüksek hassasiyet ayarları ile adres bilgisini alma
+        // Nominatim API, WhatsApp'a göre daha temel bir servistir, WhatsApp Google Maps API kullanır
+        // Fakat aynı sonuçları elde etmek için parametreleri optimize ediyoruz
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=tr&namedetails=1&extratags=1&email=petapp@example.com`)
         .then(response => response.json())
         .then(data => {
             const addressElement = document.getElementById('locationAddress');
