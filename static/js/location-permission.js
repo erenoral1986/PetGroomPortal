@@ -256,11 +256,10 @@ function showRejectedPermissionPopup() {
             <div class="text-center mb-3">
                 <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
                 <h5 class="fw-bold">Konum İzni Reddedildi</h5>
-                <p class="text-muted mb-3">Konum iznini reddetmişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz veya tekrar izin vermeyi deneyebilirsiniz.</p>
+                <p class="text-muted mb-3">Konum iznini reddetmişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz.</p>
             </div>
-            <div class="d-flex justify-content-between">
-                <button id="closeRejectedPopup" class="btn btn-outline-secondary px-4">Tamam</button>
-                <button id="retryPermission" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
+            <div class="d-flex justify-content-center">
+                <button id="closeRejectedPopup" class="btn bg-pet-blue text-white px-4">Tamam</button>
             </div>
         </div>
     `;
@@ -270,35 +269,6 @@ function showRejectedPermissionPopup() {
     // Tamam butonu - kapat
     document.getElementById('closeRejectedPopup').addEventListener('click', function() {
         modal.remove();
-    });
-    
-    // İzin ver butonu - localStorage'ı temizle ve Chrome'un popup'ını göster
-    document.getElementById('retryPermission').addEventListener('click', function() {
-        // İzin durumunu sıfırla
-        localStorage.removeItem('locationPermissionGranted');
-        modal.remove();
-        
-        console.log("Tarayıcıdan konum izni yeniden isteniyor...");
-        
-        // Tarayıcıyı reddedilmiş izinleri sıfırlamaya zorlamak için:
-        // 1. sayfa yenileme ile browser iznini tekrar gösterme denemesi
-        alert("Tarayıcı ayarlarından konum iznini açmanız gerekebilir. Sayfa yenilenecek.");
-        
-        /* 
-         * Not: chrome:// URL'leri güvenlik nedeniyle JavaScript ile açılamaz
-         * Bunun yerine kullanıcıya talimat veriyoruz
-         */
-        alert("Tarayıcınızda konum izinlerini sıfırlamak için:\n1. Tarayıcı ayarlarına gidin\n2. Gizlilik ve Güvenlik > Site Ayarları > Konum\n3. Engellenen siteleri kontrol edin\n\nİşlem tamamlandığında sayfayı yenileyin.");
-        
-        // Sayfayı yenile - konum iznini sıfırlamak için
-        setTimeout(() => {
-            window.location.reload(true);
-        }, 500);
-        
-        /* Not: Navigator API doğrudan tarayıcı izinlerini sıfırlamaya izin vermez,
-           kullanıcının bunun için tarayıcı ayarlarına gitmesi gerekiyor.
-           Bu nedenle tarayıcı izni reddedilmişse, en iyi yöntem kullanıcıya yol göstermektir.
-        */
     });
 }
 
