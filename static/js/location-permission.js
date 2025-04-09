@@ -326,7 +326,7 @@ function showLocationError(message) {
         
         // 3 saniye sonra normal placeholder'a dön
         setTimeout(() => {
-            locationInput.placeholder = "Şehir veya posta kodu giriniz";
+            locationInput.placeholder = "Şehir ara";
         }, 3000);
     }
 }
