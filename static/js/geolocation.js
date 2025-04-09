@@ -40,11 +40,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Sayfa yüklendiğinde otomatik olarak konum izni kontrolü ve gerekirse izin isteme
-    checkLocationPermission();
+    // Sayfa yüklendiğinde sadece konum iznini kontrol et, izin durumuna göre popup göster
+    checkPermissionStatusSilently();
 });
 
-// Konum iznini kontrol et, izin verilmemişse iste
+// Konum iznini kontrol et, izin verilmemişse iste (ve otomatik konumla)
 function checkLocationPermission() {
     // Konum izni verilmiş mi kontrol et
     const permissionGranted = localStorage.getItem('locationPermissionGranted');
@@ -65,6 +65,104 @@ function checkLocationPermission() {
     if (permissionGranted === 'false') {
         showManualSelectionPrompt();
     }
+}
+
+// Sadece konum iznini kontrol et, popup göster ama konum alma
+function checkPermissionStatusSilently() {
+    // Konum izni verilmiş mi kontrol et
+    const permissionGranted = localStorage.getItem('locationPermissionGranted');
+    
+    // İzin reddedilmişse, manuel seçim yapabileceklerini belirten mesaj göster
+    if (permissionGranted === 'false') {
+        // Popup göster - konum izni reddedilmiş
+        showNoPermissionPopup();
+    }
+    
+    // İzin hiç sorulmamışsa, farklı bir mesaj göster
+    if (permissionGranted === null || permissionGranted === undefined) {
+        // Popup göster - hiç izin verilmemiş
+        showNeverAskedPopup();
+    }
+    
+    // İzin verilmişse, bir şey yapma (otomatik konum alma)
+}
+
+// Hiç konum izni verilmemiş durumunda gösterilecek popup
+function showNeverAskedPopup() {
+    // Sayfa yüklendiğinde daha önce gösterilmiş mi?
+    if (window.locationPromptShownThisPageLoad) {
+        return;
+    }
+    
+    // Bu sayfa yüklemesinde gösterildiğini işaretle
+    window.locationPromptShownThisPageLoad = true;
+    
+    // Popup oluştur
+    const permissionModal = document.createElement('div');
+    permissionModal.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
+    permissionModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    permissionModal.style.zIndex = '9999';
+    
+    permissionModal.innerHTML = `
+        <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
+            <div class="text-center mb-3">
+                <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
+                <h5 class="fw-bold">Konum İzni Verilmemiş</h5>
+                <p class="text-muted mb-3">Konum izni vermemişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button id="closeNeverAskedModal" class="btn btn-outline-secondary px-4">Tamam</button>
+                <button id="givePermission" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(permissionModal);
+    
+    // Tamam butonu - sadece kapat
+    document.getElementById('closeNeverAskedModal').addEventListener('click', function() {
+        permissionModal.remove();
+    });
+    
+    // İzin Ver butonu - tarayıcının izin dialogunu göster
+    document.getElementById('givePermission').addEventListener('click', function() {
+        permissionModal.remove();
+        
+        // Tarayıcının konum izni sorgusunu göster (Chrome dialog)
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // Başarılı olunca
+                localStorage.setItem('locationPermissionGranted', 'true');
+                const locationInput = document.getElementById('location');
+                if (locationInput) {
+                    // Konum alındı, en yakın şehri bul
+                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
+                }
+            },
+            function(error) {
+                // Hata olursa veya reddedilirse
+                if (error.code === error.PERMISSION_DENIED) {
+                    localStorage.setItem('locationPermissionGranted', 'false');
+                    showLocationError("Konum izni reddedildi");
+                }
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    });
+}
+
+// Konum izni reddedilmiş durumunda gösterilecek popup
+function showNoPermissionPopup() {
+    // Sayfa yüklendiğinde daha önce gösterilmiş mi?
+    if (window.locationPromptShownThisPageLoad) {
+        return;
+    }
+    
+    // Bu sayfa yüklemesinde gösterildiğini işaretle
+    window.locationPromptShownThisPageLoad = true;
+    
+    // Popup oluştur - manuel seçim popup'ı aynı işi görüyor, onu kullan
+    showManualSelectionPrompt();
 }
 
 // Doğrudan tarayıcıdan konum izni al ve konumu al
