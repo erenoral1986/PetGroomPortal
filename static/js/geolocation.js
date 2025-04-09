@@ -19,8 +19,16 @@ document.addEventListener('DOMContentLoaded', function() {
             locationInputParent.insertBefore(locationButton, inputIcon.nextSibling);
         }
         
-        // Konum butonuna tıklanınca konumu al
-        locationButton.addEventListener('click', getUserLocation);
+        // Konum butonuna tıklanınca konum izni iste
+        locationButton.addEventListener('click', function() {
+            // Konum butonu tıklandığında daha önce izni reddedilmiş olsa bile tekrar iste
+            // localStorage'dan permission değerini temizle
+            localStorage.removeItem('locationPermissionGranted');
+            // Sayfa değişkeni değerini sıfırla ki tekrar popup çıksın
+            window.locationPromptShownThisPageLoad = false;
+            // Konum iznini göster
+            showLocationPermissionPrompt();
+        });
     }
     
     // Sayfa yüklendiğinde otomatik olarak konum izni kontrolü ve gerekirse izin isteme
