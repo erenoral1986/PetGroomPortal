@@ -339,6 +339,19 @@ function findNearestCity(latitude, longitude, locationInput) {
             cityList.style.display = 'none';
             cityList.classList.add('hidden');
         }
+        
+        // Form'u submit et (otomatik arama yap)
+        const searchForm = locationInput.closest('form');
+        if (searchForm) {
+            // Form submit butonunu bul ve tıkla
+            const submitButton = searchForm.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.click();
+            } else {
+                // Buton yoksa direkt form'u submit et
+                searchForm.submit();
+            }
+        }
     }
 }
 
