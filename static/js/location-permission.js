@@ -159,8 +159,8 @@ function showNeverAskedPopup() {
         <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
             <div class="text-center mb-3">
                 <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
-                <h5 class="fw-bold">Konum İzni Verilmemiş</h5>
-                <p class="text-muted mb-3">Konum izni vermemişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
+                <h5 class="fw-bold">Konum İzni Gerekli</h5>
+                <p class="text-muted mb-3">Konum izni vermeniz lazım. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
             </div>
             <div class="d-flex justify-content-between">
                 <button id="closeNeverAskedPopup" class="btn btn-outline-secondary px-4">Tamam</button>
@@ -223,8 +223,8 @@ function showRejectedPermissionPopup() {
         <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
             <div class="text-center mb-3">
                 <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
-                <h5 class="fw-bold">Konum İzni Reddedildi</h5>
-                <p class="text-muted mb-3">Konum iznini reddetmişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
+                <h5 class="fw-bold">Konum İzni Gerekli</h5>
+                <p class="text-muted mb-3">Konum izni vermeniz lazım. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
             </div>
             <div class="d-flex justify-content-between">
                 <button id="closeRejectedPopup" class="btn btn-outline-secondary px-4">Tamam</button>
@@ -248,8 +248,24 @@ function showRejectedPermissionPopup() {
         // localStorage durumunu sıfırla
         localStorage.removeItem('locationPermissionGranted');
         
-        // Sayfa yenile - bu yeni bir konum izni isteği başlatacak
-        window.location.reload(true);
+        // Tarayıcının izin popup'ını göster
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                localStorage.setItem('locationPermissionGranted', 'true');
+                
+                const locationInput = document.getElementById('location');
+                if (locationInput) {
+                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
+                }
+            },
+            function(error) {
+                if (error.code === error.PERMISSION_DENIED) {
+                    localStorage.setItem('locationPermissionGranted', 'false');
+                    showLocationError("Konum izni reddedildi");
+                }
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
     });
 }
 
