@@ -1,7 +1,7 @@
 // Kullanıcının konumunu alıp, koordinatlardan en yakın şehri belirleyen fonksiyon
 document.addEventListener('DOMContentLoaded', function() {
-    // Konum iznini test için sıfırlayalım
-    localStorage.removeItem('locationPermissionGranted');
+    // Konum iznini test için sıfırlamayalım, mevcut izin durumunu kullanalım
+    // localStorage.removeItem('locationPermissionGranted');
     
     const locationInput = document.getElementById('location');
     
@@ -57,10 +57,9 @@ function checkLocationPermission() {
     
     // Eğer izin hiç sorulmamışsa (null veya undefined) VEYA reddedilmişse ('false')
     // SADECE bu durumda izin iste, daha önce verilmişse gösterme
-    
-    // Her durumda izni göster (test için)
-    // window.locationPromptShownThisPageLoad = false; // Popup gösterim bayrağını sıfırla
-    showLocationPermissionPrompt();
+    if (permissionGranted !== 'true') {
+        showLocationPermissionPrompt();
+    }
 }
 
 // Doğrudan tarayıcıdan konum izni al ve konumu al
@@ -113,11 +112,10 @@ function getGeolocation() {
 
 // Konum izni isteme mesajını göster
 function showLocationPermissionPrompt() {
-    // Test için bu kontrolü devre dışı bıraktık
     // Sadece bu sayfa görüntülemesinde daha önce gösterilmiş mi kontrolü
-    // if (window.locationPromptShownThisPageLoad) {
-    //     return;
-    // }
+    if (window.locationPromptShownThisPageLoad) {
+        return;
+    }
     
     // Bu sayfa yüklemesinde gösterildiğini işaretle (sayfayı yenilememize kadar geçerli)
     window.locationPromptShownThisPageLoad = true;
