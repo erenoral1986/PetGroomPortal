@@ -42,17 +42,76 @@ function checkLocationPermission() {
     
     // Eğer izin verilmişse, konumu al
     if (permissionGranted === 'true') {
-        getUserLocation();
+        getGeolocation();
         return;
     }
     
-    // Eğer izin verilmemişse veya hiç sorulmamışsa, izin iste
+    // Eğer izin verilmemişse ('false'), hiçbir şey yapma
+    if (permissionGranted === 'false') {
+        return;
+    }
+    
+    // Eğer hiç sorulmamışsa (null veya undefined), izin iste
     showLocationPermissionPrompt();
+}
+
+// Doğrudan tarayıcıdan konum izni al ve konumu al
+function getGeolocation() {
+    const locationInput = document.getElementById('location');
+    if (!locationInput) return;
+    
+    // Konum alınıyor mesajı göster
+    locationInput.value = "Konum alınıyor...";
+    locationInput.disabled = true;
+    
+    // Konumu al
+    navigator.geolocation.getCurrentPosition(
+        // Başarılı olunca
+        function(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+            // Koordinatları yakın şehre çevir 
+            findNearestCity(latitude, longitude, locationInput);
+        },
+        // Hata olunca
+        function(error) {
+            locationInput.disabled = false;
+            
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    showLocationError("Konum izni reddedildi");
+                    localStorage.setItem('locationPermissionGranted', 'false');
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    showLocationError("Konum bilgisi mevcut değil");
+                    break;
+                case error.TIMEOUT:
+                    showLocationError("İstek zaman aşımına uğradı");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    showLocationError("Bilinmeyen bir hata oluştu");
+                    break;
+            }
+        },
+        // Geolocation Ayarları
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
 }
 
 // Konum izni isteme mesajını göster
 function showLocationPermissionPrompt() {
-    // Her sayfada daima uyarı göster, önceki oturumlardaki kullanıcı tercihi ne olursa olsun
+    // Eğer izin zaten verilmişse, tekrar popup gösterme
+    if (localStorage.getItem('locationPermissionGranted') === 'true') {
+        // İzin verilmişse otomatik olarak konumu al
+        getGeolocation();
+        return;
+    }
+    
     // Sadece bu sayfa görüntülemesinde daha önce gösterilmiş mi kontrolü
     if (window.locationPromptShownThisPageLoad) {
         return;
@@ -87,7 +146,52 @@ function showLocationPermissionPrompt() {
     document.getElementById('allowLocation').addEventListener('click', function() {
         localStorage.setItem('locationPermissionGranted', 'true');
         permissionModal.remove();
-        getUserLocation();
+        
+        // Konum almaya başla
+        const locationInput = document.getElementById('location');
+        if (locationInput) {
+            // Konum alınıyor mesajı göster
+            locationInput.value = "Konum alınıyor...";
+            locationInput.disabled = true;
+            
+            // Konumu al
+            navigator.geolocation.getCurrentPosition(
+                // Başarılı olunca
+                function(position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    // Koordinatları yakın şehre çevir 
+                    findNearestCity(latitude, longitude, locationInput);
+                },
+                // Hata olunca
+                function(error) {
+                    locationInput.disabled = false;
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            showLocationError("Konum izni reddedildi");
+                            localStorage.setItem('locationPermissionGranted', 'false');
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            showLocationError("Konum bilgisi mevcut değil");
+                            break;
+                        case error.TIMEOUT:
+                            showLocationError("İstek zaman aşımına uğradı");
+                            break;
+                        case error.UNKNOWN_ERROR:
+                            showLocationError("Bilinmeyen bir hata oluştu");
+                            break;
+                    }
+                },
+                // Geolocation Ayarları
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
     });
     
     // İzin verilmezse modal kapat
@@ -104,47 +208,9 @@ function getUserLocation() {
     
     // Kullanıcının tarayıcısı geolocation destekliyor mu?
     if (navigator.geolocation) {
-        // Konum alınıyor mesajı göster
-        locationInput.value = "Konum alınıyor...";
-        locationInput.disabled = true;
-        
-        // Konumu al
-        navigator.geolocation.getCurrentPosition(
-            // Başarılı olunca
-            function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-                
-                // Koordinatları yakın şehre çevir 
-                findNearestCity(latitude, longitude, locationInput);
-            },
-            // Hata olunca
-            function(error) {
-                locationInput.disabled = false;
-                
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        showLocationError("Konum izni reddedildi");
-                        localStorage.setItem('locationPermissionGranted', 'false');
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        showLocationError("Konum bilgisi mevcut değil");
-                        break;
-                    case error.TIMEOUT:
-                        showLocationError("İstek zaman aşımına uğradı");
-                        break;
-                    case error.UNKNOWN_ERROR:
-                        showLocationError("Bilinmeyen bir hata oluştu");
-                        break;
-                }
-            },
-            // Geolocation Ayarları
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 0
-            }
-        );
+        // Her durumda önce bizim özel konum izni popup'ını gösterelim
+        // Popup'taki "İzin Ver" butonuna tıklanınca browser'ın izni de istenerek konum alınacak
+        showLocationPermissionPrompt();
     } else {
         showLocationError("Tarayıcınız konum bilgisini desteklemiyor");
     }
