@@ -246,12 +246,12 @@ function showLocationSuccess(message) {
     permissionModal.innerHTML = `
         <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
             <div class="text-center mb-3">
-                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
                 <h5 class="fw-bold">Konum Bilgisi</h5>
                 <p class="text-muted mb-3">${message}</p>
             </div>
             <div class="d-flex justify-content-center">
-                <button id="closeSuccessModal" class="btn btn-success px-4">Tamam</button>
+                <button id="closeSuccessModal" class="btn bg-pet-blue text-white px-4">Tamam</button>
             </div>
         </div>
     `;
