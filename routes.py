@@ -121,9 +121,9 @@ def get_districts():
     city = data.get('city')
 
     # Print debug bilgileri
-    print(f"Mahalleler istendi: {city}")
+    print(f"İlçeler istendi: {city}")
     
-    # Şehirlere göre mahalleler (örnek veri)
+    # Şehirlere göre ilçeler (örnek veri)
     districts_by_city = {
         'İstanbul': ['Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu', 'Ataşehir', 'Bakırköy', 'Maltepe', 'Üsküdar'],
         'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Altındağ', 'Etimesgut', 'Sincan'],
@@ -142,16 +142,16 @@ def get_districts():
     
     if not city:
         print("Şehir adı boş!")
-        return jsonify({'districts': ['Tüm Mahalleler']})
+        return jsonify({'districts': ['Tüm İlçeler']})
     
     # Şehir verilerde yoksa boş liste döndür
     districts = districts_by_city.get(city, [])
     
     # Debug bilgisi
-    print(f"Bulunan mahalleler: {districts}")
+    print(f"Bulunan ilçeler: {districts}")
     
-    # Tüm Mahalleler seçeneğini en başa ekle
-    districts = ['Tüm Mahalleler'] + districts
+    # Tüm İlçeler seçeneğini en başa ekle
+    districts = ['Tüm İlçeler'] + districts
     
     response = jsonify({'districts': districts})
     print(f"Gönderilen yanıt: {response.data}")
@@ -174,8 +174,8 @@ def salons():
             (Salon.address.ilike(f'%{location}%'))
         )
         
-        # Mahalle filtresi (eğer tüm mahalleler seçilmediyse)
-        if district and district != 'all' and district != 'Tüm Mahalleler':
+        # İlçe filtresi (eğer tüm ilçeler seçilmediyse)
+        if district and district != 'all' and district != 'Tüm İlçeler':
             salons = salons.filter(Salon.address.ilike(f'%{district}%'))
         
         salons = salons.all()

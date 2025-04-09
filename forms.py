@@ -31,7 +31,7 @@ class LoginForm(FlaskForm):
 
 class SalonSearchForm(FlaskForm):
     location = StringField('Şehir', validators=[DataRequired()])
-    district = SelectField('Mahalle', choices=[('all', 'Tüm Mahalleler')], validate_choice=False)
+    district = SelectField('İlçe', choices=[('all', 'Tüm İlçeler')], validate_choice=False)
     pet_type = SelectField('Evcil Hayvan Türü', choices=[
         ('all', 'Tüm Evcil Hayvanlar'),
         ('dog', 'Köpek'),
