@@ -481,6 +481,41 @@ function showLocationDebugInfo(latitude, longitude) {
                             detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
                             addressElement.after(detailsElement);
                         }
+                        
+                        // Gerçek adresten mahalle bilgisini alıp dropdown'da seç
+                        let realNeighborhood = null;
+                        
+                        // Önce neighbourhood bilgisini al
+                        if (data.address.neighbourhood) {
+                            realNeighborhood = data.address.neighbourhood;
+                        } 
+                        // Yoksa suburb bilgisini al
+                        else if (data.address.suburb) {
+                            realNeighborhood = data.address.suburb;
+                        }
+                        // Yoksa city_district bilgisini al
+                        else if (data.address.city_district) {
+                            realNeighborhood = data.address.city_district;
+                        }
+                        
+                        // Mahalle bilgisi bulunmuşsa ve İstanbul'daysa
+                        if (realNeighborhood && (data.address.city === 'İstanbul' || data.address.city === 'Istanbul')) {
+                            console.log("Gerçek adres mahallesi bulundu:", realNeighborhood);
+                            
+                            // Dropdown'u güncelle
+                            setTimeout(() => {
+                                const districtSelect = document.getElementById('district');
+                                if (districtSelect) {
+                                    for (let i = 0; i < districtSelect.options.length; i++) {
+                                        if (districtSelect.options[i].text.includes(realNeighborhood)) {
+                                            console.log("Mahalle dropdown'da seçildi (gerçek adres):", districtSelect.options[i].text);
+                                            districtSelect.selectedIndex = i;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }, 500); // Dropdown yüklenmesi için 0.5 saniye bekle
+                        }
                     }
                 } else {
                     addressElement.textContent = `Servis adresi döndürmedi, tahmini adres kullanılıyor.`;
