@@ -80,7 +80,7 @@ function hideCityList() {
 
 // Şehir değiştiğinde mahalleleri getir
 function updateDistrictsByCity(city) {
-    if (!city || city.trim() === '') return;
+    if (!city || city.trim() === '') return Promise.reject('Şehir boş');
     
     console.log(`updateDistrictsByCity() fonksiyonu çağrıldı - şehir: "${city}"`);
     
@@ -96,7 +96,7 @@ function updateDistrictsByCity(city) {
     const isValidCity = turkishCities.includes(city);
     if (!isValidCity) {
         console.warn(`"${city}" geçerli bir şehir değil, mahalleler çağrılmayacak.`);
-        return;
+        return Promise.reject('Geçersiz şehir');
     }
     
     // Mahalle seçim kutusunu yükleniyor durumuna getir
@@ -106,7 +106,7 @@ function updateDistrictsByCity(city) {
     }
     
     // API'den mahalleleri al
-    fetch('/get_districts', {
+    return fetch('/get_districts', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -146,12 +146,15 @@ function updateDistrictsByCity(city) {
             option.textContent = 'Tüm Mahalleler';
             districtSelect.appendChild(option);
         }
+        
+        // İşlem tamamlandı, promise'i resolve et
+        return data;
     })
     .catch(error => {
         console.error('Mahalleler alınırken hata oluştu:', error);
         
         // Hata durumunda varsayılan seçenek ekle
-        if (!districtSelect) return;
+        if (!districtSelect) return Promise.reject(error);
         
         districtSelect.disabled = false;
         districtSelect.innerHTML = '';
@@ -159,6 +162,9 @@ function updateDistrictsByCity(city) {
         option.value = 'all';
         option.textContent = 'Tüm Mahalleler';
         districtSelect.appendChild(option);
+        
+        // Hata durumunda promise'i reject et
+        return Promise.reject(error);
     });
 }
 

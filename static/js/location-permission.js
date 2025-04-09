@@ -419,6 +419,43 @@ function findNearestCity(latitude, longitude, locationInput) {
         { name: "Trabzon", lat: 41.0050, lon: 39.7297 }
     ];
     
+    // İstanbul, Ankara ve İzmir için özel mahalle verileri
+    const istanbulNeighborhoods = [
+        { name: 'Caferağa', lat: 40.9894, lon: 29.0342 },
+        { name: 'Fenerbahçe', lat: 40.9703, lon: 29.0361 },
+        { name: 'Koşuyolu', lat: 41.0128, lon: 29.0339 },
+        { name: 'Abbasağa', lat: 41.0422, lon: 29.0097 },
+        { name: 'Bebek', lat: 41.0770, lon: 29.0418 },
+        { name: 'Etiler', lat: 41.0811, lon: 29.0333 },
+        { name: 'Levent', lat: 41.0825, lon: 29.0178 },
+        { name: 'Cihangir', lat: 41.0317, lon: 28.9833 },
+        { name: 'Galata', lat: 41.0256, lon: 28.9742 },
+        { name: 'Taksim', lat: 41.0370, lon: 28.9850 },
+        { name: 'Mecidiyeköy', lat: 41.0667, lon: 28.9956 },
+        { name: 'Erenköy', lat: 40.9717, lon: 29.0636 },
+        { name: 'Suadiye', lat: 40.9572, lon: 29.0681 },
+        { name: 'Bağcılar', lat: 41.0384, lon: 28.8558 },
+        { name: 'Bakırköy', lat: 40.9808, lon: 28.8772 },
+        { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
+    ];
+    
+    const ankaraNeighborhoods = [
+        { name: 'Kızılay', lat: 39.9208, lon: 32.8541 },
+        { name: 'Çukurambar', lat: 39.9114, lon: 32.8119 },
+        { name: 'Bahçelievler', lat: 39.9217, lon: 32.8158 },
+        { name: 'Ümitköy', lat: 39.9047, lon: 32.6981 },
+        { name: 'Çayyolu', lat: 39.8894, lon: 32.6589 },
+        { name: 'Batıkent', lat: 39.9692, lon: 32.7306 }
+    ];
+    
+    const izmirNeighborhoods = [
+        { name: 'Alsancak', lat: 38.4370, lon: 27.1428 },
+        { name: 'Karşıyaka', lat: 38.4602, lon: 27.1100 },
+        { name: 'Bornova', lat: 38.4697, lon: 27.2137 },
+        { name: 'Göztepe', lat: 38.3922, lon: 27.0808 },
+        { name: 'Bostanlı', lat: 38.4464, lon: 27.0983 }
+    ];
+    
     // En yakın şehri bul
     let closestCity = null;
     let minDistance = Number.MAX_VALUE;
@@ -440,10 +477,83 @@ function findNearestCity(latitude, longitude, locationInput) {
         locationInput.value = closestCity.name;
         locationInput.disabled = false;
         
-        // Konum seçildiğinde otomatik olarak formu gönder (opsiyonel)
-        const form = locationInput.closest('form');
-        if (form) {
-            form.submit();
+        console.log("En yakın şehir bulundu:", closestCity.name);
+        
+        // Şehir için mahalleleri yükle ve en yakın mahalleyi seç
+        console.log("Şehir için mahalleler yükleniyor:", closestCity.name);
+        
+        // Mevcut updateDistrictsByCity fonksiyonunu çağır (cities.js'de tanımlı)
+        if (typeof updateDistrictsByCity === 'function') {
+            updateDistrictsByCity(closestCity.name).then(() => {
+                // Şehre bağlı olarak uygun mahalle datasını seç
+                let neighborhoodData = [];
+                if (closestCity.name === 'İstanbul') {
+                    neighborhoodData = istanbulNeighborhoods;
+                } else if (closestCity.name === 'Ankara') {
+                    neighborhoodData = ankaraNeighborhoods;
+                } else if (closestCity.name === 'İzmir') {
+                    neighborhoodData = izmirNeighborhoods;
+                }
+                
+                // Eğer bu şehir için mahalle verisi varsa, en yakın mahalleyi bul
+                if (neighborhoodData.length > 0) {
+                    let closestNeighborhood = null;
+                    let minNeighborhoodDistance = Infinity;
+                    
+                    for (const nh of neighborhoodData) {
+                        const distance = haversineDistance(latitude, longitude, nh.lat, nh.lon);
+                        if (distance < minNeighborhoodDistance) {
+                            minNeighborhoodDistance = distance;
+                            closestNeighborhood = nh.name;
+                        }
+                    }
+                    
+                    console.log("En yakın mahalle bulundu:", closestNeighborhood);
+                    
+                    // En yakın mahalleyi dropdown'da seç
+                    if (closestNeighborhood) {
+                        setTimeout(() => {
+                            const districtSelect = document.getElementById('district');
+                            if (districtSelect) {
+                                // Dropdown'da mahalleyi bul
+                                for (let i = 0; i < districtSelect.options.length; i++) {
+                                    // Tam adı veya adın bir parçasını içeriyor mu kontrol et
+                                    if (districtSelect.options[i].text.includes(closestNeighborhood)) {
+                                        districtSelect.selectedIndex = i;
+                                        console.log("Mahalle dropdown'da seçildi:", districtSelect.options[i].text);
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // Form'u submit et
+                            submitForm();
+                        }, 1000); // Mahallelerin yüklenmesi için 1 saniye bekle
+                    } else {
+                        // Mahalle bulunamadıysa direk formu gönder
+                        submitForm();
+                    }
+                } else {
+                    // Eğer şehir için mahalle verisi yoksa, direk formu gönder
+                    submitForm();
+                }
+            }).catch(error => {
+                console.error("Mahalle yüklerken hata:", error);
+                // Hata durumunda sadece form gönder
+                submitForm();
+            });
+        } else {
+            console.error("updateDistrictsByCity fonksiyonu bulunamadı!");
+            submitForm();
+        }
+        
+        // Form submit fonksiyonu
+        function submitForm() {
+            const form = locationInput.closest('form');
+            if (form) {
+                console.log("Form otomatik olarak gönderiliyor...");
+                form.submit();
+            }
         }
     }
 }
