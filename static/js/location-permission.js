@@ -400,10 +400,82 @@ function showLocationError(message) {
 
 // Test için konum koordinatlarını ve adres bilgilerini ekrana yazdırma
 function showLocationDebugInfo(latitude, longitude) {
+    // Türkiye'deki önemli şehirlerin koordinatları (enlem, boylam) ve isimlerini kontrol et
+    const cities = [
+        { name: "İstanbul", lat: 41.0082, lon: 28.9784 },
+        { name: "Ankara", lat: 39.9334, lon: 32.8597 },
+        { name: "İzmir", lat: 38.4237, lon: 27.1428 },
+        { name: "Bursa", lat: 40.1885, lon: 29.0610 },
+        { name: "Antalya", lat: 36.8969, lon: 30.7133 },
+        { name: "Adana", lat: 37.0000, lon: 35.3213 },
+        { name: "Konya", lat: 37.8667, lon: 32.4833 },
+        { name: "Gaziantep", lat: 37.0662, lon: 37.3833 },
+        { name: "Mersin", lat: 36.8000, lon: 34.6333 },
+        { name: "Diyarbakır", lat: 37.9144, lon: 40.2306 }
+    ];
+    
+    // İstanbul'daki önemli mahalleler
+    const istanbulNeighborhoods = [
+        { name: 'Caferağa', lat: 40.9894, lon: 29.0342 },
+        { name: 'Fenerbahçe', lat: 40.9703, lon: 29.0361 },
+        { name: 'Koşuyolu', lat: 41.0128, lon: 29.0339 },
+        { name: 'Abbasağa', lat: 41.0422, lon: 29.0097 },
+        { name: 'Bebek', lat: 41.0770, lon: 29.0418 },
+        { name: 'Etiler', lat: 41.0811, lon: 29.0333 },
+        { name: 'Levent', lat: 41.0825, lon: 29.0178 },
+        { name: 'Cihangir', lat: 41.0317, lon: 28.9833 },
+        { name: 'Galata', lat: 41.0256, lon: 28.9742 },
+        { name: 'Taksim', lat: 41.0370, lon: 28.9850 },
+        { name: 'Mecidiyeköy', lat: 41.0667, lon: 28.9956 },
+        { name: 'Erenköy', lat: 40.9717, lon: 29.0636 },
+        { name: 'Suadiye', lat: 40.9572, lon: 29.0681 },
+        { name: 'Bağcılar', lat: 41.0384, lon: 28.8558 },
+        { name: 'Bakırköy', lat: 40.9808, lon: 28.8772 },
+        { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
+    ];
+    
+    // En yakın şehri ve mahalleyi bul
+    let closestCity = null;
+    let minCityDistance = Infinity;
+    let cityDistance = 0;
+    
+    for (const city of cities) {
+        cityDistance = haversineDistance(latitude, longitude, city.lat, city.lon);
+        if (cityDistance < minCityDistance) {
+            minCityDistance = cityDistance;
+            closestCity = city;
+        }
+    }
+    
+    // En yakın mahalleyi bul (sadece İstanbul için)
+    let closestNeighborhood = null;
+    let neighborhoodDistance = 0;
+    let minNeighborhoodDistance = Infinity;
+    
+    if (closestCity && closestCity.name === "İstanbul") {
+        for (const nh of istanbulNeighborhoods) {
+            neighborhoodDistance = haversineDistance(latitude, longitude, nh.lat, nh.lon);
+            if (neighborhoodDistance < minNeighborhoodDistance) {
+                minNeighborhoodDistance = neighborhoodDistance;
+                closestNeighborhood = nh;
+            }
+        }
+    }
+    
     // Debug bilgilerini göstermek için banner oluştur
     const debugBanner = document.createElement('div');
     debugBanner.className = 'position-fixed top-0 start-0 w-100 bg-dark text-white p-2';
     debugBanner.style.zIndex = '9998';
+    
+    // Tahmini adres oluştur
+    let estimatedAddress = "";
+    if (closestCity) {
+        estimatedAddress = `${closestCity.name}`;
+        if (closestNeighborhood) {
+            estimatedAddress += `, ${closestNeighborhood.name} Mahallesi`;
+        }
+        estimatedAddress += ` (tahmini mesafe: ${minCityDistance.toFixed(1)} km)`;
+    }
     
     // Banner içeriği
     debugBanner.innerHTML = `
@@ -412,7 +484,8 @@ function showLocationDebugInfo(latitude, longitude) {
                 <div class="col-12">
                     <h5 class="mb-1">Konum Test Bilgileri (Sadece Test İçin)</h5>
                     <p class="mb-1">Enlem: ${latitude}, Boylam: ${longitude}</p>
-                    <p class="mb-0" id="locationAddress">Adres bilgileri getiriliyor...</p>
+                    <p class="mb-2">Tahmini adres: ${estimatedAddress}</p>
+                    <p class="mb-0" id="locationAddress">Gerçek adres bilgileri getiriliyor...</p>
                     <button class="btn btn-sm btn-danger mt-2" id="closeDebugBanner">Kapat</button>
                 </div>
             </div>
@@ -426,24 +499,45 @@ function showLocationDebugInfo(latitude, longitude) {
         debugBanner.remove();
     });
     
-    // Google Maps Geocoding API'yi kullanarak adresi getir
-    // Not: Bu işlem için normalde bir API anahtarı gerekir, test amaçlı olarak yalnızca koordinatları gösteriyoruz
-    // Gerçek bir uygulamada reverse geocoding servisi kullanılmalıdır
+    // Servis üzerinden adres bilgisini almayı dene
     try {
         // Nominatim servisini kullanarak adres bilgisini alma (açık kaynak)
         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`)
         .then(response => response.json())
         .then(data => {
             const addressElement = document.getElementById('locationAddress');
-            if (addressElement && data.display_name) {
-                addressElement.textContent = `Adres: ${data.display_name}`;
+            if (addressElement) {
+                if (data.display_name) {
+                    addressElement.textContent = `Gerçek adres: ${data.display_name}`;
+                    
+                    // Adres detaylarını da göster (varsa)
+                    if (data.address) {
+                        const addressDetails = [];
+                        if (data.address.road) addressDetails.push(data.address.road);
+                        if (data.address.neighbourhood) addressDetails.push(data.address.neighbourhood);
+                        if (data.address.suburb) addressDetails.push(data.address.suburb);
+                        if (data.address.city_district) addressDetails.push(data.address.city_district);
+                        if (data.address.city) addressDetails.push(data.address.city);
+                        if (data.address.state) addressDetails.push(data.address.state);
+                        if (data.address.country) addressDetails.push(data.address.country);
+                        
+                        if (addressDetails.length > 0) {
+                            const detailsElement = document.createElement('p');
+                            detailsElement.className = 'mb-0 small';
+                            detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
+                            addressElement.after(detailsElement);
+                        }
+                    }
+                } else {
+                    addressElement.textContent = `Servis adresi döndürmedi, tahmini adres kullanılıyor.`;
+                }
             }
         })
         .catch(error => {
             console.error('Adres bilgisi alınamadı:', error);
             const addressElement = document.getElementById('locationAddress');
             if (addressElement) {
-                addressElement.textContent = `Adres bilgisi alınamadı: ${error.message}`;
+                addressElement.textContent = `Adres bilgisi alınamadı, tahmini adres kullanılıyor.`;
             }
         });
     } catch (error) {
