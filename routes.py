@@ -121,17 +121,41 @@ def salons():
     
     if form.validate_on_submit() or request.args.get('location'):
         location = form.location.data if form.validate_on_submit() else request.args.get('location')
+        pet_type = form.pet_type.data if form.validate_on_submit() else request.args.get('pet_type', 'all')
         
-        # Search by city or zip code
+        # Şehir filtresi (basit bir "içerir" araması)
         salons = Salon.query.filter(
             (Salon.city.ilike(f'%{location}%')) | 
-            (Salon.zip_code == location)
+            (Salon.zip_code == location) |
+            (Salon.address.ilike(f'%{location}%'))
         ).all()
         
-        return render_template('salons.html', title='Salons', salons=salons, form=form, location=location, **get_base_data())
+        # Evcil hayvan türüne göre filtreleme
+        if pet_type != 'all':
+            # İlgili hizmetleri olan salonları filtreleyerek getir
+            filtered_salons = []
+            for salon in salons:
+                has_services = False
+                for service in salon.services:
+                    if pet_type == 'both' and service.pet_type == 'both':
+                        has_services = True
+                        break
+                    elif pet_type == 'dog' and (service.pet_type == 'dog' or service.pet_type == 'both'):
+                        has_services = True
+                        break
+                    elif pet_type == 'cat' and (service.pet_type == 'cat' or service.pet_type == 'both'):
+                        has_services = True
+                        break
+                if has_services:
+                    filtered_salons.append(salon)
+            salons = filtered_salons
+        
+        return render_template('salons.html', title='Salons', salons=salons, form=form, 
+                              location=location, pet_type=pet_type, search_performed=True, **get_base_data())
     
     salons = Salon.query.all()
-    return render_template('salons.html', title='Salons', salons=salons, form=form, **get_base_data())
+    return render_template('salons.html', title='Salons', salons=salons, form=form, 
+                          search_performed=False, **get_base_data())
 
 # Salon details
 @app.route('/salon/<int:salon_id>')
