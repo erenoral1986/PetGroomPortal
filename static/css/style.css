@@ -783,6 +783,37 @@ a {
     font-weight: 600;
 }
 
+/* City List Styles */
+#cityList {
+    display: none;
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ddd;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    left: 0;
+    right: 0;
+    border-radius: 0.375rem;
+}
+
+.city-item {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.city-item:hover {
+    background-color: #f8f9fa;
+}
+
+.city-item:last-child {
+    border-bottom: none;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
     .hero-section {
