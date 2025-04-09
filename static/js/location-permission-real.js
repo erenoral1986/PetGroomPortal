@@ -637,83 +637,173 @@ function showLocationDebugInfo(latitude, longitude) {
         debugBanner.remove();
     });
     
-    // Servis üzerinden adres bilgisini almayı dene
+    // Yandex Maps API ile adres bilgisini almayı dene
     try {
-        // WhatsApp'ın kullandığı gibi yüksek hassasiyet ayarları ile adres bilgisini alma
-        // Nominatim API, WhatsApp'a göre daha temel bir servistir, WhatsApp Google Maps API kullanır
-        // Fakat aynı sonuçları elde etmek için parametreleri optimize ediyoruz
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=tr&namedetails=1&extratags=1&email=petapp@example.com`)
+        // Yandex API anahtarı
+        const yandexApiKey = "{{YANDEX_API_KEY}}";
+        
+        // Yandex Geocoder kullanarak konum bilgisini al (WhatsApp'tan daha hassas, özellikle Türkiye'de)
+        fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${yandexApiKey}&format=json&geocode=${longitude},${latitude}&lang=tr_TR&results=1&kind=house`)
         .then(response => response.json())
         .then(data => {
             const addressElement = document.getElementById('locationAddress');
             if (addressElement) {
-                if (data.display_name) {
-                    addressElement.textContent = `Gerçek adres: ${data.display_name}`;
+                try {
+                    // Yandex verilerini parse et
+                    const geoObject = data.response.GeoObjectCollection.featureMember[0].GeoObject;
+                    const formattedAddress = geoObject.metaDataProperty.GeocoderMetaData.text;
+                    const addressComponents = geoObject.metaDataProperty.GeocoderMetaData.Address.Components;
                     
-                    // Adres detaylarını da göster (varsa)
-                    if (data.address) {
-                        const addressDetails = [];
-                        if (data.address.road) addressDetails.push(data.address.road);
-                        if (data.address.neighbourhood) addressDetails.push(data.address.neighbourhood);
-                        if (data.address.suburb) addressDetails.push(data.address.suburb);
-                        if (data.address.city_district) addressDetails.push(data.address.city_district);
-                        if (data.address.city) addressDetails.push(data.address.city);
-                        if (data.address.state) addressDetails.push(data.address.state);
-                        if (data.address.country) addressDetails.push(data.address.country);
-                        
-                        if (addressDetails.length > 0) {
-                            const detailsElement = document.createElement('p');
-                            detailsElement.className = 'mb-0 small';
-                            detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
-                            addressElement.after(detailsElement);
-                        }
-                        
-                        // Gerçek adresten mahalle bilgisini alıp dropdown'da seç
-                        let realNeighborhood = null;
-                        
-                        // Önce neighbourhood bilgisini al
-                        if (data.address.neighbourhood) {
-                            realNeighborhood = data.address.neighbourhood;
-                        } 
-                        // Yoksa suburb bilgisini al
-                        else if (data.address.suburb) {
-                            realNeighborhood = data.address.suburb;
-                        }
-                        // Yoksa city_district bilgisini al
-                        else if (data.address.city_district) {
-                            realNeighborhood = data.address.city_district;
-                        }
-                        
-                        // Mahalle bilgisi bulunmuşsa ve İstanbul'daysa
-                        if (realNeighborhood && (data.address.city === 'İstanbul' || data.address.city === 'Istanbul')) {
-                            console.log("Gerçek adres mahallesi bulundu:", realNeighborhood);
-                            
-                            // Dropdown'u güncelle
-                            setTimeout(() => {
-                                const districtSelect = document.getElementById('district');
-                                if (districtSelect) {
-                                    for (let i = 0; i < districtSelect.options.length; i++) {
-                                        if (districtSelect.options[i].text.includes(realNeighborhood)) {
-                                            console.log("Mahalle dropdown'da seçildi (gerçek adres):", districtSelect.options[i].text);
-                                            districtSelect.selectedIndex = i;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }, 500); // Dropdown yüklenmesi için 0.5 saniye bekle
-                        }
+                    // Detaylı adres bilgilerini çıkar
+                    const city = addressComponents.find(c => c.kind === 'locality')?.name || 'Bilinmiyor';
+                    const district = addressComponents.find(c => c.kind === 'district')?.name || '';
+                    const street = addressComponents.find(c => c.kind === 'street')?.name || '';
+                    const house = addressComponents.find(c => c.kind === 'house')?.name || '';
+                    
+                    // Adres detayları
+                    addressElement.textContent = `Gerçek adres: ${formattedAddress}`;
+                    
+                    // Adres detaylarını da göster
+                    const addressDetails = [];
+                    if (street) addressDetails.push(street);
+                    if (house) addressDetails.push(house);
+                    if (district) addressDetails.push(district);
+                    if (city) addressDetails.push(city);
+                    
+                    // Mahalle (district) bilgisini kullan
+                    let realNeighborhood = district;
+                    
+                    if (addressDetails.length > 0) {
+                        const detailsElement = document.createElement('p');
+                        detailsElement.className = 'mb-0 small';
+                        detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
+                        addressElement.after(detailsElement);
                     }
-                } else {
-                    addressElement.textContent = `Servis adresi döndürmedi, tahmini adres kullanılıyor.`;
+                    
+                    // Özel Tuzla algılama
+                    const isTuzlaArea = city.includes('Tuzla') || district.includes('Tuzla');
+                    if (isTuzlaArea) {
+                        console.log("Yandex algılamasına göre Tuzla bölgesindesiniz!");
+                        
+                        // Tuzla bilgisini ekle
+                        const tuzlaElement = document.createElement('p');
+                        tuzlaElement.className = 'mb-0 small text-success';
+                        tuzlaElement.textContent = `✓ Tuzla bölgesinde olduğunuz doğrulandı (Yandex)`;
+                        addressElement.after(tuzlaElement);
+                    }
+                    
+                    // Şehir - şehri dropdown'da seç
+                    setTimeout(() => {
+                        const locationInput = document.getElementById('location');
+                        if (locationInput && city !== 'Bilinmiyor') {
+                            locationInput.value = city;
+                            
+                            // Şehri seçtikten sonra mahalleleri yükle
+                            if (typeof updateDistrictsByCity === 'function') {
+                                updateDistrictsByCity(city).then(() => {
+                                    // Mahalle bilgisi varsa dropdown'da seç
+                                    if (realNeighborhood) {
+                                        setTimeout(() => {
+                                            const districtSelect = document.getElementById('district');
+                                            if (districtSelect) {
+                                                for (let i = 0; i < districtSelect.options.length; i++) {
+                                                    if (districtSelect.options[i].text.includes(realNeighborhood)) {
+                                                        console.log("Mahalle dropdown'da seçildi (Yandex):", districtSelect.options[i].text);
+                                                        districtSelect.selectedIndex = i;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }, 500); // Dropdown yüklenmesi için 0.5 saniye bekle
+                                    }
+                                });
+                            }
+                        }
+                    }, 500);
+                    
+                } catch (parseError) {
+                    console.error('Yandex verisi parse edilemedi:', parseError);
+                    addressElement.textContent = `Yandex verileri okunamadı, tahmini adres kullanılıyor.`;
                 }
             }
         })
         .catch(error => {
-            console.error('Adres bilgisi alınamadı:', error);
-            const addressElement = document.getElementById('locationAddress');
-            if (addressElement) {
-                addressElement.textContent = `Adres bilgisi alınamadı, tahmini adres kullanılıyor.`;
-            }
+            console.error('Yandex adres bilgisi alınamadı:', error);
+            
+            // Yandex başarısız olursa Nominatim API'yi yedek olarak dene
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=tr&namedetails=1&extratags=1&email=petapp@example.com`)
+            .then(response => response.json())
+            .then(data => {
+                const addressElement = document.getElementById('locationAddress');
+                if (addressElement) {
+                    if (data.display_name) {
+                        addressElement.textContent = `Gerçek adres (Nominatim): ${data.display_name}`;
+                        
+                        // Adres detaylarını da göster (varsa)
+                        if (data.address) {
+                            const addressDetails = [];
+                            if (data.address.road) addressDetails.push(data.address.road);
+                            if (data.address.neighbourhood) addressDetails.push(data.address.neighbourhood);
+                            if (data.address.suburb) addressDetails.push(data.address.suburb);
+                            if (data.address.city_district) addressDetails.push(data.address.city_district);
+                            if (data.address.city) addressDetails.push(data.address.city);
+                            if (data.address.state) addressDetails.push(data.address.state);
+                            if (data.address.country) addressDetails.push(data.address.country);
+                            
+                            if (addressDetails.length > 0) {
+                                const detailsElement = document.createElement('p');
+                                detailsElement.className = 'mb-0 small';
+                                detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
+                                addressElement.after(detailsElement);
+                            }
+                            
+                            // Gerçek adresten mahalle bilgisini alıp dropdown'da seç
+                            let realNeighborhood = null;
+                            
+                            // Önce neighbourhood bilgisini al
+                            if (data.address.neighbourhood) {
+                                realNeighborhood = data.address.neighbourhood;
+                            } 
+                            // Yoksa suburb bilgisini al
+                            else if (data.address.suburb) {
+                                realNeighborhood = data.address.suburb;
+                            }
+                            // Yoksa city_district bilgisini al
+                            else if (data.address.city_district) {
+                                realNeighborhood = data.address.city_district;
+                            }
+                            
+                            // Mahalle bilgisi bulunmuşsa ve İstanbul'daysa
+                            if (realNeighborhood && (data.address.city === 'İstanbul' || data.address.city === 'Istanbul')) {
+                                console.log("Gerçek adres mahallesi bulundu:", realNeighborhood);
+                                
+                                // Dropdown'u güncelle
+                                setTimeout(() => {
+                                    const districtSelect = document.getElementById('district');
+                                    if (districtSelect) {
+                                        for (let i = 0; i < districtSelect.options.length; i++) {
+                                            if (districtSelect.options[i].text.includes(realNeighborhood)) {
+                                                console.log("Mahalle dropdown'da seçildi (gerçek adres):", districtSelect.options[i].text);
+                                                districtSelect.selectedIndex = i;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }, 500); // Dropdown yüklenmesi için 0.5 saniye bekle
+                            }
+                        }
+                    } else {
+                        addressElement.textContent = `Servis adresi döndürmedi, tahmini adres kullanılıyor.`;
+                    }
+                }
+            })
+            .catch(nominatimError => {
+                console.error('Nominatim adres bilgisi de alınamadı:', nominatimError);
+                const addressElement = document.getElementById('locationAddress');
+                if (addressElement) {
+                    addressElement.textContent = `Adres bilgisi alınamadı, tahmini adres kullanılıyor.`;
+                }
+            });
         });
     } catch (error) {
         console.error('Adres sorgusu sırasında hata:', error);
@@ -724,7 +814,36 @@ function showLocationDebugInfo(latitude, longitude) {
 function findNearestCity(latitude, longitude, locationInput) {
     console.log("WhatsApp hassasiyetinde konum tespiti:", latitude, longitude);
     
-    // İlk olarak Nominatim'den gerçek adres bilgisini almayı dene
+    // İlk olarak Yandex'ten adres bilgisini almayı dene
+    const getYandexAddress = () => {
+        return new Promise((resolve, reject) => {
+            try {
+                // Yandex API anahtarı
+                const yandexApiKey = "{{YANDEX_API_KEY}}";
+                
+                // Yandex Geocoder API'sini kullan
+                fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${yandexApiKey}&format=json&geocode=${longitude},${latitude}&lang=tr_TR&results=1&kind=house`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Yandex API yanıt vermedi');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resolve(data);
+                })
+                .catch(error => {
+                    console.error("Yandex adres bilgisi alınamadı:", error);
+                    reject(error);
+                });
+            } catch (error) {
+                console.error("Yandex sorgulaması yapılamadı:", error);
+                reject(error);
+            }
+        });
+    };
+    
+    // Yedek olarak Nominatim'den gerçek adres bilgisini almayı dene
     const getNominatimAddress = () => {
         return new Promise((resolve, reject) => {
             try {
@@ -739,11 +858,11 @@ function findNearestCity(latitude, longitude, locationInput) {
                     resolve(data);
                 })
                 .catch(error => {
-                    console.error("Adres bilgisi alınamadı:", error);
+                    console.error("Nominatim adres bilgisi alınamadı:", error);
                     reject(error);
                 });
             } catch (error) {
-                console.error("Adres sorgulaması yapılamadı:", error);
+                console.error("Nominatim sorgulaması yapılamadı:", error);
                 reject(error);
             }
         });

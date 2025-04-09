@@ -3,8 +3,12 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import func
 from datetime import datetime, timedelta, time
 import json
+import os
 
 from app import app, db
+
+# API anahtarını çevresel değişkenden al
+YANDEX_API_KEY = os.environ.get('YANDEX_API_KEY', '')
 from models import User, Salon, Service, Appointment, Availability
 from forms import (
     RegistrationForm, LoginForm, SalonSearchForm, ServiceForm, 
@@ -31,7 +35,7 @@ def time_to_str(t):
 def index():
     base_data = get_base_data()
     search_form = SalonSearchForm()
-    return render_template('index.html', title='Pet Grooming - Home', form=search_form, **base_data)
+    return render_template('index.html', title='Pet Grooming - Home', form=search_form, yandex_api_key=YANDEX_API_KEY, **base_data)
 
 # User registration
 @app.route('/register', methods=['GET', 'POST'])
