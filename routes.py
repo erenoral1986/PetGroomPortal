@@ -119,6 +119,9 @@ def profile():
 def get_districts():
     data = request.get_json()
     city = data.get('city')
+
+    # Print debug bilgileri
+    print(f"Mahalleler istendi: {city}")
     
     # Şehirlere göre mahalleler (örnek veri)
     districts_by_city = {
@@ -128,15 +131,31 @@ def get_districts():
         'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya', 'İnegöl'],
         'Antalya': ['Muratpaşa', 'Konyaaltı', 'Kepez', 'Manavgat', 'Alanya', 'Serik'],
         'Adana': ['Seyhan', 'Çukurova', 'Yüreğir', 'Sarıçam', 'Karaisalı'],
+        'Konya': ['Meram', 'Selçuklu', 'Karatay', 'Ereğli', 'Akşehir'],
+        'Gaziantep': ['Şahinbey', 'Şehitkamil', 'Oğuzeli', 'Nizip'],
+        'Mersin': ['Akdeniz', 'Mezitli', 'Yenişehir', 'Toroslar', 'Tarsus', 'Erdemli'],
+        'Diyarbakır': ['Bağlar', 'Kayapınar', 'Sur', 'Yenişehir'],
+        'Kayseri': ['Melikgazi', 'Kocasinan', 'Talas', 'Develi'],
+        'Eskişehir': ['Tepebaşı', 'Odunpazarı', 'Alpu', 'Sivrihisar'],
+        'Samsun': ['İlkadım', 'Atakum', 'Canik', 'Bafra', 'Çarşamba'],
     }
+    
+    if not city:
+        print("Şehir adı boş!")
+        return jsonify({'districts': ['Tüm Mahalleler']})
     
     # Şehir verilerde yoksa boş liste döndür
     districts = districts_by_city.get(city, [])
     
+    # Debug bilgisi
+    print(f"Bulunan mahalleler: {districts}")
+    
     # Tüm Mahalleler seçeneğini en başa ekle
     districts = ['Tüm Mahalleler'] + districts
     
-    return jsonify({'districts': districts})
+    response = jsonify({'districts': districts})
+    print(f"Gönderilen yanıt: {response.data}")
+    return response
 
 # Search for salons
 @app.route('/salons', methods=['GET', 'POST'])

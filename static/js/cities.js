@@ -82,6 +82,29 @@ function hideCityList() {
 function updateDistrictsByCity(city) {
     if (!city || city.trim() === '') return;
     
+    console.log(`updateDistrictsByCity() fonksiyonu çağrıldı - şehir: "${city}"`);
+    
+    // Önce mevcut illeri kontrol et
+    const turkishCities = [
+        'İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 
+        'Konya', 'Gaziantep', 'Mersin', 'Diyarbakır', 'Kayseri', 
+        'Eskişehir', 'Samsun', 'Denizli', 'Şanlıurfa', 'Malatya', 
+        'Erzurum', 'Trabzon'
+    ];
+    
+    // Şehir adı gerçekten Türkiye'de bir şehir mi?
+    const isValidCity = turkishCities.includes(city);
+    if (!isValidCity) {
+        console.warn(`"${city}" geçerli bir şehir değil, mahalleler çağrılmayacak.`);
+        return;
+    }
+    
+    // Mahalle seçim kutusunu yükleniyor durumuna getir
+    if (districtSelect) {
+        districtSelect.innerHTML = '<option value="">Yükleniyor...</option>';
+        districtSelect.disabled = true;
+    }
+    
     // API'den mahalleleri al
     fetch('/get_districts', {
         method: 'POST',
@@ -90,15 +113,25 @@ function updateDistrictsByCity(city) {
         },
         body: JSON.stringify({ city: city })
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log("API yanıt durumu:", response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log("API yanıtı:", data);
+        
         // Mahalle select kutusunu temizle
-        if (!districtSelect) return;
+        if (!districtSelect) {
+            console.error("Mahalle seçim kutusu bulunamadı!");
+            return;
+        }
         
         districtSelect.innerHTML = '';
+        districtSelect.disabled = false;
         
         // Mahalleleri ekle
         if (data.districts && data.districts.length > 0) {
+            console.log(`${data.districts.length} mahalle bulundu.`);
             data.districts.forEach(district => {
                 const option = document.createElement('option');
                 option.value = district === 'Tüm Mahalleler' ? 'all' : district;
@@ -106,6 +139,7 @@ function updateDistrictsByCity(city) {
                 districtSelect.appendChild(option);
             });
         } else {
+            console.warn("Mahallelerin uzunluğu sıfır veya boş.");
             // Eğer mahalle bulunamazsa varsayılan seçeneği ekle
             const option = document.createElement('option');
             option.value = 'all';
@@ -119,6 +153,7 @@ function updateDistrictsByCity(city) {
         // Hata durumunda varsayılan seçenek ekle
         if (!districtSelect) return;
         
+        districtSelect.disabled = false;
         districtSelect.innerHTML = '';
         const option = document.createElement('option');
         option.value = 'all';
