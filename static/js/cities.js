@@ -33,9 +33,18 @@ function createCityList(filteredCities) {
     
     filteredCities.forEach(city => {
         const item = document.createElement('div');
-        item.className = 'city-item p-2 cursor-pointer hover:bg-gray-100';
+        item.className = 'city-item p-3 border-bottom cursor-pointer';
         item.textContent = city;
         item.style.cursor = 'pointer';
+        
+        // Hover efekti için stil
+        item.style.transition = 'background-color 0.2s';
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = '#f8f9fa';
+        });
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
         
         // Tıklama olayı - Şehir seçildiğinde
         item.onclick = function() {
