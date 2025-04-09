@@ -256,10 +256,11 @@ function showRejectedPermissionPopup() {
             <div class="text-center mb-3">
                 <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
                 <h5 class="fw-bold">Konum İzni Reddedildi</h5>
-                <p class="text-muted mb-3">Konum iznini reddetmişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz.</p>
+                <p class="text-muted mb-3">Konum iznini reddetmişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
             </div>
-            <div class="d-flex justify-content-center">
-                <button id="closeRejectedPopup" class="btn bg-pet-blue text-white px-4">Tamam</button>
+            <div class="d-flex justify-content-between">
+                <button id="closeRejectedPopup" class="btn btn-outline-secondary px-4">Tamam</button>
+                <button id="retryPermission" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
             </div>
         </div>
     `;
@@ -269,6 +270,18 @@ function showRejectedPermissionPopup() {
     // Tamam butonu - kapat
     document.getElementById('closeRejectedPopup').addEventListener('click', function() {
         modal.remove();
+    });
+    
+    // İzin ver butonu - konum izni verme işlemini başlat
+    document.getElementById('retryPermission').addEventListener('click', function() {
+        // Popup'ı kaldır
+        modal.remove();
+        
+        // localStorage durumunu sıfırla
+        localStorage.removeItem('locationPermissionGranted');
+        
+        // Sayfa yenile - bu yeni bir konum izni isteği başlatacak
+        window.location.reload(true);
     });
 }
 
