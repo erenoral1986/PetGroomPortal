@@ -1,73 +1,69 @@
 // Kullanıcının konumunu alıp, koordinatlardan en yakın şehri belirleyen fonksiyon
 document.addEventListener('DOMContentLoaded', function() {
+    // Global değişken oluştur - bu değişken her sayfada sadece bir popup gösterilmesini sağlayacak
+    window.popupShownOnThisPage = false;
+    
     // Test için localStorage sıfırlama düğmesi (geliştirme ve test için)
-    const addTestButton = function() {
-        const container = document.querySelector('.container');
-        if (!container) return;
-        
-        const testButton = document.createElement('button');
-        testButton.textContent = 'Test: Konum İznini Sıfırla';
-        testButton.className = 'btn btn-sm btn-secondary mt-2 mb-2';
-        testButton.style.display = 'none'; // Normal kullanımda gizle
-        testButton.addEventListener('click', function() {
-            localStorage.removeItem('locationPermissionGranted');
-            window.locationPromptShownThisPageLoad = false;
-            alert('Konum izni sıfırlandı. Sayfayı yenileyin.');
-        });
-        
-        container.prepend(testButton);
-    };
+    const testButton = document.createElement('button');
+    testButton.textContent = 'Test: Konum İznini Sıfırla';
+    testButton.className = 'btn btn-sm btn-warning mt-2';
+    testButton.style.position = 'fixed';
+    testButton.style.bottom = '10px';
+    testButton.style.right = '10px';
+    testButton.style.opacity = '0.7';
+    testButton.style.zIndex = '1000';
     
-    // Test düğmesini ekle
-    addTestButton();
+    testButton.addEventListener('click', function() {
+        localStorage.removeItem('locationPermissionGranted');
+        window.popupShownOnThisPage = false;
+        alert('Konum izni sıfırlandı. Sayfayı yenileyin.');
+        location.reload(); // Sayfayı yenile
+    });
     
+    document.body.appendChild(testButton);
+    
+    // Arama kutusu için konum butonu ekle
     const locationInput = document.getElementById('location');
-    
-    // Uygulamanın başlangıcında konumu almak için buton oluştur
-    const locationInputParent = locationInput ? locationInput.parentElement : null;
-    
-    if (locationInput && locationInputParent) {
-        // Konum butonu ekle
-        const locationButton = document.createElement('span');
-        locationButton.className = 'input-group-text bg-light border-start-0 border-end-0 cursor-pointer';
-        locationButton.innerHTML = '<i class="fas fa-crosshairs text-muted"></i>';
-        locationButton.style.cursor = 'pointer';
-        locationButton.title = 'Konumunuzu kullanın';
-        
-        // Konum butonunu input grubuna ekleyin
-        const inputIcon = locationInputParent.querySelector('.input-group-text');
-        if (inputIcon) {
-            locationInputParent.insertBefore(locationButton, inputIcon.nextSibling);
-        }
-        
-        // Konum butonuna tıklanınca konum izni iste
-        locationButton.addEventListener('click', function() {
-            // Konum izni verilmiş mi kontrol et
-            if (localStorage.getItem('locationPermissionGranted') === 'true') {
-                // Konum izni zaten verilmiş, kullanıcıya bilgi ver
-                showLocationSuccess("Konum izni zaten verilmiş. Konumunuz kullanılıyor.");
-                // Mevcut konumu tekrar al
-                getGeolocation();
-            } else {
-                // Konum izni verilmemiş, izin verme şansı sun
-                // Sayfa değişkeni değerini sıfırla ki popup çıksın
-                window.locationPromptShownThisPageLoad = false;
-                
-                // Daha önce reddedilmiş mi veya sorulmamış mı kontrol et
-                const permissionStatus = localStorage.getItem('locationPermissionGranted');
-                if (permissionStatus === 'false') {
-                    // Daha önce reddedilmiş
-                    showManualSelectionPrompt();
-                } else {
-                    // Daha önce hiç sorulmamış veya null
-                    showLocationPermissionPrompt();
-                }
+    if (locationInput) {
+        const locationInputParent = locationInput.parentElement;
+        if (locationInputParent) {
+            // Konum butonu ekle
+            const locationButton = document.createElement('span');
+            locationButton.className = 'input-group-text bg-light border-start-0 border-end-0 cursor-pointer';
+            locationButton.innerHTML = '<i class="fas fa-crosshairs text-muted"></i>';
+            locationButton.style.cursor = 'pointer';
+            locationButton.title = 'Konumunuzu kullanın';
+            
+            // Konum butonunu input grubuna ekleyin
+            const inputIcon = locationInputParent.querySelector('.input-group-text');
+            if (inputIcon) {
+                locationInputParent.insertBefore(locationButton, inputIcon.nextSibling);
             }
-        });
+            
+            // Konum butonuna tıklanınca konum izni iste
+            locationButton.addEventListener('click', function() {
+                // Popup gösterme değişkenini sıfırla
+                window.popupShownOnThisPage = false;
+                
+                // İzin durumuna göre işlem yap
+                const permissionStatus = localStorage.getItem('locationPermissionGranted');
+                
+                if (permissionStatus === 'true') {
+                    // İzin verilmiş - konumu al
+                    getGeolocation();
+                } else if (permissionStatus === 'false') {
+                    // İzin reddedilmiş - manuel seçim popup'ı göster
+                    showRejectedPermissionPopup();
+                } else {
+                    // İzin hiç sorulmamış - izin iste
+                    requestLocationPermission();
+                }
+            });
+        }
     }
     
-    // Sayfa yüklendiğinde sadece konum iznini kontrol et, izin durumuna göre popup göster
-    checkPermissionStatusSilently();
+    // Sayfa yüklendiğinde konum iznini kontrol et
+    checkPermissionOnPageLoad();
 });
 
 // Konum iznini kontrol et, izin verilmemişse iste (ve otomatik konumla)
