@@ -1,101 +1,42 @@
-// Konum izni için tüm fonksiyonları içeren yeni dosya
+// Sayfa yüklendiğinde konum izni kontrolünü yap
 document.addEventListener('DOMContentLoaded', function() {
-    // Global değişken - bu sayfada popup gösterilip gösterilmediğini tutar
-    window.popupShownOnThisPage = false;
-    
-    // Konum butonu ekle
-    addLocationButton();
-    
-    // Sayfa yüklendiğinde konum iznini kontrol et
     checkPermissionOnPageLoad();
 });
 
-// Test düğmesi fonksiyonu kaldırıldı
-
-// Konum butonunu arama kutusuna ekler
-function addLocationButton() {
-    const locationInput = document.getElementById('location');
-    if (!locationInput) return;
-    
-    const locationInputParent = locationInput.parentElement;
-    if (!locationInputParent) return;
-    
-    // Konum butonu oluştur
-    const locationButton = document.createElement('span');
-    locationButton.className = 'input-group-text bg-light border-start-0 border-end-0 cursor-pointer';
-    locationButton.innerHTML = '<i class="fas fa-crosshairs text-muted"></i>';
-    locationButton.style.cursor = 'pointer';
-    locationButton.title = 'Konumunuzu kullanın';
-    
-    // Konum butonunu input grubuna ekle
-    const inputIcon = locationInputParent.querySelector('.input-group-text');
-    if (inputIcon) {
-        locationInputParent.insertBefore(locationButton, inputIcon.nextSibling);
-    }
-    
-    // Konum butonuna tıklandığında
-    locationButton.addEventListener('click', function() {
-        // Bu sayfada popup gösterilmediğini işaretle
-        window.popupShownOnThisPage = false;
-        
-        // İzin durumuna göre işlem yap
-        const permissionStatus = localStorage.getItem('locationPermissionGranted');
-        
-        if (permissionStatus === 'true') {
-            // İzin verilmiş - konumu al
-            getGeolocation();
-        } else if (permissionStatus === 'false') {
-            // İzin reddedilmiş - "izin reddedilmiş" popup'ı göster
-            showRejectedPermissionPopup();
-        } else {
-            // İzin hiç sorulmamış - izin iste
-            showPermissionRequestPopup();
-        }
-    });
-}
-
-// Sayfa yüklendiğinde konum iznini kontrol eder ve gerekli popup'ı gösterir
+// Sayfa yüklendiğinde konum izni durumunu kontrol et
 function checkPermissionOnPageLoad() {
     console.log("Sayfa yüklendiğinde konum izni kontrolü yapılıyor...");
     
-    // Konum izni durumunu kontrol et
-    const permissionStatus = localStorage.getItem('locationPermissionGranted');
-    console.log("Konum izni durumu:", permissionStatus);
+    const permissionState = localStorage.getItem('locationPermissionGranted');
+    console.log("Konum izni durumu:", permissionState);
     
-    // Hiç izin sorulmamışsa - popup göster
-    if (permissionStatus === null || permissionStatus === undefined) {
-        console.log("Konum izni hiç verilmemiş, popup gösteriliyor");
-        showNeverAskedPopup();
-        return;
-    }
-    
-    // İzin reddedilmişse - popup göster
-    if (permissionStatus === 'false') {
+    if (permissionState === 'true') {
+        console.log("Konum izni verilmiş, konumu alıyorum");
+        getGeolocation();
+    } else if (permissionState === 'false') {
         console.log("Konum izni reddedilmiş, popup gösteriliyor");
         showRejectedPermissionPopup();
-        return;
-    }
-    
-    // İzin verilmişse - otomatik konum al ve en yakın şehri bul
-    if (permissionStatus === 'true') {
-        console.log("Konum izni verilmiş, otomatik konum alınıyor");
-        // Arama sayfasındaysak ve konum giriş alanı varsa:
-        const locationInput = document.getElementById('location');
-        if (locationInput && !locationInput.value) {
-            getGeolocation();
-        } else {
-            console.log("Konum giriş alanı bulunamadı veya zaten bir değer var");
-        }
+    } else {
+        console.log("Konum izni hiç sorulmamış, popup gösteriliyor");
+        showNeverAskedPopup();
     }
 }
 
-// Konum iznini kullanarak kullanıcı konumunu alır
+// Anasayfada Konum Butonunu ekle
+function addLocationButton() {
+    const locationButton = document.getElementById('locationButton');
+    if (locationButton) {
+        locationButton.addEventListener('click', getGeolocation);
+    }
+}
+
+// Konum bilgisini al
 function getGeolocation() {
+    // Konum inputu var mı kontrol et
     const locationInput = document.getElementById('location');
     if (!locationInput) return;
     
-    // Konum alınıyor mesajı göster
-    locationInput.value = "Konum alınıyor...";
+    // Input'u devre dışı bırak
     locationInput.disabled = true;
     
     // Tarayıcıdan konum iste
@@ -198,9 +139,9 @@ function showNeverAskedPopup() {
             function(position) {
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
-                // Test için sabit konum kullan
-                const latitude = 40.9928; // Kadıköy - İstanbul
-                const longitude = 29.0230;
+                // Tarayıcıdan gelen gerçek konum bilgisini kullan
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
                 
                 const locationInput = document.getElementById('location');
                 if (locationInput) {
@@ -285,9 +226,9 @@ function showRejectedPermissionPopup() {
             function(position) {
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
-                // Test için sabit konum kullan
-                const latitude = 40.9928; // Kadıköy - İstanbul
-                const longitude = 29.0230;
+                // Tarayıcıdan gelen gerçek konum bilgisini kullan
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
                 
                 const locationInput = document.getElementById('location');
                 if (locationInput) {
@@ -354,9 +295,9 @@ function showPermissionRequestPopup() {
             function(position) {
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
-                // Test için sabit konum kullan
-                const latitude = 40.9928; // Kadıköy - İstanbul
-                const longitude = 29.0230;
+                // Tarayıcıdan gelen gerçek konum bilgisini kullan
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
                 
                 const locationInput = document.getElementById('location');
                 if (locationInput) {
