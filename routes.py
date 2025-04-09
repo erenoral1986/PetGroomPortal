@@ -3,12 +3,8 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy import func
 from datetime import datetime, timedelta, time
 import json
-import os
 
 from app import app, db
-
-# API anahtarını çevresel değişkenden al
-YANDEX_API_KEY = os.environ.get('YANDEX_API_KEY', '')
 from models import User, Salon, Service, Appointment, Availability
 from forms import (
     RegistrationForm, LoginForm, SalonSearchForm, ServiceForm, 
@@ -21,8 +17,7 @@ def get_base_data():
     return {
         'is_authenticated': current_user.is_authenticated,
         'is_admin': current_user.is_authenticated and current_user.role == 'admin',
-        'is_salon_owner': current_user.is_authenticated and current_user.role == 'salon_owner',
-        'yandex_api_key': YANDEX_API_KEY
+        'is_salon_owner': current_user.is_authenticated and current_user.role == 'salon_owner'
     }
 
 # Helper function to convert time objects to strings for JSON
