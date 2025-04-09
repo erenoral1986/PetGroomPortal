@@ -129,21 +129,21 @@ function updateDistrictsByCity(city) {
         districtSelect.innerHTML = '';
         districtSelect.disabled = false;
         
-        // İlçeleri ekle
+        // Mahalleleri ekle
         if (data.districts && data.districts.length > 0) {
-            console.log(`${data.districts.length} ilçe bulundu.`);
+            console.log(`${data.districts.length} mahalle bulundu.`);
             data.districts.forEach(district => {
                 const option = document.createElement('option');
-                option.value = district === 'Tüm İlçeler' ? 'all' : district;
+                option.value = district === 'Tüm Mahalleler' ? 'all' : district;
                 option.textContent = district;
                 districtSelect.appendChild(option);
             });
         } else {
-            console.warn("İlçelerin uzunluğu sıfır veya boş.");
-            // Eğer ilçe bulunamazsa varsayılan seçeneği ekle
+            console.warn("Mahallelerin uzunluğu sıfır veya boş.");
+            // Eğer mahalle bulunamazsa varsayılan seçeneği ekle
             const option = document.createElement('option');
             option.value = 'all';
-            option.textContent = 'Tüm İlçeler';
+            option.textContent = 'Tüm Mahalleler';
             districtSelect.appendChild(option);
         }
     })
@@ -157,7 +157,7 @@ function updateDistrictsByCity(city) {
         districtSelect.innerHTML = '';
         const option = document.createElement('option');
         option.value = 'all';
-        option.textContent = 'Tüm İlçeler';
+        option.textContent = 'Tüm Mahalleler';
         districtSelect.appendChild(option);
     });
 }

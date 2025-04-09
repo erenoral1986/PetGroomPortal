@@ -121,9 +121,43 @@ def get_districts():
     city = data.get('city')
 
     # Print debug bilgileri
-    print(f"İlçeler istendi: {city}")
+    print(f"Mahalleler istendi: {city}")
     
-    # Şehirlere göre ilçeler (örnek veri)
+    # Şehirlere göre mahalleler (örnek veri)
+    neighborhoods_by_city = {
+        'İstanbul': {
+            'Kadıköy': ['Caferağa', 'Osmanağa', 'Rasimpaşa', 'Koşuyolu', 'Fenerbahçe', 'Göztepe', 'Erenköy', 'Suadiye'],
+            'Beşiktaş': ['Abbasağa', 'Bebek', 'Arnavutköy', 'Etiler', 'Ortaköy', 'Levent', 'Nisbetiye', 'Ulus'],
+            'Şişli': ['Cumhuriyet', 'Kuştepe', 'Maslak', 'Mecidiyeköy', 'Teşvikiye', 'Harbiye', 'Fulya'],
+            'Beyoğlu': ['Cihangir', 'Galata', 'Taksim', 'Karaköy', 'Tophane', 'Tarlabaşı', 'Kasımpaşa'],
+            'Ataşehir': ['Atatürk', 'Barbaros', 'İçerenköy', 'Kayışdağı', 'Ferhatpaşa', 'Küçükbakkalköy'],
+        },
+        'Ankara': {
+            'Çankaya': ['Ayrancı', 'Çukurambar', 'Gaziosmanpaşa', 'Kavaklıdere', 'Kızılay', 'Bahçelievler', 'Esat'],
+            'Keçiören': ['Aktepe', 'Kalaba', 'Ovacık', 'Şenyuva', 'Yükseltepe', 'Etlik', 'Ayvalı'],
+            'Yenimahalle': ['Batıkent', 'Demetevler', 'İvedik', 'Karşıyaka', 'Ostim', 'Şentepe'],
+        },
+        'İzmir': {
+            'Konak': ['Alsancak', 'Göztepe', 'Güzelyalı', 'Konak', 'Hatay', 'Üçkuyular'],
+            'Bornova': ['Erzene', 'Evka', 'Kazımdirik', 'Manavkuyu', 'Özkanlar'],
+            'Karşıyaka': ['Alaybey', 'Atakent', 'Bostanlı', 'Donanmacı', 'Tuna', 'Mavişehir'],
+        },
+        'Bursa': {
+            'Nilüfer': ['Beşevler', 'Görükle', 'İhsaniye', 'Konak', 'Karaman', 'Özlüce', 'Cumhuriyet'],
+            'Osmangazi': ['Çekirge', 'Demirtaş', 'Hamitler', 'Hürriyet', 'Soğanlı', 'Yıldırım'],
+        },
+        'Antalya': {
+            'Muratpaşa': ['Lara', 'Fener', 'Meltem', 'Yeşilbahçe', 'Etiler', 'Kızıltoprak', 'Memurevleri'],
+            'Konyaaltı': ['Liman', 'Arapsuyu', 'Toros', 'Uncalı', 'Hurma', 'Pınarbaşı'],
+            'Kepez': ['Varsak', 'Göksu', 'Fabrikalar', 'Erenköy', 'Özgürlük', 'Ulus', 'Sütçüler'],
+        }
+    }
+    
+    if not city:
+        print("Şehir adı boş!")
+        return jsonify({'districts': ['Tüm Mahalleler']})
+    
+    # Şehirlere göre ilçeler (örnek veri) - İlk aşama
     districts_by_city = {
         'İstanbul': ['Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu', 'Ataşehir', 'Bakırköy', 'Maltepe', 'Üsküdar'],
         'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Altındağ', 'Etimesgut', 'Sincan'],
@@ -140,20 +174,32 @@ def get_districts():
         'Samsun': ['İlkadım', 'Atakum', 'Canik', 'Bafra', 'Çarşamba'],
     }
     
-    if not city:
-        print("Şehir adı boş!")
-        return jsonify({'districts': ['Tüm İlçeler']})
-    
-    # Şehir verilerde yoksa boş liste döndür
+    # İlçe seçimi ve mahalle listesi oluşturma
     districts = districts_by_city.get(city, [])
+    all_neighborhoods = []
+    
+    # Şehir için mahalleler varsa bunları topla
+    if city in neighborhoods_by_city:
+        city_neighborhoods = neighborhoods_by_city[city]
+        
+        for district in districts:
+            if district in city_neighborhoods:
+                district_neighborhoods = city_neighborhoods[district]
+                # İlçe adıyla birlikte mahalle adlarını ekle
+                for neighborhood in district_neighborhoods:
+                    all_neighborhoods.append(f"{district} - {neighborhood}")
+                    
+    # Eğer detaylı mahalle bilgisi yoksa ilçeleri kullan
+    if not all_neighborhoods:
+        all_neighborhoods = districts
     
     # Debug bilgisi
-    print(f"Bulunan ilçeler: {districts}")
+    print(f"Bulunan mahalleler: {all_neighborhoods}")
     
-    # Tüm İlçeler seçeneğini en başa ekle
-    districts = ['Tüm İlçeler'] + districts
+    # Tüm Mahalleler seçeneğini en başa ekle
+    all_neighborhoods = ['Tüm Mahalleler'] + all_neighborhoods
     
-    response = jsonify({'districts': districts})
+    response = jsonify({'districts': all_neighborhoods})
     print(f"Gönderilen yanıt: {response.data}")
     return response
 
@@ -174,8 +220,8 @@ def salons():
             (Salon.address.ilike(f'%{location}%'))
         )
         
-        # İlçe filtresi (eğer tüm ilçeler seçilmediyse)
-        if district and district != 'all' and district != 'Tüm İlçeler':
+        # Mahalle filtresi (eğer tüm mahalleler seçilmediyse)
+        if district and district != 'all' and district != 'Tüm Mahalleler':
             salons = salons.filter(Salon.address.ilike(f'%{district}%'))
         
         salons = salons.all()
