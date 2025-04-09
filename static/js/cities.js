@@ -84,6 +84,9 @@ function updateDistrictsByCity(city) {
     
     console.log(`updateDistrictsByCity() fonksiyonu çağrıldı - şehir: "${city}"`);
     
+    // Son şehri localStorage'a kaydet (sayfa yenilenmesinde kullanmak için)
+    localStorage.setItem('lastSelectedCity', city);
+    
     // Önce mevcut illeri kontrol et
     const turkishCities = [
         'İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana', 
@@ -184,6 +187,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (locationInput.value.trim()) {
         console.log("Sayfa yüklendiğinde şehir değeri algılandı:", locationInput.value.trim());
         updateDistrictsByCity(locationInput.value.trim());
+    } 
+    // Veya localStorage'da kaydedilmiş şehir varsa onu kullan
+    else {
+        const lastCity = localStorage.getItem('lastSelectedCity');
+        if (lastCity) {
+            console.log("Önceki oturumdan kaydedilen şehir yükleniyor:", lastCity);
+            locationInput.value = lastCity;
+            updateDistrictsByCity(lastCity);
+        }
     }
     
     // Arama alanına yazılınca

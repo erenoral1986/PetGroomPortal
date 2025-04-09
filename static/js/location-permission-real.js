@@ -1,6 +1,85 @@
 // Sayfa yüklendiğinde konum izni kontrolünü yap
 document.addEventListener('DOMContentLoaded', function() {
     checkPermissionOnPageLoad();
+    
+    // Her 60 saniyede bir konumu güncelleme işlevi
+    setInterval(function() {
+        // Eğer konum izni verilmişse
+        if (localStorage.getItem('locationPermissionGranted') === 'true') {
+            // Kaydedilmiş konum varsa gerçek konum bilgisini güncelle
+            if (localStorage.getItem('userLatitude') && localStorage.getItem('userLongitude')) {
+                console.log("Konum bilgisi düzenli olarak güncelleniyor...");
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        // Yeni konum bilgilerini al
+                        const newLatitude = position.coords.latitude;
+                        const newLongitude = position.coords.longitude;
+                        
+                        // Eski konum ile yeni konum arasında fark var mı?
+                        const oldLatitude = parseFloat(localStorage.getItem('userLatitude'));
+                        const oldLongitude = parseFloat(localStorage.getItem('userLongitude'));
+                        
+                        const distance = haversineDistance(oldLatitude, oldLongitude, newLatitude, newLongitude);
+                        
+                        // Eğer konum belirgin şekilde değiştiyse (100 metre veya daha fazla)
+                        if (distance > 0.1) {
+                            console.log("Konum değişikliği tespit edildi:", distance.toFixed(2) + " km");
+                            
+                            // Konumu güncelle
+                            localStorage.setItem('userLatitude', newLatitude);
+                            localStorage.setItem('userLongitude', newLongitude);
+                            
+                            // Gerçek adres bilgisini güncelle
+                            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${newLatitude}&lon=${newLongitude}&zoom=18&addressdetails=1`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.address) {
+                                    let realNeighborhood = null;
+                                    
+                                    // Önce neighbourhood bilgisini al
+                                    if (data.address.neighbourhood) {
+                                        realNeighborhood = data.address.neighbourhood;
+                                    } 
+                                    // Yoksa suburb bilgisini al
+                                    else if (data.address.suburb) {
+                                        realNeighborhood = data.address.suburb;
+                                    }
+                                    // Yoksa city_district bilgisini al
+                                    else if (data.address.city_district) {
+                                        realNeighborhood = data.address.city_district;
+                                    }
+                                    
+                                    // Mahalle bilgisi bulunmuşsa ve mahalle seçim kutusu varsa
+                                    if (realNeighborhood) {
+                                        console.log("Yeni gerçek mahalle bulundu:", realNeighborhood);
+                                        
+                                        // Dropdown'u güncelle
+                                        const districtSelect = document.getElementById('district');
+                                        if (districtSelect) {
+                                            for (let i = 0; i < districtSelect.options.length; i++) {
+                                                if (districtSelect.options[i].text.includes(realNeighborhood)) {
+                                                    console.log("Yeni mahalle bilgisine göre dropdown güncellendi:", districtSelect.options[i].text);
+                                                    districtSelect.selectedIndex = i;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Adres güncellemesi sırasında hata:', error);
+                            });
+                        }
+                    },
+                    function(error) {
+                        console.error('Konum güncellemesi sırasında hata:', error);
+                    },
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+                );
+            }
+        }
+    }, 60000); // 60 saniyede bir güncelle (60.000 milisaniye)
 });
 
 // Sayfa yüklendiğinde konum izni durumunu kontrol et
@@ -38,6 +117,9 @@ function getGeolocation() {
     
     // Input'u devre dışı bırak
     locationInput.disabled = true;
+    
+    // Konum alındı olarak işaretle
+    localStorage.setItem('locationPermissionGranted', 'true');
     
     // Tarayıcıdan konum iste
     navigator.geolocation.getCurrentPosition(
@@ -536,6 +618,9 @@ function showLocationDebugInfo(latitude, longitude) {
 
 // Koordinatlardan en yakın şehri bul
 function findNearestCity(latitude, longitude, locationInput) {
+    // Konum bilgilerini localStorage'a kaydet (sürekli güncelleme için)
+    localStorage.setItem('userLatitude', latitude);
+    localStorage.setItem('userLongitude', longitude);
     // Türkiye'nin büyük şehirleri
     const turkishCities = [
         { name: "İstanbul", lat: 41.0082, lon: 28.9784 },
