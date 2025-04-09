@@ -818,7 +818,7 @@ function findNearestCity(latitude, longitude, locationInput) {
     // API sonucu alınamazsa kullanılacak hesaplama yöntemi
     function useCalculationMethod() {
         // İstanbul'un tüm bölgeleri için genişletilmiş mahalle verileri
-    const istanbulNeighborhoods = [
+        const istanbulNeighborhoods = [
         // Anadolu Yakası
         // Kadıköy mahalleleri
         { name: 'Caferağa', lat: 40.9894, lon: 29.0342 },
@@ -865,22 +865,22 @@ function findNearestCity(latitude, longitude, locationInput) {
         { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
     ];
     
-    const ankaraNeighborhoods = [
-        { name: 'Kızılay', lat: 39.9208, lon: 32.8541 },
-        { name: 'Çukurambar', lat: 39.9114, lon: 32.8119 },
-        { name: 'Bahçelievler', lat: 39.9217, lon: 32.8158 },
-        { name: 'Ümitköy', lat: 39.9047, lon: 32.6981 },
-        { name: 'Çayyolu', lat: 39.8894, lon: 32.6589 },
-        { name: 'Batıkent', lat: 39.9692, lon: 32.7306 }
-    ];
+        const ankaraNeighborhoods = [
+            { name: 'Kızılay', lat: 39.9208, lon: 32.8541 },
+            { name: 'Çukurambar', lat: 39.9114, lon: 32.8119 },
+            { name: 'Bahçelievler', lat: 39.9217, lon: 32.8158 },
+            { name: 'Ümitköy', lat: 39.9047, lon: 32.6981 },
+            { name: 'Çayyolu', lat: 39.8894, lon: 32.6589 },
+            { name: 'Batıkent', lat: 39.9692, lon: 32.7306 }
+        ];
     
-    const izmirNeighborhoods = [
-        { name: 'Alsancak', lat: 38.4370, lon: 27.1428 },
-        { name: 'Karşıyaka', lat: 38.4602, lon: 27.1100 },
-        { name: 'Bornova', lat: 38.4697, lon: 27.2137 },
-        { name: 'Göztepe', lat: 38.3922, lon: 27.0808 },
-        { name: 'Bostanlı', lat: 38.4464, lon: 27.0983 }
-    ];
+        const izmirNeighborhoods = [
+            { name: 'Alsancak', lat: 38.4370, lon: 27.1428 },
+            { name: 'Karşıyaka', lat: 38.4602, lon: 27.1100 },
+            { name: 'Bornova', lat: 38.4697, lon: 27.2137 },
+            { name: 'Göztepe', lat: 38.3922, lon: 27.0808 },
+            { name: 'Bostanlı', lat: 38.4464, lon: 27.0983 }
+        ];
     
     // En yakın şehri bul
     let closestCity = null;
