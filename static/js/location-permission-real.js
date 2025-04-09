@@ -671,12 +671,40 @@ function showLocationDebugInfo(latitude, longitude) {
     }
 }
 
-// Koordinatlardan en yakın şehri bul
+// WhatsApp hassasiyetinde koordinatlardan en yakın şehri ve mahalleyi bul
 function findNearestCity(latitude, longitude, locationInput) {
+    console.log("WhatsApp hassasiyetinde konum tespiti:", latitude, longitude);
+    
+    // İlk olarak Nominatim'den gerçek adres bilgisini almayı dene
+    const getNominatimAddress = () => {
+        return new Promise((resolve, reject) => {
+            try {
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=tr&namedetails=1&extratags=1&email=petapp@example.com`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Nominatim API yanıt vermedi');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resolve(data);
+                })
+                .catch(error => {
+                    console.error("Adres bilgisi alınamadı:", error);
+                    reject(error);
+                });
+            } catch (error) {
+                console.error("Adres sorgulaması yapılamadı:", error);
+                reject(error);
+            }
+        });
+    };
+    
     // Konum bilgilerini localStorage'a kaydet (sürekli güncelleme için)
     localStorage.setItem('userLatitude', latitude);
     localStorage.setItem('userLongitude', longitude);
-    // Türkiye'nin büyük şehirleri
+    
+    // Türkiye'nin büyük şehirleri - Daha hassas koordinatlarla
     const turkishCities = [
         { name: "İstanbul", lat: 41.0082, lon: 28.9784 },
         { name: "Ankara", lat: 39.9334, lon: 32.8597 },
@@ -698,11 +726,132 @@ function findNearestCity(latitude, longitude, locationInput) {
         { name: "Trabzon", lat: 41.0050, lon: 39.7297 }
     ];
     
-    // İstanbul, Ankara ve İzmir için özel mahalle verileri
+    // Nominatim'den adres bilgisini almayı dene, alamazsak hesaplama yöntemini kullan
+    getNominatimAddress()
+    .then(data => {
+        console.log("Nominatim'den gelen adres bilgileri:", data);
+        
+        if (data && data.address) {
+            // Şehir bilgisini al
+            let detectedCity = data.address.city || data.address.town || data.address.county || data.address.state;
+            
+            // Mahalle bilgisini al
+            let detectedNeighborhood = data.address.neighbourhood || data.address.suburb || data.address.quarter || data.address.hamlet;
+            
+            console.log("Tespit edilen şehir:", detectedCity);
+            console.log("Tespit edilen mahalle:", detectedNeighborhood);
+            
+            // Şehir Türkçe karakterlerle doğru şekilde yazılmış mı kontrol et
+            if (detectedCity) {
+                // Türkçe karakter çevirileri yap
+                if (detectedCity === "Istanbul") detectedCity = "İstanbul";
+                if (detectedCity === "Izmir") detectedCity = "İzmir";
+                
+                // Şehri input'a ayarla
+                if (locationInput) {
+                    locationInput.value = detectedCity;
+                    locationInput.disabled = false;
+                }
+                
+                // Mahalleleri yükle
+                if (typeof updateDistrictsByCity === 'function') {
+                    updateDistrictsByCity(detectedCity).then(() => {
+                        // Mahalle seçiliyse ve dropdown varsa
+                        if (detectedNeighborhood) {
+                            setTimeout(() => {
+                                const districtSelect = document.getElementById('district');
+                                if (districtSelect) {
+                                    // Dropdown'da mahalleyi bul
+                                    let foundMatch = false;
+                                    for (let i = 0; i < districtSelect.options.length; i++) {
+                                        // Tam adı veya adın bir parçasını içeriyor mu kontrol et
+                                        if (districtSelect.options[i].text.includes(detectedNeighborhood)) {
+                                            districtSelect.selectedIndex = i;
+                                            console.log("Gerçek mahalle dropdown'da seçildi:", districtSelect.options[i].text);
+                                            foundMatch = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // Tuzla bölgesi için özel kontrol - kesin kontrol için lokasyon dedeksiyonunu geliştirdik
+                                    // Tuzla'daki tüm konumları tanımlamak için daha geniş bir kordinat aralığı kullanıyoruz
+                                    if (!foundMatch && detectedCity === "İstanbul" && 
+                                        ((latitude >= 40.75 && latitude <= 40.87 && longitude >= 29.25 && longitude <= 29.40) || 
+                                         data.address.city_district === "Tuzla" || 
+                                         data.address.county === "Tuzla")) {
+                                        // Konum Tuzla sınırları içinde
+                                        for (let i = 0; i < districtSelect.options.length; i++) {
+                                            if (districtSelect.options[i].text.includes("Tuzla")) {
+                                                districtSelect.selectedIndex = i;
+                                                console.log("Konum Tuzla'da, Tuzla seçildi");
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                // Form'u submit et
+                                submitForm();
+                            }, 1000);
+                        } else {
+                            // Mahalle bilgisi yoksa direk formu gönder
+                            submitForm();
+                        }
+                    });
+                } else {
+                    console.error("updateDistrictsByCity fonksiyonu bulunamadı!");
+                    submitForm();
+                }
+                
+                return; // API sonucu var, hesaplamaya gerek yok
+            }
+        }
+        
+        // API sonucu yoksa veya eksikse, hesaplamaya geç
+        useCalculationMethod();
+    })
+    .catch(error => {
+        console.log("Nominatim API hatası, hesaplama yöntemine geçiliyor:", error);
+        useCalculationMethod();
+    });
+    
+    // API sonucu alınamazsa kullanılacak hesaplama yöntemi
+    function useCalculationMethod() {
+        // İstanbul'un tüm bölgeleri için genişletilmiş mahalle verileri
     const istanbulNeighborhoods = [
+        // Anadolu Yakası
+        // Kadıköy mahalleleri
         { name: 'Caferağa', lat: 40.9894, lon: 29.0342 },
         { name: 'Fenerbahçe', lat: 40.9703, lon: 29.0361 },
+        { name: 'Göztepe', lat: 40.9772, lon: 29.0557 },
         { name: 'Koşuyolu', lat: 41.0128, lon: 29.0339 },
+        { name: 'Acıbadem', lat: 40.9831, lon: 29.0469 },
+        { name: 'Moda', lat: 40.9828, lon: 29.0259 },
+        { name: 'Erenköy', lat: 40.9717, lon: 29.0636 },
+        { name: 'Suadiye', lat: 40.9572, lon: 29.0681 },
+        { name: 'Bostancı', lat: 40.9533, lon: 29.0775 },
+        
+        // Üsküdar mahalleleri
+        { name: 'Beylerbeyi', lat: 41.0471, lon: 29.0382 },
+        { name: 'Çengelköy', lat: 41.0652, lon: 29.0488 },
+        { name: 'Kandilli', lat: 41.0762, lon: 29.0576 },
+        { name: 'Kuzguncuk', lat: 41.0364, lon: 29.0339 },
+        
+        // Kartal, Pendik ve Tuzla mahalleleri
+        { name: 'Kartal', lat: 40.9063, lon: 29.1566 },
+        { name: 'Pendik', lat: 40.8766, lon: 29.2516 },
+        { name: 'Tuzla', lat: 40.8179, lon: 29.3007 },
+        { name: 'Aydınlı', lat: 40.8389, lon: 29.3385 },
+        { name: 'İçmeler', lat: 40.8309, lon: 29.3196 },
+        { name: 'Postane', lat: 40.8229, lon: 29.2984 },
+        { name: 'Evliya Çelebi', lat: 40.8138, lon: 29.3016 },
+        { name: 'Yayla', lat: 40.8211, lon: 29.3104 },
+        { name: 'Mimar Sinan', lat: 40.8246, lon: 29.3230 },
+        { name: 'Cami', lat: 40.8174, lon: 29.3043 },
+        { name: 'Fatih', lat: 40.8160, lon: 29.3096 },
+        { name: 'Şifa', lat: 40.8140, lon: 29.3125 },
+        
+        // Avrupa Yakası
         { name: 'Abbasağa', lat: 41.0422, lon: 29.0097 },
         { name: 'Bebek', lat: 41.0770, lon: 29.0418 },
         { name: 'Etiler', lat: 41.0811, lon: 29.0333 },
@@ -711,8 +860,6 @@ function findNearestCity(latitude, longitude, locationInput) {
         { name: 'Galata', lat: 41.0256, lon: 28.9742 },
         { name: 'Taksim', lat: 41.0370, lon: 28.9850 },
         { name: 'Mecidiyeköy', lat: 41.0667, lon: 28.9956 },
-        { name: 'Erenköy', lat: 40.9717, lon: 29.0636 },
-        { name: 'Suadiye', lat: 40.9572, lon: 29.0681 },
         { name: 'Bağcılar', lat: 41.0384, lon: 28.8558 },
         { name: 'Bakırköy', lat: 40.9808, lon: 28.8772 },
         { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
