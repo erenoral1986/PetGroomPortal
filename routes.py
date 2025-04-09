@@ -123,23 +123,28 @@ def get_districts():
     # Print debug bilgileri
     print(f"Mahalleler istendi: {city}")
     
-    # Şehirlere göre mahalleler (ayrıntılı veri - alfabetik sıralı)
+    # Şehirlere göre gerçek mahalleler (alfabetik sıralı)
     neighborhoods_data = {
         'İstanbul': [
-            'Acıbadem', 'Adatepe', 'Atakent', 'Atalar', 'Ataşehir', 'Atatürk', 'Bahçelievler', 'Bağcılar', 'Bağdat Caddesi',
-            'Bakırköy', 'Balat', 'Barbaros', 'Başakşehir', 'Batı Ataşehir', 'Bebek', 'Beşiktaş', 'Beşyüzevler',
-            'Beyazıt', 'Beylikdüzü', 'Beyoğlu', 'Bostancı', 'Büyükçekmece', 'Caferağa', 'Caddebostan', 'Cevizli',
-            'Cihangir', 'Çağlayan', 'Çamlıca', 'Çapa', 'Çekmeköy', 'Çemberlitaş', 'Çengelköy', 'Çiftehavuzlar',
-            'Dikilitaş', 'Dragos', 'Emirgan', 'Erenköy', 'Esenkent', 'Esenler', 'Esenyurt', 'Etiler', 'Eyüp',
-            'Fatih', 'Fenerbahçe', 'Feneryolu', 'Ferhatpaşa', 'Fındıkzade', 'Florya', 'Fulya', 'Galata', 'Gayrettepe',
-            'Gaziosmanpaşa', 'Göztepe', 'Güneşli', 'Güngören', 'Harbiye', 'Hasanpaşa', 'İçerenköy', 'İkitelli',
-            'Kadıköy', 'Kağıthane', 'Kalamış', 'Karaköy', 'Kartal', 'Kasımpaşa', 'Kavacık', 'Kayışdağı', 'Kaynarca',
-            'Kazasker', 'Kızıltoprak', 'Koşuyolu', 'Kozyatağı', 'Kurtköy', 'Kuruçeşme', 'Kuştepe', 'Küçükbakkalköy',
-            'Küçükyalı', 'Levent', 'Maçka', 'Maltepe', 'Maslak', 'Mecidiyeköy', 'Merter', 'Moda', 'Nişantaşı',
-            'Nişantaşı', 'Ortaköy', 'Osmanağa', 'Pendik', 'Rasimpaşa', 'Sahrayıcedit', 'Salacak', 'Sarıyer',
-            'Sefaköy', 'Silivri', 'Suadiye', 'Sultanbeyli', 'Sultangazi', 'Şile', 'Şirinevler', 'Şişhane', 'Şişli',
-            'Taksim', 'Tarlabaşı', 'Taşdelen', 'Teşvikiye', 'Topkapı', 'Tophane', 'Tuzla', 'Ulus', 'Ümraniye',
-            'Üsküdar', 'Yakacık', 'Yenibosna', 'Yeşilköy', 'Yeşilyurt', 'Zeytinburnu', 'Zincirlikuyu'
+            # İstanbul'un gerçek mahalleleri (ilçe değil)
+            'Acıbadem', 'Adatepe', 'Alemdağ', 'Alibeyköy', 'Altunizade', 'Ambarlı', 'Anadoluhisarı', 'Arnavutköy',  
+            'Atakent', 'Ataköy', 'Atalar', 'Ataşehir', 'Ayazağa', 'Aydınlı', 'Ayazma', 'Bağlarbaşı', 'Bahçeköy',
+            'Bahçelievler', 'Bahçeşehir', 'Balat', 'Balmumcu', 'Basınköy', 'Başakşehir', 'Batı Ataşehir', 'Bebek', 
+            'Beyazıtağa', 'Beykoz', 'Beylerbeyi', 'Beyoğlu', 'Bostancı', 'Büyükbakkalköy', 'Büyükçekmece', 'Caferağa', 
+            'Cevizli', 'Cihangir', 'Çakmak', 'Çamlıca', 'Çarşı', 'Çatalca', 'Çavuşbaşı', 'Çekmeköy', 'Çengelköy', 
+            'Çınar', 'Çiftehavuzlar', 'Çınardere', 'Davutpaşa', 'Denizköşkler', 'Dikilitaş', 'Dolapdere', 'Dragos', 
+            'Dudullu', 'Emin Sinan', 'Emirgan', 'Erenköy', 'Esatpaşa', 'Esenyalı', 'Eski Altıntepe', 'Etiler', 
+            'Ferahevler', 'Feyzullah', 'Fikirtepe', 'Fındıklı', 'Firuzköy', 'Fulya', 'Göztepe', 'Gülensu', 'Güneşli', 
+            'Güngören', 'Güzeltepe', 'Hasanpaşa', 'Harbiye', 'Harmantepe', 'Ihlamurkuyu', 'İçerenköy', 'İçmeler', 
+            'İkitelli', 'İnönü', 'İstiklal', 'Kadıköy', 'Kağıthane', 'Kalamış', 'Kandilli', 'Karanfilköy', 'Kartal', 
+            'Kavacık', 'Kayışdağı', 'Kaynaşlı', 'Kaynarca', 'Kemeraltı', 'Kısıklı', 'Kıztaşı', 'Koşuyolu', 'Kozyatağı', 
+            'Kuleli', 'Kurtköy', 'Kuruçeşme', 'Kuştepe', 'Küçükbakkalköy', 'Küçükyalı', 'Kuzguncuk', 'Levent', 
+            'Libadiye', 'Mahmutbey', 'Maslak', 'Mecidiyeköy', 'Merdivenköy', 'Moda', 'Namık Kemal', 'Nişantaşı', 
+            'Okmeydanı', 'Ortaköy', 'Osmaniye', 'Paşabahçe', 'Pendik', 'Rahmanlar', 'Sahrayıcedit', 'Sarıgazi', 'Sarıyer', 
+            'Sefaköy', 'Selimiye', 'Sinanpaşa', 'Sultanbeyli', 'Sultançiftliği', 'Suadiye', 'Şerifali', 'Şirinevler', 
+            'Taksim', 'Tarabya', 'Tatlısu', 'Tepeüstü', 'Teşvikiye', 'Tophane', 'Topkapı', 'Tuzla', 'Ulus', 'Unkapanı', 
+            'Üsküdar', 'Validebağ', 'Vaniköy', 'Yakacık', 'Yakuplu', 'Yedikule', 'Yenibosna', 'Yenidoğan', 'Yenimahalle', 
+            'Yeşilbahar', 'Yeşilce', 'Yeşilköy', 'Yeşiltepe', 'Yeşilyurt', 'Yıldırım', 'Yıldız', 'Zekeriyaköy', 'Zeytinburnu'
         ],
         'Ankara': [
             'Akdere', 'Akyurt', 'Altındağ', 'Ankara Merkez', 'Anıttepe', 'Aşağı Ayrancı', 'Atakent', 'Atapark', 
@@ -219,6 +224,9 @@ def get_districts():
     
     # Debug bilgisi
     print(f"Bulunan mahalleler: {neighborhoods}")
+    
+    # Log bilgisi olarak mahalle adlarını yazdır
+    print("Mahalle listesi (ilçe değil, gerçek mahalleler):", ', '.join(neighborhoods[:20]) + "...")
     
     # Tüm Mahalleler seçeneğini en başa ekle
     neighborhoods = ['Tüm Mahalleler'] + neighborhoods
