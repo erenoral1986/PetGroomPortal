@@ -1,5 +1,8 @@
 // Kullanıcının konumunu alıp, koordinatlardan en yakın şehri belirleyen fonksiyon
 document.addEventListener('DOMContentLoaded', function() {
+    // Test için localStorage'ı temizle
+    localStorage.removeItem('locationPermissionGranted');
+    
     const locationInput = document.getElementById('location');
     
     // Uygulamanın başlangıcında konumu almak için buton oluştur
