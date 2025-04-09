@@ -46,12 +46,8 @@ function checkLocationPermission() {
         return;
     }
     
-    // Eğer izin verilmemişse ('false'), hiçbir şey yapma
-    if (permissionGranted === 'false') {
-        return;
-    }
-    
-    // Eğer hiç sorulmamışsa (null veya undefined), izin iste
+    // Eğer izin hiç sorulmamışsa (null veya undefined) VEYA reddedilmişse ('false'), 
+    // her durumda izin iste - bu sayfa yüklendiğinde her zaman kontrol et
     showLocationPermissionPrompt();
 }
 
