@@ -53,6 +53,8 @@ function createCityList(filteredCities) {
                 hideCityList(); // Listeyi gizle
                 // Şehir seçildikten sonra ilgili mahalleleri yükle
                 updateDistrictsByCity(city);
+                // Log ekleyerek kontrol et
+                console.log("Şehir seçildi: " + city + ", mahalleler yükleniyor...");
             }
         };
         
@@ -137,6 +139,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Başlangıçta şehirleri gizle
     hideCityList();
     
+    // Eğer şehir alanında önceden bir değer varsa, o şehir için mahalleleri yükle
+    if (locationInput.value.trim()) {
+        console.log("Sayfa yüklendiğinde şehir değeri algılandı:", locationInput.value.trim());
+        updateDistrictsByCity(locationInput.value.trim());
+    }
+    
     // Arama alanına yazılınca
     locationInput.addEventListener('input', function() {
         const searchText = this.value.trim();
@@ -191,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 const city = this.value.trim();
                 if (city) {
+                    console.log("Şehir alanı değiştiğinde mahalleler yükleniyor:", city);
                     updateDistrictsByCity(city);
                 }
             }, 200);

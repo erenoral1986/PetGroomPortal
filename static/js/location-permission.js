@@ -174,6 +174,14 @@ function showNeverAskedPopup() {
     // Tamam butonu - kapat
     document.getElementById('closeNeverAskedPopup').addEventListener('click', function() {
         modal.remove();
+        
+        // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+        const locationInput = document.getElementById('location');
+        if (locationInput && locationInput.value.trim()) {
+            const city = locationInput.value.trim();
+            console.log("Konum izni verilmedi, manuel şehir için mahalleler yükleniyor: " + city);
+            updateDistrictsByCity(city);
+        }
     });
     
     // İzin ver butonu - Chrome popup'ını göster
@@ -196,6 +204,14 @@ function showNeverAskedPopup() {
                 if (error.code === error.PERMISSION_DENIED) {
                     localStorage.setItem('locationPermissionGranted', 'false');
                     showLocationError("Konum izni reddedildi");
+                    
+                    // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+                    const locationInput = document.getElementById('location');
+                    if (locationInput && locationInput.value.trim()) {
+                        const city = locationInput.value.trim();
+                        console.log("Konum izni reddedildi, manuel şehir için mahalleler yükleniyor: " + city);
+                        updateDistrictsByCity(city);
+                    }
                 }
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -238,6 +254,14 @@ function showRejectedPermissionPopup() {
     // Tamam butonu - kapat
     document.getElementById('closeRejectedPopup').addEventListener('click', function() {
         modal.remove();
+        
+        // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+        const locationInput = document.getElementById('location');
+        if (locationInput && locationInput.value.trim()) {
+            const city = locationInput.value.trim();
+            console.log("Konum izni reddedilmiş, manuel şehir için mahalleler yükleniyor: " + city);
+            updateDistrictsByCity(city);
+        }
     });
     
     // İzin ver butonu - konum izni verme işlemini başlat
@@ -262,6 +286,14 @@ function showRejectedPermissionPopup() {
                 if (error.code === error.PERMISSION_DENIED) {
                     localStorage.setItem('locationPermissionGranted', 'false');
                     showLocationError("Konum izni reddedildi");
+                    
+                    // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+                    const locationInput = document.getElementById('location');
+                    if (locationInput && locationInput.value.trim()) {
+                        const city = locationInput.value.trim();
+                        console.log("Konum izni hala reddedildi, manuel şehir için mahalleler yükleniyor: " + city);
+                        updateDistrictsByCity(city);
+                    }
                 }
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -319,6 +351,14 @@ function showPermissionRequestPopup() {
                 if (error.code === error.PERMISSION_DENIED) {
                     localStorage.setItem('locationPermissionGranted', 'false');
                     showLocationError("Konum izni reddedildi");
+                    
+                    // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+                    const locationInput = document.getElementById('location');
+                    if (locationInput && locationInput.value.trim()) {
+                        const city = locationInput.value.trim();
+                        console.log("İzin soruldu ama reddedildi, manuel şehir için mahalleler yükleniyor: " + city);
+                        updateDistrictsByCity(city);
+                    }
                 }
             },
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -329,6 +369,14 @@ function showPermissionRequestPopup() {
     document.getElementById('denyPermission').addEventListener('click', function() {
         localStorage.setItem('locationPermissionGranted', 'false');
         modal.remove();
+        
+        // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+        const locationInput = document.getElementById('location');
+        if (locationInput && locationInput.value.trim()) {
+            const city = locationInput.value.trim();
+            console.log("İzin isteği reddedildi, manuel şehir için mahalleler yükleniyor: " + city);
+            updateDistrictsByCity(city);
+        }
     });
 }
 
