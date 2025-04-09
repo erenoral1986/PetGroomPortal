@@ -98,8 +98,17 @@ function checkPermissionOnPageLoad() {
         return;
     }
     
-    // İzin verilmişse - hiçbir şey yapma
-    console.log("Konum izni verilmiş, popup gösterilmiyor");
+    // İzin verilmişse - otomatik konum al ve en yakın şehri bul
+    if (permissionStatus === 'true') {
+        console.log("Konum izni verilmiş, otomatik konum alınıyor");
+        // Arama sayfasındaysak ve konum giriş alanı varsa:
+        const locationInput = document.getElementById('location');
+        if (locationInput && !locationInput.value) {
+            getGeolocation();
+        } else {
+            console.log("Konum giriş alanı bulunamadı veya zaten bir değer var");
+        }
+    }
 }
 
 // Konum iznini kullanarak kullanıcı konumunu alır
