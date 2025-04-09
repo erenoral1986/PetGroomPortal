@@ -107,11 +107,15 @@
         <form action="{{ url_for('salons') }}" method="post" class="row g-3">
             {{ form.hidden_tag() }}
             <div class="col-md-5">
-                <div class="input-group">
+                <div class="input-group position-relative">
                     <span class="input-group-text bg-light border-end-0">
                         <i class="fas fa-map-marker-alt text-muted"></i>
                     </span>
-                    {{ form.location(class="form-control border-start-0 py-3", placeholder="Şehir veya posta kodu giriniz") }}
+                    {{ form.location(class="form-control border-start-0 py-3", id="location", placeholder="Şehir veya posta kodu giriniz", autocomplete="off") }}
+                    <!-- Şehir listesi dropdown -->
+                    <div id="cityList" class="position-absolute bg-white shadow-lg rounded-3 w-100 mt-1 overflow-auto hidden" 
+                         style="top: 100%; left: 0; max-height: 300px; z-index: 1000;">
+                    </div>
                 </div>
             </div>
             <div class="col-md-4">
