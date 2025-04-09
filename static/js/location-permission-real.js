@@ -1,5 +1,10 @@
-// Sayfa yüklendiğinde konum izni kontrolünü yap
+// Sayfa yüklendiğinde konum izni kontrolünü yap - her zaman popup gösterilmesini sağla
 document.addEventListener('DOMContentLoaded', function() {
+    // Her sayfa yüklenişinde konum izni durumunu sıfırla (test için)
+    localStorage.removeItem('locationPermissionGranted');
+    window.popupShownOnThisPage = false;
+    
+    // Konum kontrolünü başlat
     checkPermissionOnPageLoad();
     
     // Her 60 saniyede bir konumu güncelleme işlevi
@@ -118,8 +123,8 @@ function getGeolocation() {
     // Input'u devre dışı bırak
     locationInput.disabled = true;
     
-    // Konum alındı olarak işaretle
-    localStorage.setItem('locationPermissionGranted', 'true');
+    // Konum iznini her seferinde sorgula
+    localStorage.removeItem('locationPermissionGranted');
     
     // Tarayıcıdan konum iste - WhatsApp'ın kullandığı gibi yüksek hassasiyetli ayarlar kullanarak
     navigator.geolocation.getCurrentPosition(
@@ -214,6 +219,10 @@ function getGeolocation() {
 
 // Konum izni hiç sorulmamış durumunda gösterilecek popup
 function showNeverAskedPopup() {
+    // Her zaman popup göster - test için
+    localStorage.removeItem('locationPermissionGranted');
+    window.popupShownOnThisPage = false;
+    
     // Bu sayfada daha önce popup gösterilmiş mi kontrol et
     if (window.popupShownOnThisPage) {
         return;
@@ -298,6 +307,10 @@ function showNeverAskedPopup() {
 
 // Konum izni reddedilmiş durumunda gösterilecek popup
 function showRejectedPermissionPopup() {
+    // Her zaman popup göster - test için
+    localStorage.removeItem('locationPermissionGranted');
+    window.popupShownOnThisPage = false;
+    
     // Bu sayfada daha önce popup gösterilmiş mi kontrol et
     if (window.popupShownOnThisPage) {
         return;
