@@ -44,14 +44,14 @@ function checkLocationPermission() {
 
 // Konum izni isteme mesajını göster
 function showLocationPermissionPrompt() {
-    // Her sayfada tekrar sor, önceki oturumlarda reddetme durumunda bile
-    // Bu ziyaret için soruldu mu kontrolü
-    if (sessionStorage.getItem('locationPromptShownThisSession')) {
+    // Her sayfada daima uyarı göster, önceki oturumlardaki kullanıcı tercihi ne olursa olsun
+    // Sadece bu sayfa görüntülemesinde daha önce gösterilmiş mi kontrolü
+    if (window.locationPromptShownThisPageLoad) {
         return;
     }
     
-    // Bu oturum için izin isteğinin gösterildiğini kaydet
-    sessionStorage.setItem('locationPromptShownThisSession', 'true');
+    // Bu sayfa yüklemesinde gösterildiğini işaretle (sayfayı yenilememize kadar geçerli)
+    window.locationPromptShownThisPageLoad = true;
     
     // Konum izni isteme modal
     const permissionModal = document.createElement('div');
