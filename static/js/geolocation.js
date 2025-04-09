@@ -234,29 +234,35 @@ function showLocationError(message) {
 
 // Başarı mesajı göster
 function showLocationSuccess(message) {
-    // Toast bildirim için element oluştur
-    const toast = document.createElement('div');
-    toast.className = 'position-fixed top-0 end-0 p-3';
-    toast.style.zIndex = '9999';
+    // Popup bildirim (modal) için element oluştur
+    const permissionModal = document.createElement('div');
+    permissionModal.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
+    permissionModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    permissionModal.style.zIndex = '9999';
     
-    toast.innerHTML = `
-        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header bg-success text-white">
-                <i class="fas fa-check-circle me-2"></i>
-                <strong class="me-auto">Konum Bilgisi</strong>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+    permissionModal.innerHTML = `
+        <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
+            <div class="text-center mb-3">
+                <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                <h5 class="fw-bold">Konum Bilgisi</h5>
+                <p class="text-muted mb-3">${message}</p>
             </div>
-            <div class="toast-body">
-                ${message}
+            <div class="d-flex justify-content-center">
+                <button id="closeSuccessModal" class="btn btn-success px-4">Tamam</button>
             </div>
         </div>
     `;
     
-    document.body.appendChild(toast);
+    document.body.appendChild(permissionModal);
     
-    // 3 saniye sonra toast'ı kaldır
+    // "Tamam" butonuna tıklayınca modal kapat
+    document.getElementById('closeSuccessModal').addEventListener('click', function() {
+        permissionModal.remove();
+    });
+    
+    // 3 saniye sonra popup'ı otomatik kaldır
     setTimeout(() => {
-        toast.remove();
+        permissionModal.remove();
     }, 3000);
 }
 
