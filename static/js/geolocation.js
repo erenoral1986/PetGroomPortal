@@ -55,10 +55,15 @@ function checkLocationPermission() {
         return;
     }
     
-    // Eğer izin hiç sorulmamışsa (null veya undefined) VEYA reddedilmişse ('false')
-    // SADECE bu durumda izin iste, daha önce verilmişse gösterme
-    if (permissionGranted !== 'true') {
+    // Eğer izin hiç sorulmamışsa (null veya undefined), izin iste
+    if (permissionGranted === null || permissionGranted === undefined) {
         showLocationPermissionPrompt();
+        return;
+    }
+    
+    // Eğer reddedilmişse ('false'), manuel seçim yapabileceklerini belirten mesaj göster
+    if (permissionGranted === 'false') {
+        showManualSelectionPrompt();
     }
 }
 
@@ -201,6 +206,52 @@ function showLocationPermissionPrompt() {
     });
 }
 
+// Manuel seçim yapabileceklerini bildiren popup'ı göster
+function showManualSelectionPrompt() {
+    // Sadece bu sayfa görüntülemesinde daha önce gösterilmiş mi kontrolü
+    if (window.locationPromptShownThisPageLoad) {
+        return;
+    }
+    
+    // Bu sayfa yüklemesinde gösterildiğini işaretle
+    window.locationPromptShownThisPageLoad = true;
+    
+    // Popup oluştur
+    const permissionModal = document.createElement('div');
+    permissionModal.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
+    permissionModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    permissionModal.style.zIndex = '9999';
+    
+    permissionModal.innerHTML = `
+        <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
+            <div class="text-center mb-3">
+                <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
+                <h5 class="fw-bold">Konum İzni Reddedildi</h5>
+                <p class="text-muted mb-3">Konum iznini reddetmişsiniz. Şehir adı girerek manuel olarak arama yapabilirsiniz veya tekrar izin vermeyi deneyebilirsiniz.</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button id="closeManualModal" class="btn btn-outline-secondary px-4">Tamam</button>
+                <button id="retryPermission" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(permissionModal);
+    
+    // Tamam butonu - sadece kapat
+    document.getElementById('closeManualModal').addEventListener('click', function() {
+        permissionModal.remove();
+    });
+    
+    // İzin Ver butonu - localStorage temizle ve tekrar izin iste
+    document.getElementById('retryPermission').addEventListener('click', function() {
+        localStorage.removeItem('locationPermissionGranted'); // İzin bilgisini sıfırla
+        permissionModal.remove();
+        window.locationPromptShownThisPageLoad = false; // Popup gösterimini sıfırla
+        showLocationPermissionPrompt(); // İzin istemini tekrar göster
+    });
+}
+
 // Kullanıcı konumunu al
 function getUserLocation() {
     const locationInput = document.getElementById('location');
@@ -209,11 +260,16 @@ function getUserLocation() {
     // Kullanıcının tarayıcısı geolocation destekliyor mu?
     if (navigator.geolocation) {
         // Konum izni verilmiş mi kontrol et
-        if (localStorage.getItem('locationPermissionGranted') === 'true') {
+        const permissionGranted = localStorage.getItem('locationPermissionGranted');
+        
+        if (permissionGranted === 'true') {
             // İzin verilmişse doğrudan konumu al
             getGeolocation();
+        } else if (permissionGranted === 'false') {
+            // İzin reddedilmişse, manuel seçim popup'ını göster
+            showManualSelectionPrompt();
         } else {
-            // İzin verilmemişse popup göster
+            // İzin daha önce sorulmamışsa, izin iste
             showLocationPermissionPrompt();
         }
     } else {
