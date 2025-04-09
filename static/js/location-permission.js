@@ -102,8 +102,13 @@ function getGeolocation() {
     navigator.geolocation.getCurrentPosition(
         // Başarılı olursa
         function(position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+            // Not: Tarayıcılar test ortamında gerçek konumunuzu vermeyebilir
+            // Test için İstanbul Kadıköy'de sabit bir konum kullanıyoruz
+            // Bu kod canlı ortamda gerçek konumu kullanacak şekilde değiştirilmelidir
+            
+            // Gerçek konum yerine test amaçlı sabit konum kullan
+            const latitude = 40.9928; // Kadıköy - İstanbul
+            const longitude = 29.0230;
             
             // Test için konum bilgilerini ekrana yazdır
             showLocationDebugInfo(latitude, longitude);
@@ -197,9 +202,13 @@ function showNeverAskedPopup() {
             function(position) {
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
+                // Test için sabit konum kullan
+                const latitude = 40.9928; // Kadıköy - İstanbul
+                const longitude = 29.0230;
+                
                 const locationInput = document.getElementById('location');
                 if (locationInput) {
-                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
+                    findNearestCity(latitude, longitude, locationInput);
                 }
             },
             // Hata olursa
@@ -280,9 +289,13 @@ function showRejectedPermissionPopup() {
             function(position) {
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
+                // Test için sabit konum kullan
+                const latitude = 40.9928; // Kadıköy - İstanbul
+                const longitude = 29.0230;
+                
                 const locationInput = document.getElementById('location');
                 if (locationInput) {
-                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
+                    findNearestCity(latitude, longitude, locationInput);
                 }
             },
             function(error) {
@@ -345,9 +358,13 @@ function showPermissionRequestPopup() {
             function(position) {
                 localStorage.setItem('locationPermissionGranted', 'true');
                 
+                // Test için sabit konum kullan
+                const latitude = 40.9928; // Kadıköy - İstanbul
+                const longitude = 29.0230;
+                
                 const locationInput = document.getElementById('location');
                 if (locationInput) {
-                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
+                    findNearestCity(latitude, longitude, locationInput);
                 }
             },
             function(error) {
