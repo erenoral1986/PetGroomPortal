@@ -123,47 +123,44 @@ def get_districts():
     # Print debug bilgileri
     print(f"Mahalleler istendi: {city}")
     
-    # Şehirlere göre mahalleler (örnek veri)
-    neighborhoods_by_city = {
-        'İstanbul': {
-            'Kadıköy': ['Caferağa', 'Osmanağa', 'Rasimpaşa', 'Koşuyolu', 'Fenerbahçe', 'Göztepe', 'Erenköy', 'Suadiye'],
-            'Beşiktaş': ['Abbasağa', 'Bebek', 'Arnavutköy', 'Etiler', 'Ortaköy', 'Levent', 'Nisbetiye', 'Ulus'],
-            'Şişli': ['Cumhuriyet', 'Kuştepe', 'Maslak', 'Mecidiyeköy', 'Teşvikiye', 'Harbiye', 'Fulya'],
-            'Beyoğlu': ['Cihangir', 'Galata', 'Taksim', 'Karaköy', 'Tophane', 'Tarlabaşı', 'Kasımpaşa'],
-            'Ataşehir': ['Atatürk', 'Barbaros', 'İçerenköy', 'Kayışdağı', 'Ferhatpaşa', 'Küçükbakkalköy'],
-        },
-        'Ankara': {
-            'Çankaya': ['Ayrancı', 'Çukurambar', 'Gaziosmanpaşa', 'Kavaklıdere', 'Kızılay', 'Bahçelievler', 'Esat'],
-            'Keçiören': ['Aktepe', 'Kalaba', 'Ovacık', 'Şenyuva', 'Yükseltepe', 'Etlik', 'Ayvalı'],
-            'Yenimahalle': ['Batıkent', 'Demetevler', 'İvedik', 'Karşıyaka', 'Ostim', 'Şentepe'],
-        },
-        'İzmir': {
-            'Konak': ['Alsancak', 'Göztepe', 'Güzelyalı', 'Konak', 'Hatay', 'Üçkuyular'],
-            'Bornova': ['Erzene', 'Evka', 'Kazımdirik', 'Manavkuyu', 'Özkanlar'],
-            'Karşıyaka': ['Alaybey', 'Atakent', 'Bostanlı', 'Donanmacı', 'Tuna', 'Mavişehir'],
-        },
-        'Bursa': {
-            'Nilüfer': ['Beşevler', 'Görükle', 'İhsaniye', 'Konak', 'Karaman', 'Özlüce', 'Cumhuriyet'],
-            'Osmangazi': ['Çekirge', 'Demirtaş', 'Hamitler', 'Hürriyet', 'Soğanlı', 'Yıldırım'],
-        },
-        'Antalya': {
-            'Muratpaşa': ['Lara', 'Fener', 'Meltem', 'Yeşilbahçe', 'Etiler', 'Kızıltoprak', 'Memurevleri'],
-            'Konyaaltı': ['Liman', 'Arapsuyu', 'Toros', 'Uncalı', 'Hurma', 'Pınarbaşı'],
-            'Kepez': ['Varsak', 'Göksu', 'Fabrikalar', 'Erenköy', 'Özgürlük', 'Ulus', 'Sütçüler'],
-        }
+    # Şehirlere göre mahalleler (ayrıntılı veri)
+    neighborhoods_data = {
+        'İstanbul': [
+            'Caferağa', 'Osmanağa', 'Rasimpaşa', 'Koşuyolu', 'Fenerbahçe', 'Göztepe', 'Erenköy', 'Suadiye',
+            'Abbasağa', 'Bebek', 'Arnavutköy', 'Etiler', 'Ortaköy', 'Levent', 'Nisbetiye', 'Ulus',
+            'Cumhuriyet', 'Kuştepe', 'Maslak', 'Mecidiyeköy', 'Teşvikiye', 'Harbiye', 'Fulya',
+            'Cihangir', 'Galata', 'Taksim', 'Karaköy', 'Tophane', 'Tarlabaşı', 'Kasımpaşa',
+            'Atatürk', 'Barbaros', 'İçerenköy', 'Kayışdağı', 'Ferhatpaşa', 'Küçükbakkalköy',
+            'Bahçelievler', 'Bağcılar', 'Bakırköy', 'Başakşehir', 'Beylikdüzü', 'Beyoğlu', 'Büyükçekmece',
+            'Esenler', 'Esenyurt', 'Eyüp', 'Fatih', 'Gaziosmanpaşa', 'Güngören', 'Kadıköy', 'Kağıthane'
+        ],
+        'Ankara': [
+            'Ayrancı', 'Çukurambar', 'Gaziosmanpaşa', 'Kavaklıdere', 'Kızılay', 'Bahçelievler', 'Esat',
+            'Aktepe', 'Kalaba', 'Ovacık', 'Şenyuva', 'Yükseltepe', 'Etlik', 'Ayvalı',
+            'Batıkent', 'Demetevler', 'İvedik', 'Karşıyaka', 'Ostim', 'Şentepe',
+            'Çayyolu', 'Ümitköy', 'Bilkent', 'Dikmen', 'Sıhhiye', 'Tunalı Hilmi', 'Cebeci'
+        ],
+        'İzmir': [
+            'Alsancak', 'Göztepe', 'Güzelyalı', 'Konak', 'Hatay', 'Üçkuyular',
+            'Erzene', 'Evka', 'Kazımdirik', 'Manavkuyu', 'Özkanlar',
+            'Alaybey', 'Atakent', 'Bostanlı', 'Donanmacı', 'Tuna', 'Mavişehir',
+            'Çiğli', 'Gaziemir', 'Narlıdere', 'Buca', 'Balçova', 'Bayraklı', 'Karşıyaka'
+        ],
+        'Bursa': [
+            'Beşevler', 'Görükle', 'İhsaniye', 'Konak', 'Karaman', 'Özlüce', 'Cumhuriyet',
+            'Çekirge', 'Demirtaş', 'Hamitler', 'Hürriyet', 'Soğanlı', 'Yıldırım',
+            'İnegöl', 'Mudanya', 'Gemlik', 'Gürsu', 'Kestel', 'Karacabey', 'Mustafakemalpaşa'
+        ],
+        'Antalya': [
+            'Lara', 'Fener', 'Meltem', 'Yeşilbahçe', 'Etiler', 'Kızıltoprak', 'Memurevleri',
+            'Liman', 'Arapsuyu', 'Toros', 'Uncalı', 'Hurma', 'Pınarbaşı',
+            'Varsak', 'Göksu', 'Fabrikalar', 'Erenköy', 'Özgürlük', 'Ulus', 'Sütçüler',
+            'Konyaaltı', 'Alanya', 'Manavgat', 'Serik', 'Kaş', 'Demre', 'Side', 'Belek'
+        ]
     }
     
-    if not city:
-        print("Şehir adı boş!")
-        return jsonify({'districts': ['Tüm Mahalleler']})
-    
-    # Şehirlere göre ilçeler (örnek veri) - İlk aşama
+    # Diğer şehirler için ilçe verileri
     districts_by_city = {
-        'İstanbul': ['Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu', 'Ataşehir', 'Bakırköy', 'Maltepe', 'Üsküdar'],
-        'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Altındağ', 'Etimesgut', 'Sincan'],
-        'İzmir': ['Konak', 'Bornova', 'Karşıyaka', 'Bayraklı', 'Buca', 'Karabağlar', 'Çiğli'],
-        'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya', 'İnegöl'],
-        'Antalya': ['Muratpaşa', 'Konyaaltı', 'Kepez', 'Manavgat', 'Alanya', 'Serik'],
         'Adana': ['Seyhan', 'Çukurova', 'Yüreğir', 'Sarıçam', 'Karaisalı'],
         'Konya': ['Meram', 'Selçuklu', 'Karatay', 'Ereğli', 'Akşehir'],
         'Gaziantep': ['Şahinbey', 'Şehitkamil', 'Oğuzeli', 'Nizip'],
@@ -174,32 +171,27 @@ def get_districts():
         'Samsun': ['İlkadım', 'Atakum', 'Canik', 'Bafra', 'Çarşamba'],
     }
     
-    # İlçe seçimi ve mahalle listesi oluşturma
-    districts = districts_by_city.get(city, [])
-    all_neighborhoods = []
+    if not city:
+        print("Şehir adı boş!")
+        return jsonify({'districts': ['Tüm Mahalleler']})
     
-    # Şehir için mahalleler varsa bunları topla
-    if city in neighborhoods_by_city:
-        city_neighborhoods = neighborhoods_by_city[city]
-        
-        for district in districts:
-            if district in city_neighborhoods:
-                district_neighborhoods = city_neighborhoods[district]
-                # İlçe adıyla birlikte mahalle adlarını ekle
-                for neighborhood in district_neighborhoods:
-                    all_neighborhoods.append(f"{district} - {neighborhood}")
-                    
-    # Eğer detaylı mahalle bilgisi yoksa ilçeleri kullan
-    if not all_neighborhoods:
-        all_neighborhoods = districts
+    # Mahalle listesini oluştur
+    neighborhoods = []
+    
+    # Eğer şehir için detaylı mahalle verisi varsa onu kullan
+    if city in neighborhoods_data:
+        neighborhoods = neighborhoods_data[city]
+    # Yoksa ilçe verilerini kullan (gelecekte mahalle verileri eklenebilir)
+    elif city in districts_by_city:
+        neighborhoods = districts_by_city[city]
     
     # Debug bilgisi
-    print(f"Bulunan mahalleler: {all_neighborhoods}")
+    print(f"Bulunan mahalleler: {neighborhoods}")
     
     # Tüm Mahalleler seçeneğini en başa ekle
-    all_neighborhoods = ['Tüm Mahalleler'] + all_neighborhoods
+    neighborhoods = ['Tüm Mahalleler'] + neighborhoods
     
-    response = jsonify({'districts': all_neighborhoods})
+    response = jsonify({'districts': neighborhoods})
     print(f"Gönderilen yanıt: {response.data}")
     return response
 
