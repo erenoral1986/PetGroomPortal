@@ -19,32 +19,61 @@ function filterCities(searchText) {
     return cities.filter(city => city.toLowerCase().includes(searchText));
 }
 
+// Global elemanlara referanslar
+let locationInput;
+let cityList;
+
 // Şehir listesini oluştur
 function createCityList(filteredCities) {
-    const cityList = document.getElementById('cityList');
+    if (!cityList) return;
+    
+    // Önce listeyi temizle
     cityList.innerHTML = '';
     
     filteredCities.forEach(city => {
         const item = document.createElement('div');
         item.className = 'city-item p-2 cursor-pointer hover:bg-gray-100';
         item.textContent = city;
-        item.addEventListener('click', () => {
-            document.getElementById('location').value = city;
-            cityList.classList.add('hidden'); // Seçim yapıldığında listeyi gizle
-        });
+        item.style.cursor = 'pointer';
+        
+        // Tıklama olayı - Şehir seçildiğinde
+        item.onclick = function() {
+            if (locationInput) {
+                locationInput.value = city;
+                hideCityList(); // Listeyi gizle
+            }
+        };
+        
         cityList.appendChild(item);
     });
 }
 
+// Şehir listesini göster
+function showCityList() {
+    if (cityList) {
+        cityList.style.display = 'block';
+        cityList.classList.remove('hidden');
+    }
+}
+
+// Şehir listesini gizle
+function hideCityList() {
+    if (cityList) {
+        cityList.style.display = 'none';
+        cityList.classList.add('hidden');
+    }
+}
+
 // Sayfa yüklendiğinde
-document.addEventListener('DOMContentLoaded', () => {
-    const locationInput = document.getElementById('location');
-    const cityList = document.getElementById('cityList');
+document.addEventListener('DOMContentLoaded', function() {
+    // Elemanları al
+    locationInput = document.getElementById('location');
+    cityList = document.getElementById('cityList');
     
-    if (!locationInput) return;
+    if (!locationInput || !cityList) return;
     
     // Başlangıçta şehirleri gizle
-    cityList.classList.add('hidden');
+    hideCityList();
     
     // Arama alanına yazılınca
     locationInput.addEventListener('input', function() {
@@ -53,32 +82,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchText.length >= 3) {
             const filteredCities = filterCities(searchText);
             createCityList(filteredCities);
+            
             if (filteredCities.length > 0) {
-                cityList.classList.remove('hidden');
+                showCityList();
             } else {
-                cityList.classList.add('hidden');
+                hideCityList();
             }
         } else {
-            cityList.classList.add('hidden');
+            hideCityList();
         }
     });
     
     // Başka bir yere tıklayınca listeyi gizle
     document.addEventListener('click', function(e) {
-        if (!locationInput.contains(e.target) && !cityList.contains(e.target)) {
-            cityList.classList.add('hidden');
-        }
-    });
-    
-    // Focus olunca en az 3 karakter yazılıysa şehirleri göster
-    locationInput.addEventListener('focus', function() {
-        const searchText = this.value.trim();
-        if (searchText.length >= 3) {
-            const filteredCities = filterCities(searchText);
-            createCityList(filteredCities);
-            if (filteredCities.length > 0) {
-                cityList.classList.remove('hidden');
+        if (locationInput && cityList) {
+            if (!locationInput.contains(e.target) && !cityList.contains(e.target)) {
+                hideCityList();
             }
         }
     });
+    
+    // Her seçim sonrası listeyi kapatan ek önlem
+    if (cityList) {
+        cityList.addEventListener('click', function(e) {
+            if (e.target.classList.contains('city-item')) {
+                hideCityList();
+            }
+        });
+    }
+    
+    // Focus olunca en az 3 karakter yazılıysa şehirleri göster
+    if (locationInput) {
+        locationInput.addEventListener('focus', function() {
+            const searchText = this.value.trim();
+            if (searchText.length >= 3) {
+                const filteredCities = filterCities(searchText);
+                createCityList(filteredCities);
+                if (filteredCities.length > 0) {
+                    showCityList();
+                }
+            }
+        });
+    }
 });
