@@ -55,9 +55,11 @@ function checkLocationPermission() {
         return;
     }
     
-    // Eğer izin hiç sorulmamışsa (null veya undefined) VEYA reddedilmişse ('false'), 
-    // her durumda izin iste - bu sayfa yüklendiğinde her zaman kontrol et
-    showLocationPermissionPrompt();
+    // Eğer izin hiç sorulmamışsa (null veya undefined) VEYA reddedilmişse ('false')
+    // SADECE bu durumda izin iste, daha önce verilmişse gösterme
+    if (permissionGranted !== 'true') {
+        showLocationPermissionPrompt();
+    }
 }
 
 // Doğrudan tarayıcıdan konum izni al ve konumu al
@@ -110,13 +112,6 @@ function getGeolocation() {
 
 // Konum izni isteme mesajını göster
 function showLocationPermissionPrompt() {
-    // Eğer izin zaten verilmişse, tekrar popup gösterme
-    if (localStorage.getItem('locationPermissionGranted') === 'true') {
-        // İzin verilmişse otomatik olarak konumu al
-        getGeolocation();
-        return;
-    }
-    
     // Sadece bu sayfa görüntülemesinde daha önce gösterilmiş mi kontrolü
     if (window.locationPromptShownThisPageLoad) {
         return;
@@ -213,9 +208,14 @@ function getUserLocation() {
     
     // Kullanıcının tarayıcısı geolocation destekliyor mu?
     if (navigator.geolocation) {
-        // Her durumda önce bizim özel konum izni popup'ını gösterelim
-        // Popup'taki "İzin Ver" butonuna tıklanınca browser'ın izni de istenerek konum alınacak
-        showLocationPermissionPrompt();
+        // Konum izni verilmiş mi kontrol et
+        if (localStorage.getItem('locationPermissionGranted') === 'true') {
+            // İzin verilmişse doğrudan konumu al
+            getGeolocation();
+        } else {
+            // İzin verilmemişse popup göster
+            showLocationPermissionPrompt();
+        }
     } else {
         showLocationError("Tarayıcınız konum bilgisini desteklemiyor");
     }
