@@ -274,27 +274,31 @@ function showRejectedPermissionPopup() {
     
     // İzin ver butonu - localStorage'ı temizle ve Chrome'un popup'ını göster
     document.getElementById('retryPermission').addEventListener('click', function() {
-        localStorage.removeItem('locationPermissionGranted'); // İzin durumunu sıfırla
+        // İzin durumunu sıfırla
+        localStorage.removeItem('locationPermissionGranted');
         modal.remove();
         
-        // Chrome'un konum izni dialogunu göster
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                localStorage.setItem('locationPermissionGranted', 'true');
-                
-                const locationInput = document.getElementById('location');
-                if (locationInput) {
-                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
-                }
-            },
-            function(error) {
-                if (error.code === error.PERMISSION_DENIED) {
-                    localStorage.setItem('locationPermissionGranted', 'false');
-                    showLocationError("Konum izni reddedildi");
-                }
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
+        console.log("Tarayıcıdan konum izni yeniden isteniyor...");
+        
+        // Tarayıcıyı reddedilmiş izinleri sıfırlamaya zorlamak için:
+        // 1. sayfa yenileme ile browser iznini tekrar gösterme denemesi
+        alert("Tarayıcı ayarlarından konum iznini açmanız gerekebilir. Sayfa yenilenecek.");
+        
+        /* 
+         * Not: chrome:// URL'leri güvenlik nedeniyle JavaScript ile açılamaz
+         * Bunun yerine kullanıcıya talimat veriyoruz
+         */
+        alert("Tarayıcınızda konum izinlerini sıfırlamak için:\n1. Tarayıcı ayarlarına gidin\n2. Gizlilik ve Güvenlik > Site Ayarları > Konum\n3. Engellenen siteleri kontrol edin\n\nİşlem tamamlandığında sayfayı yenileyin.");
+        
+        // Sayfayı yenile - konum iznini sıfırlamak için
+        setTimeout(() => {
+            window.location.reload(true);
+        }, 500);
+        
+        /* Not: Navigator API doğrudan tarayıcı izinlerini sıfırlamaya izin vermez,
+           kullanıcının bunun için tarayıcı ayarlarına gitmesi gerekiyor.
+           Bu nedenle tarayıcı izni reddedilmişse, en iyi yöntem kullanıcıya yol göstermektir.
+        */
     });
 }
 
