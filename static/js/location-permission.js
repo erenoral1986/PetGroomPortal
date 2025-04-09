@@ -15,23 +15,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Test düğmesi ekle (geliştirme amaçlı)
 function addTestButton() {
-    const testButton = document.createElement('button');
-    testButton.textContent = 'Test: Konum İznini Sıfırla';
-    testButton.className = 'btn btn-sm btn-warning mt-2';
-    testButton.style.position = 'fixed';
-    testButton.style.bottom = '10px';
-    testButton.style.right = '10px';
-    testButton.style.opacity = '0.7';
-    testButton.style.zIndex = '1000';
-    
-    testButton.addEventListener('click', function() {
-        localStorage.removeItem('locationPermissionGranted');
-        window.popupShownOnThisPage = false;
-        alert('Konum izni sıfırlandı. Sayfayı yenileyin.');
-        location.reload();
-    });
-    
-    document.body.appendChild(testButton);
+    // Birkaç saniye bekleyerek sayfanın tam olarak yüklenmesini sağla
+    setTimeout(() => {
+        const testButton = document.createElement('button');
+        testButton.textContent = 'Test: Konum İznini Sıfırla';
+        testButton.className = 'btn btn-sm btn-warning';
+        testButton.style.position = 'fixed';
+        testButton.style.bottom = '20px';
+        testButton.style.right = '20px';
+        testButton.style.opacity = '0.9';
+        testButton.style.zIndex = '9999';
+        testButton.style.padding = '8px 15px';
+        testButton.style.fontWeight = 'bold';
+        testButton.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+        
+        // Click olayını doğrudan özellik olarak ata
+        testButton.onclick = function() {
+            console.log("Test butonu tıklandı, konum izni sıfırlanıyor...");
+            localStorage.removeItem('locationPermissionGranted');
+            window.popupShownOnThisPage = false;
+            alert('Konum izni sıfırlandı. Sayfa yenileniyor...');
+            window.location.reload(true); // Hard reload - önbelleği temizle
+            return false; // Olayı durdur
+        };
+        
+        document.body.appendChild(testButton);
+        console.log("Test butonu eklendi.");
+    }, 1000);
 }
 
 // Konum butonunu arama kutusuna ekler
