@@ -114,6 +114,30 @@ def profile():
     
     return render_template('profile.html', title='Profile', form=form, **get_base_data())
 
+# Get districts by city
+@app.route('/get_districts', methods=['POST'])
+def get_districts():
+    data = request.get_json()
+    city = data.get('city')
+    
+    # Şehirlere göre mahalleler (örnek veri)
+    districts_by_city = {
+        'İstanbul': ['Kadıköy', 'Beşiktaş', 'Şişli', 'Beyoğlu', 'Ataşehir', 'Bakırköy', 'Maltepe', 'Üsküdar'],
+        'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Mamak', 'Altındağ', 'Etimesgut', 'Sincan'],
+        'İzmir': ['Konak', 'Bornova', 'Karşıyaka', 'Bayraklı', 'Buca', 'Karabağlar', 'Çiğli'],
+        'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya', 'İnegöl'],
+        'Antalya': ['Muratpaşa', 'Konyaaltı', 'Kepez', 'Manavgat', 'Alanya', 'Serik'],
+        'Adana': ['Seyhan', 'Çukurova', 'Yüreğir', 'Sarıçam', 'Karaisalı'],
+    }
+    
+    # Şehir verilerde yoksa boş liste döndür
+    districts = districts_by_city.get(city, [])
+    
+    # Tüm Mahalleler seçeneğini en başa ekle
+    districts = ['Tüm Mahalleler'] + districts
+    
+    return jsonify({'districts': districts})
+
 # Search for salons
 @app.route('/salons', methods=['GET', 'POST'])
 def salons():
@@ -121,6 +145,7 @@ def salons():
     
     if form.validate_on_submit() or request.args.get('location'):
         location = form.location.data if form.validate_on_submit() else request.args.get('location')
+        district = form.district.data if form.validate_on_submit() else request.args.get('district', 'all')
         pet_type = form.pet_type.data if form.validate_on_submit() else request.args.get('pet_type', 'all')
         
         # Şehir filtresi (basit bir "içerir" araması)
@@ -128,7 +153,13 @@ def salons():
             (Salon.city.ilike(f'%{location}%')) | 
             (Salon.zip_code == location) |
             (Salon.address.ilike(f'%{location}%'))
-        ).all()
+        )
+        
+        # Mahalle filtresi (eğer tüm mahalleler seçilmediyse)
+        if district and district != 'all' and district != 'Tüm Mahalleler':
+            salons = salons.filter(Salon.address.ilike(f'%{district}%'))
+        
+        salons = salons.all()
         
         # Evcil hayvan türüne göre filtreleme
         if pet_type != 'all':
@@ -151,7 +182,8 @@ def salons():
             salons = filtered_salons
         
         return render_template('salons.html', title='Salons', salons=salons, form=form, 
-                              location=location, pet_type=pet_type, search_performed=True, **get_base_data())
+                              location=location, district=district, pet_type=pet_type, 
+                              search_performed=True, **get_base_data())
     
     salons = Salon.query.all()
     return render_template('salons.html', title='Salons', salons=salons, form=form, 

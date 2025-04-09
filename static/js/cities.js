@@ -22,6 +22,7 @@ function filterCities(searchText) {
 // Global elemanlara referanslar
 let locationInput;
 let cityList;
+let districtSelect;
 
 // Şehir listesini oluştur
 function createCityList(filteredCities) {
@@ -41,6 +42,8 @@ function createCityList(filteredCities) {
             if (locationInput) {
                 locationInput.value = city;
                 hideCityList(); // Listeyi gizle
+                // Şehir seçildikten sonra ilgili mahalleleri yükle
+                updateDistrictsByCity(city);
             }
         };
         
@@ -64,11 +67,61 @@ function hideCityList() {
     }
 }
 
+// Şehir değiştiğinde mahalleleri getir
+function updateDistrictsByCity(city) {
+    if (!city || city.trim() === '') return;
+    
+    // API'den mahalleleri al
+    fetch('/get_districts', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ city: city })
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Mahalle select kutusunu temizle
+        if (!districtSelect) return;
+        
+        districtSelect.innerHTML = '';
+        
+        // Mahalleleri ekle
+        if (data.districts && data.districts.length > 0) {
+            data.districts.forEach(district => {
+                const option = document.createElement('option');
+                option.value = district === 'Tüm Mahalleler' ? 'all' : district;
+                option.textContent = district;
+                districtSelect.appendChild(option);
+            });
+        } else {
+            // Eğer mahalle bulunamazsa varsayılan seçeneği ekle
+            const option = document.createElement('option');
+            option.value = 'all';
+            option.textContent = 'Tüm Mahalleler';
+            districtSelect.appendChild(option);
+        }
+    })
+    .catch(error => {
+        console.error('Mahalleler alınırken hata oluştu:', error);
+        
+        // Hata durumunda varsayılan seçenek ekle
+        if (!districtSelect) return;
+        
+        districtSelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.value = 'all';
+        option.textContent = 'Tüm Mahalleler';
+        districtSelect.appendChild(option);
+    });
+}
+
 // Sayfa yüklendiğinde
 document.addEventListener('DOMContentLoaded', function() {
     // Elemanları al
     locationInput = document.getElementById('location');
     cityList = document.getElementById('cityList');
+    districtSelect = document.getElementById('district');
     
     if (!locationInput || !cityList) return;
     
@@ -122,6 +175,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     showCityList();
                 }
             }
+        });
+        
+        // Şehir değiştiğinde (blur olduğunda) mahalleleri güncelle
+        locationInput.addEventListener('blur', function() {
+            setTimeout(() => {
+                const city = this.value.trim();
+                if (city) {
+                    updateDistrictsByCity(city);
+                }
+            }, 200);
         });
     }
 });
