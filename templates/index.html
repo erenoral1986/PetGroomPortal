@@ -112,7 +112,6 @@
                         <i class="fas fa-map-marker-alt text-muted"></i>
                     </span>
                     {{ form.location(class="form-control border-start-0 py-3", id="location", placeholder="Şehir ara", autocomplete="off") }}
-                    <input type="hidden" id="yandexApiKey" value="{{ yandex_api_key }}">
                     <!-- Şehir listesi dropdown -->
                     <div id="cityList" class="position-absolute bg-white shadow-lg rounded-3 mt-1 overflow-auto hidden" 
                          style="top: 100%; left: 39px; right: 0; max-height: 300px; z-index: 1000; display: none; width: calc(100% - 39px); border: 1px solid #ddd;">
@@ -429,4 +428,114 @@
 }
 </style>
 {% endblock %}
+
+{% block extra_js %}
+<!-- Konum izni popup'ları -->
+<div class="modal fade" id="locationPermissionModal" tabindex="-1" aria-labelledby="locationPermissionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-pet-blue text-white">
+                <h5 class="modal-title" id="locationPermissionModalLabel">
+                    <i class="fas fa-map-marker-alt me-2"></i> Konum İzni Gerekli
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Size en yakın kuaförleri bulmak için konum bilginize ihtiyacımız var. Konum bilginizi paylaşarak size en yakın kuaförleri gösterebiliriz.</p>
+                <div class="d-flex justify-content-center mb-3">
+                    <i class="fas fa-map-marker-alt fa-3x text-pet-blue"></i>
+                </div>
+                <p class="small text-muted">Konum bilginiz sadece size yakın kuaförleri göstermek için kullanılacak ve başkalarıyla paylaşılmayacaktır.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Daha Sonra</button>
+                <button type="button" id="grantPermissionBtn" class="btn bg-pet-blue text-white">
+                    <i class="fas fa-check-circle me-2"></i> İzin Ver
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Konum izni reddedildiğinde görünecek modal -->
+<div class="modal fade" id="locationDeniedModal" tabindex="-1" aria-labelledby="locationDeniedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="locationDeniedModalLabel">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Konum İzni Reddedildi
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Konum izni reddedildi. Size en yakın kuaförleri gösterebilmemiz için konum izni vermeniz gerekiyor.</p>
+                <p class="small text-muted">Tarayıcı ayarlarınızdan konum iznini etkinleştirip tekrar deneyebilirsiniz.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tamam</button>
+                <button type="button" id="openSettingsBtn" class="btn bg-pet-blue text-white">
+                    <i class="fas fa-cog me-2"></i> Tarayıcı Ayarlarına Git
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test/Debugging paneli - Konum bilgileri -->
+<div id="locationTestPanel" class="alert alert-dark mb-3 d-none">
+    <h6 class="fw-bold mb-2">
+        <i class="fas fa-map-marker-alt me-2"></i> Konum test paneli
+        <button type="button" class="btn-close float-end" id="closeTestPanel"></button>
+    </h6>
+    <div id="locationStatus" class="small">
+        <span class="badge bg-secondary">Konum izni kontrolü yapılıyor...</span>
+    </div>
+    <div id="locationProvider" class="mt-2 small">
+        <span class="badge bg-secondary">API sağlayıcı: Belirleniyor...</span>
+    </div>
+    <div id="locationCoordinates" class="mt-2 small">
+        <span class="badge bg-secondary">Koordinatlar: Bekleniyor...</span>
+    </div>
+    <div id="locationAddress" class="mt-2 small">
+        <span class="badge bg-secondary">Adres: Bekleniyor...</span>
+    </div>
+    <div id="tuzlaIndicator" class="mt-2 small">
+        <span class="badge bg-secondary">Tuzla kontrolü: Yapılıyor...</span>
+    </div>
+    <div id="additionalLocationDetails" class="mt-2 small"></div>
+</div>
+
+<script src="{{ url_for('static', filename='js/location-permission-real.js') }}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Konum testi bağlantısını aktifleştir
+        const testLink = document.querySelector('#showLocationTestPanel');
+        if (testLink) {
+            testLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                const testPanel = document.getElementById('locationTestPanel');
+                if (testPanel) {
+                    testPanel.classList.toggle('d-none');
+                }
+            });
+        }
+        
+        // Konum testi panelini kapatma
+        const closeTestBtn = document.getElementById('closeTestPanel');
+        if (closeTestBtn) {
+            closeTestBtn.addEventListener('click', function() {
+                const testPanel = document.getElementById('locationTestPanel');
+                if (testPanel) {
+                    testPanel.classList.add('d-none');
+                }
+            });
+        }
+        
+        // Sayfa yüklendiğinde konum izni kontrolünü başlat
+        checkPermissionOnPageLoad();
+    });
+</script>
+{% endblock %}
+
 {% endblock %}
