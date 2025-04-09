@@ -105,6 +105,9 @@ function getGeolocation() {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
             
+            // Test için konum bilgilerini ekrana yazdır
+            showLocationDebugInfo(latitude, longitude);
+            
             // En yakın şehri bul
             findNearestCity(latitude, longitude, locationInput);
             
@@ -392,6 +395,59 @@ function showLocationError(message) {
         setTimeout(() => {
             locationInput.placeholder = "Şehir ara";
         }, 3000);
+    }
+}
+
+// Test için konum koordinatlarını ve adres bilgilerini ekrana yazdırma
+function showLocationDebugInfo(latitude, longitude) {
+    // Debug bilgilerini göstermek için banner oluştur
+    const debugBanner = document.createElement('div');
+    debugBanner.className = 'position-fixed top-0 start-0 w-100 bg-dark text-white p-2';
+    debugBanner.style.zIndex = '9998';
+    
+    // Banner içeriği
+    debugBanner.innerHTML = `
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="mb-1">Konum Test Bilgileri (Sadece Test İçin)</h5>
+                    <p class="mb-1">Enlem: ${latitude}, Boylam: ${longitude}</p>
+                    <p class="mb-0" id="locationAddress">Adres bilgileri getiriliyor...</p>
+                    <button class="btn btn-sm btn-danger mt-2" id="closeDebugBanner">Kapat</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(debugBanner);
+    
+    // Kapatma butonu
+    document.getElementById('closeDebugBanner').addEventListener('click', function() {
+        debugBanner.remove();
+    });
+    
+    // Google Maps Geocoding API'yi kullanarak adresi getir
+    // Not: Bu işlem için normalde bir API anahtarı gerekir, test amaçlı olarak yalnızca koordinatları gösteriyoruz
+    // Gerçek bir uygulamada reverse geocoding servisi kullanılmalıdır
+    try {
+        // Nominatim servisini kullanarak adres bilgisini alma (açık kaynak)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`)
+        .then(response => response.json())
+        .then(data => {
+            const addressElement = document.getElementById('locationAddress');
+            if (addressElement && data.display_name) {
+                addressElement.textContent = `Adres: ${data.display_name}`;
+            }
+        })
+        .catch(error => {
+            console.error('Adres bilgisi alınamadı:', error);
+            const addressElement = document.getElementById('locationAddress');
+            if (addressElement) {
+                addressElement.textContent = `Adres bilgisi alınamadı: ${error.message}`;
+            }
+        });
+    } catch (error) {
+        console.error('Adres sorgusu sırasında hata:', error);
     }
 }
 
