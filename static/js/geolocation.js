@@ -3,6 +3,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Global değişken oluştur - bu değişken her sayfada sadece bir popup gösterilmesini sağlayacak
     window.popupShownOnThisPage = false;
     
+    // Sayfa yüklendiğinde konum izni kontrolünü başlat
+    if (typeof checkPermissionOnPageLoad === 'function') {
+        console.log("Konum izni kontrolü başlatılıyor...");
+        setTimeout(function() {
+            checkPermissionOnPageLoad();
+        }, 500); // Sayfanın yüklenmesi için biraz bekle
+    } else {
+        console.warn("checkPermissionOnPageLoad fonksiyonu bulunamadı!");
+    }
+    
     // Test için localStorage sıfırlama düğmesi (geliştirme ve test için)
     const testButton = document.createElement('button');
     testButton.textContent = 'Test: Konum İznini Sıfırla';
@@ -62,8 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Sayfa yüklendiğinde konum iznini kontrol et
-    checkPermissionOnPageLoad();
+    // Bu kod duplicate olduğundan silindi, yukarıda zaten çağırılıyor
 });
 
 // Konum iznini kontrol et, izin verilmemişse iste (ve otomatik konumla)

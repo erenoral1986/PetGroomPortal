@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
 function checkPermissionOnPageLoad() {
     console.log("Sayfa yüklendiğinde konum izni kontrolü yapılıyor...");
     
-    // Test amaçlı - localStorage'ı temizle, her seferinde popup göster
-    localStorage.removeItem('locationPermissionGranted');
+    // Test aşamasında yorum satırı kaldırılarak localStorage temizlenebilir 
+    // localStorage.removeItem('locationPermissionGranted');
     const permissionState = localStorage.getItem('locationPermissionGranted');
     console.log("Konum izni durumu:", permissionState);
     
