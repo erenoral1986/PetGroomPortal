@@ -615,16 +615,37 @@ function showLocationDebugInfo(latitude, longitude) {
         estimatedAddress += ` (tahmini mesafe: ${minCityDistance.toFixed(1)} km)`;
     }
     
-    // Banner içeriği
+    // Banner içeriği - Gelişmiş test paneli
     debugBanner.innerHTML = `
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h5 class="mb-1">Konum Test Bilgileri (Sadece Test İçin)</h5>
-                    <p class="mb-1">Enlem: ${latitude}, Boylam: ${longitude}</p>
-                    <p class="mb-2">Tahmini adres: ${estimatedAddress}</p>
-                    <p class="mb-0" id="locationAddress">Gerçek adres bilgileri getiriliyor...</p>
-                    <button class="btn btn-sm btn-danger mt-2" id="closeDebugBanner">Kapat</button>
+            <div class="mb-2 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-primary">Konum Test Bilgileri (Gelişmiş)</h5>
+                <button class="btn btn-sm btn-outline-light" id="closeDebugBanner">Kapat</button>
+            </div>
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <div class="card bg-dark border border-secondary p-2 mb-1 rounded-2">
+                        <h6 class="text-white">📍 Konum Bilgileri</h6>
+                        <p class="mb-1"><strong>Koordinatlar:</strong> ${latitude.toFixed(6)}, ${longitude.toFixed(6)}</p>
+                        <p class="mb-1"><strong>Hassasiyet:</strong> ${accuracy ? accuracy.toFixed(1) + ' metre' : 'Bilinmiyor'}</p>
+                        <p class="mb-1"><strong>Tahmini adres:</strong> ${estimatedAddress}</p>
+                        <p class="mb-1"><strong>API:</strong> <span class="badge bg-info">Yandex Maps</span> <span class="badge bg-secondary">Nominatim</span></p>
+                        <p class="mb-0"><strong>Zaman:</strong> ${new Date().toLocaleTimeString()}</p>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card bg-light text-dark p-2 rounded-2 border border-info">
+                        <h6 class="text-primary mb-2">📫 Adres Tespiti</h6>
+                        <div id="locationProvider" class="mb-1">
+                            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                            <span class="text-muted"> Yandex Maps API sorgulanıyor...</span>
+                        </div>
+                        <div id="locationAddress" class="bg-light-subtle p-2 rounded border">Adres bilgisi alınıyor...</div>
+                        <div id="additionalLocationDetails" class="mt-1"></div>
+                        <div id="tuzlaIndicator" class="mt-1">
+                            <span class="badge bg-secondary">Tuzla bölge tespiti: Kontrol ediliyor</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -639,8 +660,9 @@ function showLocationDebugInfo(latitude, longitude) {
     
     // Yandex Maps API ile adres bilgisini almayı dene
     try {
-        // Yandex API anahtarı
-        const yandexApiKey = "{{YANDEX_API_KEY}}";
+        // Yandex API anahtarı - HTML sayfasındaki gizli alandan al
+        const yandexApiKeyElement = document.getElementById('yandexApiKey');
+        const yandexApiKey = yandexApiKeyElement ? yandexApiKeyElement.value : "";
         
         // Yandex Geocoder kullanarak konum bilgisini al (WhatsApp'tan daha hassas, özellikle Türkiye'de)
         fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${yandexApiKey}&format=json&geocode=${longitude},${latitude}&lang=tr_TR&results=1&kind=house`)
@@ -660,8 +682,17 @@ function showLocationDebugInfo(latitude, longitude) {
                     const street = addressComponents.find(c => c.kind === 'street')?.name || '';
                     const house = addressComponents.find(c => c.kind === 'house')?.name || '';
                     
+                    // Test paneli için provider bilgisini güncelle
+                    const providerElement = document.getElementById('locationProvider');
+                    if (providerElement) {
+                        providerElement.innerHTML = `
+                            <span class="badge bg-success">✓ Yandex Maps API</span>
+                            <span class="text-success small"> Adres bilgileri başarıyla alındı</span>
+                        `;
+                    }
+                    
                     // Adres detayları
-                    addressElement.textContent = `Gerçek adres: ${formattedAddress}`;
+                    addressElement.innerHTML = `<strong>Gerçek adres:</strong> ${formattedAddress}`;
                     
                     // Adres detaylarını da göster
                     const addressDetails = [];
@@ -673,23 +704,36 @@ function showLocationDebugInfo(latitude, longitude) {
                     // Mahalle (district) bilgisini kullan
                     let realNeighborhood = district;
                     
-                    if (addressDetails.length > 0) {
-                        const detailsElement = document.createElement('p');
-                        detailsElement.className = 'mb-0 small';
-                        detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
-                        addressElement.after(detailsElement);
+                    // Detay bölümünü güncelle
+                    const additionalDetailsElement = document.getElementById('additionalLocationDetails');
+                    if (additionalDetailsElement && addressDetails.length > 0) {
+                        additionalDetailsElement.innerHTML = `
+                            <div class="p-2 mt-2 bg-light-subtle rounded border">
+                                <strong>Detaylar:</strong><br>
+                                ${addressDetails.map(d => `<span class="badge bg-secondary me-1 mb-1">${d}</span>`).join('')}
+                            </div>
+                        `;
                     }
                     
                     // Özel Tuzla algılama
                     const isTuzlaArea = city.includes('Tuzla') || district.includes('Tuzla');
+                    const tuzlaIndicator = document.getElementById('tuzlaIndicator');
+                    
                     if (isTuzlaArea) {
                         console.log("Yandex algılamasına göre Tuzla bölgesindesiniz!");
                         
-                        // Tuzla bilgisini ekle
-                        const tuzlaElement = document.createElement('p');
-                        tuzlaElement.className = 'mb-0 small text-success';
-                        tuzlaElement.textContent = `✓ Tuzla bölgesinde olduğunuz doğrulandı (Yandex)`;
-                        addressElement.after(tuzlaElement);
+                        // Tuzla göstergesini güncelle
+                        if (tuzlaIndicator) {
+                            tuzlaIndicator.innerHTML = `
+                                <span class="badge bg-success">✓ Tuzla bölgesi: Doğrulandı (Yandex)</span>
+                            `;
+                        }
+                    } else {
+                        if (tuzlaIndicator) {
+                            tuzlaIndicator.innerHTML = `
+                                <span class="badge bg-warning text-dark">Tuzla bölgesi: Tespit edilemedi</span>
+                            `;
+                        }
                     }
                     
                     // Şehir - şehri dropdown'da seç
@@ -737,7 +781,16 @@ function showLocationDebugInfo(latitude, longitude) {
                 const addressElement = document.getElementById('locationAddress');
                 if (addressElement) {
                     if (data.display_name) {
-                        addressElement.textContent = `Gerçek adres (Nominatim): ${data.display_name}`;
+                        // Test paneli için provider bilgisini güncelle - Nominatim
+                        const providerElement = document.getElementById('locationProvider');
+                        if (providerElement) {
+                            providerElement.innerHTML = `
+                                <span class="badge bg-warning text-dark">⚠️ Nominatim API (Yedek)</span>
+                                <span class="text-muted small"> Yandex başarısız oldu, yedek API kullanıldı</span>
+                            `;
+                        }
+                        
+                        addressElement.innerHTML = `<strong>Gerçek adres (Nominatim):</strong> ${data.display_name}`;
                         
                         // Adres detaylarını da göster (varsa)
                         if (data.address) {
@@ -754,7 +807,18 @@ function showLocationDebugInfo(latitude, longitude) {
                                 const detailsElement = document.createElement('p');
                                 detailsElement.className = 'mb-0 small';
                                 detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
-                                addressElement.after(detailsElement);
+                                // Güncellenen test paneli için detayları düzenle
+            const additionalDetailsElement = document.getElementById('additionalLocationDetails');
+            if (additionalDetailsElement) {
+                additionalDetailsElement.innerHTML = `
+                    <div class="p-2 mt-2 bg-light-subtle rounded border">
+                        <strong>Detaylar:</strong><br>
+                        ${addressDetails.map(d => `<span class="badge bg-secondary me-1 mb-1">${d}</span>`).join('')}
+                    </div>
+                `;
+            } else {
+                addressElement.after(detailsElement);
+            }
                             }
                             
                             // Gerçek adresten mahalle bilgisini alıp dropdown'da seç
@@ -819,7 +883,9 @@ function findNearestCity(latitude, longitude, locationInput) {
         return new Promise((resolve, reject) => {
             try {
                 // Yandex API anahtarı
-                const yandexApiKey = "{{YANDEX_API_KEY}}";
+                // Sayfadaki gizli alandan API anahtarını al
+                const yandexApiKeyElement = document.getElementById('yandexApiKey');
+                const yandexApiKey = yandexApiKeyElement ? yandexApiKeyElement.value : "";
                 
                 // Yandex Geocoder API'sini kullan
                 fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${yandexApiKey}&format=json&geocode=${longitude},${latitude}&lang=tr_TR&results=1&kind=house`)

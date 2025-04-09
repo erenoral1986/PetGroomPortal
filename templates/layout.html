@@ -22,6 +22,9 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
+    <!-- Yandex Maps API keyini sayfaya ekle - Konum tespiti için kullanılacak -->
+    <input type="hidden" id="yandexApiKey" value="{{ yandex_api_key }}">
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body class="font-sans antialiased bg-gray-50 min-h-screen flex flex-col">

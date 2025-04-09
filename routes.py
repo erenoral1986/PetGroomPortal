@@ -21,7 +21,8 @@ def get_base_data():
     return {
         'is_authenticated': current_user.is_authenticated,
         'is_admin': current_user.is_authenticated and current_user.role == 'admin',
-        'is_salon_owner': current_user.is_authenticated and current_user.role == 'salon_owner'
+        'is_salon_owner': current_user.is_authenticated and current_user.role == 'salon_owner',
+        'yandex_api_key': YANDEX_API_KEY
     }
 
 # Helper function to convert time objects to strings for JSON
@@ -35,7 +36,7 @@ def time_to_str(t):
 def index():
     base_data = get_base_data()
     search_form = SalonSearchForm()
-    return render_template('index.html', title='Pet Grooming - Home', form=search_form, yandex_api_key=YANDEX_API_KEY, **base_data)
+    return render_template('index.html', title='Pet Grooming - Home', form=search_form, **base_data)
 
 # User registration
 @app.route('/register', methods=['GET', 'POST'])
