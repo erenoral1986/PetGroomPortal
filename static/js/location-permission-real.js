@@ -119,8 +119,8 @@ function getGeolocation() {
     // Input'u devre dışı bırak
     locationInput.disabled = true;
     
-    // Konum alındı olarak işaretle
-    localStorage.setItem('locationPermissionGranted', 'true');
+    // Konum izni kontrolü - izni her seferinde göster
+    localStorage.removeItem('locationPermissionGranted');
     
     // Tarayıcıdan konum iste - WhatsApp'ın kullandığı gibi yüksek hassasiyetli ayarlar kullanarak
     navigator.geolocation.getCurrentPosition(
@@ -517,6 +517,38 @@ function showLocationDebugInfo(latitude, longitude) {
         { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
     ];
     
+    // Tuzla ilçesi için özel konum kontrolü - Tuzla sınırları kabaca:
+    const TUZLA_MIN_LAT = 40.75;
+    const TUZLA_MAX_LAT = 40.87;
+    const TUZLA_MIN_LON = 29.25;
+    const TUZLA_MAX_LON = 29.40;
+    
+    const isTuzlaArea = 
+        latitude >= TUZLA_MIN_LAT && 
+        latitude <= TUZLA_MAX_LAT && 
+        longitude >= TUZLA_MIN_LON && 
+        longitude <= TUZLA_MAX_LON;
+    
+    if (isTuzlaArea) {
+        console.log("Tuzla ilçesi sınırları içindesiniz!");
+    }
+    
+    // Tuzla'nın mahalleri
+    const tuzlaNeighborhoods = [
+        { name: 'Aydınlı', lat: 40.841, lon: 29.321 },
+        { name: 'Cami', lat: 40.819, lon: 29.301 },
+        { name: 'Evliya Çelebi', lat: 40.819, lon: 29.304 },
+        { name: 'Fatih', lat: 40.821, lon: 29.307 },
+        { name: 'İçmeler', lat: 40.815, lon: 29.307 },
+        { name: 'İstasyon', lat: 40.817, lon: 29.301 },
+        { name: 'Mimar Sinan', lat: 40.829, lon: 29.309 },
+        { name: 'Postane', lat: 40.820, lon: 29.298 },
+        { name: 'Yayla', lat: 40.823, lon: 29.313 },
+        { name: 'Aydıntepe', lat: 40.835, lon: 29.322 },
+        { name: 'Şifa', lat: 40.817, lon: 29.308 },
+        { name: 'Tepeören', lat: 40.879, lon: 29.373 }
+    ];
+    
     // WhatsApp seviyesinde hassas konum tespiti için
     // Önce Nominatim API'den gerçek mahalle bilgisini almayı deneriz
     // Alamazsak en yakın konumu hesaplarız
@@ -534,13 +566,16 @@ function showLocationDebugInfo(latitude, longitude) {
         }
     }
     
-    // En yakın mahalleyi bul (sadece İstanbul için)
+    // En yakın mahalleyi bul (İstanbul için ya da Tuzla için)
     let closestNeighborhood = null;
     let neighborhoodDistance = 0;
     let minNeighborhoodDistance = Infinity;
     
     if (closestCity && closestCity.name === "İstanbul") {
-        for (const nh of istanbulNeighborhoods) {
+        // Tuzla bölgesindeyse Tuzla mahallelerini kullan
+        const neighborhoodsList = isTuzlaArea ? tuzlaNeighborhoods : istanbulNeighborhoods;
+        
+        for (const nh of neighborhoodsList) {
             neighborhoodDistance = haversineDistance(latitude, longitude, nh.lat, nh.lon);
             if (neighborhoodDistance < minNeighborhoodDistance) {
                 minNeighborhoodDistance = neighborhoodDistance;
@@ -560,7 +595,12 @@ function showLocationDebugInfo(latitude, longitude) {
     // Tahmini adres oluştur
     let estimatedAddress = "";
     if (closestCity) {
-        estimatedAddress = `${closestCity.name}`;
+        if (isTuzlaArea) {
+            estimatedAddress = "Tuzla";
+        } else {
+            estimatedAddress = `${closestCity.name}`;
+        }
+        
         if (closestNeighborhood) {
             estimatedAddress += `, ${closestNeighborhood.name} Mahallesi`;
         }
