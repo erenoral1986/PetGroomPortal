@@ -49,8 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (!locationInput) return;
     
-    // Tüm şehirleri başlangıçta göster
-    createCityList(cities);
+    // Başlangıçta şehirleri gizle
     cityList.classList.add('hidden');
     
     // Arama alanına yazılınca
@@ -60,9 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchText.length >= 3) {
             const filteredCities = filterCities(searchText);
             createCityList(filteredCities);
-        } else if (searchText.length === 0) {
-            createCityList(cities);
-            cityList.classList.add('hidden');
+            if (filteredCities.length > 0) {
+                cityList.classList.remove('hidden');
+            } else {
+                cityList.classList.add('hidden');
+            }
         } else {
             cityList.classList.add('hidden');
         }
@@ -75,11 +76,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Focus olunca ve boşsa tüm şehirleri göster
+    // Focus olunca en az 3 karakter yazılıysa şehirleri göster
     locationInput.addEventListener('focus', function() {
-        if (this.value.trim() === '') {
-            createCityList(cities);
-            cityList.classList.remove('hidden');
+        const searchText = this.value.trim();
+        if (searchText.length >= 3) {
+            const filteredCities = filterCities(searchText);
+            createCityList(filteredCities);
+            if (filteredCities.length > 0) {
+                cityList.classList.remove('hidden');
+            }
         }
     });
 });
