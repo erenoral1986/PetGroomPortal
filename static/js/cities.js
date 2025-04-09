@@ -30,16 +30,10 @@ function createCityList(filteredCities) {
         item.textContent = city;
         item.addEventListener('click', () => {
             document.getElementById('location').value = city;
-            cityList.classList.add('hidden');
+            cityList.classList.add('hidden'); // Seçim yapıldığında listeyi gizle
         });
         cityList.appendChild(item);
     });
-    
-    if (filteredCities.length > 0) {
-        cityList.classList.remove('hidden');
-    } else {
-        cityList.classList.add('hidden');
-    }
 }
 
 // Sayfa yüklendiğinde
