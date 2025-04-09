@@ -147,56 +147,50 @@ function showLocationPermissionPrompt() {
     
     document.body.appendChild(permissionModal);
     
-    // İzin verilince konumu al
+    // İzin Ver butonu - Chrome'un izin dialogunu doğrudan göster
     document.getElementById('allowLocation').addEventListener('click', function() {
-        localStorage.setItem('locationPermissionGranted', 'true');
-        permissionModal.remove();
+        permissionModal.remove(); // Önce bizim modal'ı kapat
         
-        // Konum almaya başla
-        const locationInput = document.getElementById('location');
-        if (locationInput) {
-            // Konum alınıyor mesajı göster
-            locationInput.value = "Konum alınıyor...";
-            locationInput.disabled = true;
-            
-            // Konumu al
-            navigator.geolocation.getCurrentPosition(
-                // Başarılı olunca
-                function(position) {
-                    const latitude = position.coords.latitude;
-                    const longitude = position.coords.longitude;
-                    
+        // Direkt olarak tarayıcının konum izni sorgusunu göster (Chrome dialog)
+        navigator.geolocation.getCurrentPosition(
+            // Başarılı olunca
+            function(position) {
+                // Konum izni verildi ve konum alındı
+                localStorage.setItem('locationPermissionGranted', 'true');
+                
+                // Konum bilgisini kullan
+                const locationInput = document.getElementById('location');
+                if (locationInput) {
                     // Koordinatları yakın şehre çevir 
-                    findNearestCity(latitude, longitude, locationInput);
-                },
-                // Hata olunca
-                function(error) {
-                    locationInput.disabled = false;
-                    
-                    switch(error.code) {
-                        case error.PERMISSION_DENIED:
-                            showLocationError("Konum izni reddedildi");
-                            localStorage.setItem('locationPermissionGranted', 'false');
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            showLocationError("Konum bilgisi mevcut değil");
-                            break;
-                        case error.TIMEOUT:
-                            showLocationError("İstek zaman aşımına uğradı");
-                            break;
-                        case error.UNKNOWN_ERROR:
-                            showLocationError("Bilinmeyen bir hata oluştu");
-                            break;
-                    }
-                },
-                // Geolocation Ayarları
-                {
-                    enableHighAccuracy: true,
-                    timeout: 10000,
-                    maximumAge: 0
+                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
                 }
-            );
-        }
+            },
+            // Hata olunca
+            function(error) {
+                // Hata koduna göre işlem yap
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        localStorage.setItem('locationPermissionGranted', 'false');
+                        showLocationError("Konum izni reddedildi");
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        showLocationError("Konum bilgisi mevcut değil");
+                        break;
+                    case error.TIMEOUT:
+                        showLocationError("İstek zaman aşımına uğradı");
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        showLocationError("Bilinmeyen bir hata oluştu");
+                        break;
+                }
+            },
+            // Geolocation Ayarları
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
     });
     
     // İzin verilmezse modal kapat
@@ -243,12 +237,32 @@ function showManualSelectionPrompt() {
         permissionModal.remove();
     });
     
-    // İzin Ver butonu - localStorage temizle ve tekrar izin iste
+    // İzin Ver butonu - localStorage temizle ve Chrome'un izin dialogunu doğrudan göster
     document.getElementById('retryPermission').addEventListener('click', function() {
         localStorage.removeItem('locationPermissionGranted'); // İzin bilgisini sıfırla
         permissionModal.remove();
         window.locationPromptShownThisPageLoad = false; // Popup gösterimini sıfırla
-        showLocationPermissionPrompt(); // İzin istemini tekrar göster
+        
+        // Direkt olarak tarayıcının konum izni sorgusunu göster (Chrome dialog)
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // Başarılı olunca
+                localStorage.setItem('locationPermissionGranted', 'true');
+                const locationInput = document.getElementById('location');
+                if (locationInput) {
+                    // Konum alındı, en yakın şehri bul
+                    findNearestCity(position.coords.latitude, position.coords.longitude, locationInput);
+                }
+            },
+            function(error) {
+                // Hata olursa veya reddedilirse
+                if (error.code === error.PERMISSION_DENIED) {
+                    localStorage.setItem('locationPermissionGranted', 'false');
+                    showLocationError("Konum izni reddedildi");
+                }
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
     });
 }
 
