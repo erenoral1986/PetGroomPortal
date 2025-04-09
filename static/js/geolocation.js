@@ -23,16 +23,35 @@ document.addEventListener('DOMContentLoaded', function() {
         locationButton.addEventListener('click', getUserLocation);
     }
     
-    // Sayfa yüklendiğinde konumu almayı teklif eden fonksiyon
-    showLocationPermissionPrompt();
+    // Sayfa yüklendiğinde otomatik olarak konum izni kontrolü ve gerekirse izin isteme
+    checkLocationPermission();
 });
+
+// Konum iznini kontrol et, izin verilmemişse iste
+function checkLocationPermission() {
+    // Konum izni verilmiş mi kontrol et
+    const permissionGranted = localStorage.getItem('locationPermissionGranted');
+    
+    // Eğer izin verilmişse, konumu al
+    if (permissionGranted === 'true') {
+        getUserLocation();
+        return;
+    }
+    
+    // Eğer izin verilmemişse veya hiç sorulmamışsa, izin iste
+    showLocationPermissionPrompt();
+}
 
 // Konum izni isteme mesajını göster
 function showLocationPermissionPrompt() {
-    // Daha önce seçim yapılmışsa tekrar sorma
-    if (localStorage.getItem('locationPermissionAsked')) {
+    // Her sayfada tekrar sor, önceki oturumlarda reddetme durumunda bile
+    // Bu ziyaret için soruldu mu kontrolü
+    if (sessionStorage.getItem('locationPromptShownThisSession')) {
         return;
     }
+    
+    // Bu oturum için izin isteğinin gösterildiğini kaydet
+    sessionStorage.setItem('locationPromptShownThisSession', 'true');
     
     // Konum izni isteme modal
     const permissionModal = document.createElement('div');
@@ -58,15 +77,13 @@ function showLocationPermissionPrompt() {
     
     // İzin verilince konumu al
     document.getElementById('allowLocation').addEventListener('click', function() {
-        localStorage.setItem('locationPermissionAsked', 'true');
         localStorage.setItem('locationPermissionGranted', 'true');
         permissionModal.remove();
         getUserLocation();
     });
     
-    // İzin verilmezse modal kapat ve bir daha sorma
+    // İzin verilmezse modal kapat
     document.getElementById('denyLocation').addEventListener('click', function() {
-        localStorage.setItem('locationPermissionAsked', 'true');
         localStorage.setItem('locationPermissionGranted', 'false');
         permissionModal.remove();
     });
@@ -100,6 +117,7 @@ function getUserLocation() {
                 switch(error.code) {
                     case error.PERMISSION_DENIED:
                         showLocationError("Konum izni reddedildi");
+                        localStorage.setItem('locationPermissionGranted', 'false');
                         break;
                     case error.POSITION_UNAVAILABLE:
                         showLocationError("Konum bilgisi mevcut değil");
@@ -247,9 +265,6 @@ function findNearestCity(latitude, longitude, locationInput) {
             cityList.style.display = 'none';
             cityList.classList.add('hidden');
         }
-        
-        // İsterseniz otomatik olarak form'u submit edebilirsiniz
-        // locationInput.form.submit();
     }
 }
 
