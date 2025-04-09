@@ -21,13 +21,19 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Konum butonuna tıklanınca konum izni iste
         locationButton.addEventListener('click', function() {
-            // Konum butonu tıklandığında daha önce izni reddedilmiş olsa bile tekrar iste
-            // localStorage'dan permission değerini temizle
-            localStorage.removeItem('locationPermissionGranted');
-            // Sayfa değişkeni değerini sıfırla ki tekrar popup çıksın
-            window.locationPromptShownThisPageLoad = false;
-            // Konum iznini göster
-            showLocationPermissionPrompt();
+            // Konum izni verilmiş mi kontrol et
+            if (localStorage.getItem('locationPermissionGranted') === 'true') {
+                // Konum izni zaten verilmiş, kullanıcıya bilgi ver
+                showLocationSuccess("Konum izni zaten verilmiş. Konumunuz kullanılıyor.");
+                // Mevcut konumu tekrar al
+                getGeolocation();
+            } else {
+                // Konum izni verilmemiş, izin verme şansı sun
+                // Sayfa değişkeni değerini sıfırla ki popup çıksın
+                window.locationPromptShownThisPageLoad = false;
+                // Konum iznini göster
+                showLocationPermissionPrompt();
+            }
         });
     }
     
@@ -224,6 +230,34 @@ function showLocationError(message) {
             locationInput.placeholder = "Şehir veya posta kodu giriniz";
         }, 3000);
     }
+}
+
+// Başarı mesajı göster
+function showLocationSuccess(message) {
+    // Toast bildirim için element oluştur
+    const toast = document.createElement('div');
+    toast.className = 'position-fixed top-0 end-0 p-3';
+    toast.style.zIndex = '9999';
+    
+    toast.innerHTML = `
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header bg-success text-white">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong class="me-auto">Konum Bilgisi</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                ${message}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // 3 saniye sonra toast'ı kaldır
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
 }
 
 // Koordinatlardan en yakın şehri bul (basit algoritma)
