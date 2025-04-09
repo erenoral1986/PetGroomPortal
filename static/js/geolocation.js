@@ -1,7 +1,25 @@
 // Kullanıcının konumunu alıp, koordinatlardan en yakın şehri belirleyen fonksiyon
 document.addEventListener('DOMContentLoaded', function() {
-    // Konum iznini test için sıfırlamayalım, mevcut izin durumunu kullanalım
-    // localStorage.removeItem('locationPermissionGranted');
+    // Test için localStorage sıfırlama düğmesi (geliştirme ve test için)
+    const addTestButton = function() {
+        const container = document.querySelector('.container');
+        if (!container) return;
+        
+        const testButton = document.createElement('button');
+        testButton.textContent = 'Test: Konum İznini Sıfırla';
+        testButton.className = 'btn btn-sm btn-secondary mt-2 mb-2';
+        testButton.style.display = 'none'; // Normal kullanımda gizle
+        testButton.addEventListener('click', function() {
+            localStorage.removeItem('locationPermissionGranted');
+            window.locationPromptShownThisPageLoad = false;
+            alert('Konum izni sıfırlandı. Sayfayı yenileyin.');
+        });
+        
+        container.prepend(testButton);
+    };
+    
+    // Test düğmesini ekle
+    addTestButton();
     
     const locationInput = document.getElementById('location');
     
@@ -34,8 +52,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Konum izni verilmemiş, izin verme şansı sun
                 // Sayfa değişkeni değerini sıfırla ki popup çıksın
                 window.locationPromptShownThisPageLoad = false;
-                // Konum iznini göster
-                showLocationPermissionPrompt();
+                
+                // Daha önce reddedilmiş mi veya sorulmamış mı kontrol et
+                const permissionStatus = localStorage.getItem('locationPermissionGranted');
+                if (permissionStatus === 'false') {
+                    // Daha önce reddedilmiş
+                    showManualSelectionPrompt();
+                } else {
+                    // Daha önce hiç sorulmamış veya null
+                    showLocationPermissionPrompt();
+                }
             }
         });
     }
@@ -72,19 +98,26 @@ function checkPermissionStatusSilently() {
     // Konum izni verilmiş mi kontrol et
     const permissionGranted = localStorage.getItem('locationPermissionGranted');
     
-    // İzin reddedilmişse, manuel seçim yapabileceklerini belirten mesaj göster
-    if (permissionGranted === 'false') {
-        // Popup göster - konum izni reddedilmiş
-        showNoPermissionPopup();
-    }
+    console.log("Konum izni durumu:", permissionGranted); // Debug için izin durumunu göster
     
-    // İzin hiç sorulmamışsa, farklı bir mesaj göster
+    // İzin hiç sorulmamışsa, farklı bir mesaj göster (önce bunu kontrol etmeliyiz)
     if (permissionGranted === null || permissionGranted === undefined) {
+        console.log("Konum izni hiç verilmemiş"); // Debug
         // Popup göster - hiç izin verilmemiş
         showNeverAskedPopup();
+        return; // İşlemi sonlandır
     }
     
-    // İzin verilmişse, bir şey yapma (otomatik konum alma)
+    // İzin reddedilmişse, manuel seçim yapabileceklerini belirten mesaj göster
+    if (permissionGranted === 'false') {
+        console.log("Konum izni reddedilmiş"); // Debug
+        // Popup göster - konum izni reddedilmiş
+        showNoPermissionPopup();
+        return; // İşlemi sonlandır
+    }
+    
+    // İzin verilmişse, hiçbir şey yapma (zaten otomatik konum alınmıyor)
+    console.log("Konum izni var, popup gösterilmiyor");
 }
 
 // Hiç konum izni verilmemiş durumunda gösterilecek popup
