@@ -87,9 +87,16 @@ document.addEventListener('DOMContentLoaded', function() {
 function checkPermissionOnPageLoad() {
     console.log("Sayfa yüklendiğinde konum izni kontrolü yapılıyor...");
     
+    // Test amaçlı - localStorage'ı temizle, her seferinde popup göster
+    localStorage.removeItem('locationPermissionGranted');
     const permissionState = localStorage.getItem('locationPermissionGranted');
     console.log("Konum izni durumu:", permissionState);
     
+    // Test amaçlı - her zaman izin sorulsun
+    showPermissionRequestPopup();
+    
+    // Normal izin kontrolü kodu (şu an devre dışı)
+    /*
     if (permissionState === 'true') {
         console.log("Konum izni verilmiş, konumu alıyorum");
         getGeolocation();
@@ -100,6 +107,7 @@ function checkPermissionOnPageLoad() {
         console.log("Konum izni hiç sorulmamış, popup gösteriliyor");
         showNeverAskedPopup();
     }
+    */
 }
 
 // Anasayfada Konum Butonunu ekle
