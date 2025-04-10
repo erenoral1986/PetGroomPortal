@@ -21,6 +21,37 @@
   --pet-green: #4ecca3;
 }
 
+/* Responsive düzeltmeler - sağa kaymayı önle */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Mobil için daha iyi görünüm */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 100%;
+  }
+  
+  .row {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+  
+  .col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, 
+  .col-sm, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12,
+  .col-md, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12,
+  .col-lg, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
 /* Hizmetlerimiz bölümünde başlık çizgisini kaldır */
 #hizmetlerimiz-divider {
   display: none !important;
@@ -138,6 +169,22 @@ body {
     color: #333;
     background-color: #f9fafb;
     line-height: 1.6;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Görsel düzeltmeleri */
+img, .img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Ana içerik container */
+.main-content {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 a {
@@ -787,7 +834,12 @@ a {
 #cityList {
     display: none;
     position: absolute;
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
     background-color: white;
+    overflow-x: hidden;
     border: 1px solid #ddd;
     max-height: 300px;
     overflow-y: auto;
@@ -822,5 +874,53 @@ a {
     
     .hidden-md {
         display: none;
+    }
+    
+    /* Responsive form düzeltmeleri */
+    form {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    form .form-control, 
+    form .form-select, 
+    form .btn {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    /* Responsive tablo düzeltmeleri */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Dropdown menüleri düzelt */
+    .dropdown-menu {
+        width: 100%;
+        max-width: 100%;
+        left: 0;
+        right: 0;
+    }
+    
+    /* Servis kartları için düzeltme */
+    .service-card {
+        margin-bottom: 20px;
+    }
+    
+    /* Footer için düzeltme */
+    footer {
+        text-align: center;
+    }
+    
+    footer .row > div {
+        margin-bottom: 25px;
+    }
+    
+    /* Randevu formu ve detaylar için */
+    .booking-details, 
+    .booking-form {
+        padding: 15px;
     }
 }
