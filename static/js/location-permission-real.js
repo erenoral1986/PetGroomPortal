@@ -132,9 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     }
                                 }
                             }
-                            .catch(error => {
-                                console.error('Adres güncellemesi sırasında hata:', error);
-                            });
+                        }).catch(error => {
+                            console.error('Adres güncellemesi sırasında hata:', error);
+                        });
                         }
                     },
                     function(error) {

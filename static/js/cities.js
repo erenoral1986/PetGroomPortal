@@ -78,6 +78,35 @@ function hideCityList() {
     }
 }
 
+// Gerçek mahalle adını dropdown'da seçen yardımcı fonksiyon
+function selectRealNeighborhood(neighborhood) {
+    if (!neighborhood || !districtSelect) return false;
+    
+    console.log("Mahalle aranıyor:", neighborhood);
+    
+    // Tam eşleşme ara
+    for (let i = 0; i < districtSelect.options.length; i++) {
+        if (districtSelect.options[i].text === neighborhood) {
+            console.log("Mahalle tam eşleşme bulundu:", neighborhood);
+            districtSelect.selectedIndex = i;
+            return true;
+        }
+    }
+    
+    // Kısmi eşleşme ara
+    for (let i = 0; i < districtSelect.options.length; i++) {
+        const optionText = districtSelect.options[i].text;
+        if (optionText.includes(neighborhood) || neighborhood.includes(optionText)) {
+            console.log("Mahalle kısmi eşleşme bulundu:", optionText, "içinde", neighborhood);
+            districtSelect.selectedIndex = i;
+            return true;
+        }
+    }
+    
+    console.log("Mahalle listesinde bulunamadı:", neighborhood);
+    return false;
+}
+
 // Şehir değiştiğinde mahalleleri getir
 function updateDistrictsByCity(city) {
     if (!city || city.trim() === '') return Promise.reject('Şehir boş');
@@ -141,6 +170,14 @@ function updateDistrictsByCity(city) {
                 option.textContent = district;
                 districtSelect.appendChild(option);
             });
+            
+            // Mahalleler yüklendikten sonra: 
+            // 1) Kaydedilmiş mahalle varsa seç
+            const userNeighborhood = localStorage.getItem('userNeighborhood');
+            if (userNeighborhood) {
+                console.log("Kaydedilmiş mahalle var, seçiliyor:", userNeighborhood);
+                selectRealNeighborhood(userNeighborhood);
+            }
         } else {
             console.warn("Mahallelerin uzunluğu sıfır veya boş.");
             // Eğer mahalle bulunamazsa varsayılan seçeneği ekle
