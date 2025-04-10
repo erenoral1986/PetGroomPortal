@@ -21,16 +21,23 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log("Test modu aktif, konum izni sıfırlama butonu eklenecek...");
     
     if (testModeEnabled) {
-        const resetButton = document.createElement('button');
-        resetButton.textContent = 'Konum İzni Sıfırla (Test)';
-        resetButton.className = 'btn btn-sm btn-danger position-fixed bottom-0 end-0 m-3';
-        resetButton.style.zIndex = '10000';
-        resetButton.style.fontSize = '14px';
-        resetButton.style.fontWeight = 'bold';
-        resetButton.style.padding = '8px 12px';
-        resetButton.style.cursor = 'pointer';
-        resetButton.onclick = resetLocationPermission;
-        document.body.appendChild(resetButton);
+        // 1 saniye gecikme ile butonu ekleyerek potansiyel zamanlama sorunlarını önle
+        setTimeout(function() {
+            const resetButton = document.createElement('button');
+            resetButton.id = 'resetLocationPermission';
+            resetButton.textContent = 'Konum İzni Sıfırla (Test)';
+            resetButton.className = 'btn btn-danger position-fixed bottom-0 end-0 m-4';
+            resetButton.style.zIndex = '10000';
+            resetButton.style.fontSize = '16px';
+            resetButton.style.fontWeight = 'bold';
+            resetButton.style.padding = '10px 15px';
+            resetButton.style.cursor = 'pointer';
+            resetButton.style.border = '2px solid black';
+            resetButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+            resetButton.onclick = resetLocationPermission;
+            document.body.appendChild(resetButton);
+            console.log("Test butonu eklendi: #resetLocationPermission");
+        }, 1000);
     }
     
     checkPermissionOnPageLoad();
@@ -310,19 +317,19 @@ function showNeverAskedPopup() {
     // Popup oluştur
     const modal = document.createElement('div');
     modal.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
-    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'; // Daha koyu arkaplan
     modal.style.zIndex = '9999';
     
     modal.innerHTML = `
-        <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
-            <div class="text-center mb-3">
-                <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
-                <h5 class="fw-bold">Konum İzni Gerekli</h5>
-                <p class="text-muted mb-3">Konum izni vermeniz lazım. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
+        <div class="bg-white p-5 rounded-3 shadow-lg" style="max-width: 450px; border: 2px solid #00bed7;">
+            <div class="text-center mb-4">
+                <i class="fas fa-map-marker-alt fa-4x text-pet-blue mb-3" style="color: #00bed7 !important;"></i>
+                <h4 class="fw-bold mb-3" style="color: #0096ab;">Konum İzni Gerekli</h4>
+                <p class="mb-4" style="font-size: 16px; line-height: 1.5;">Konum izni vermeniz lazım. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
             </div>
             <div class="d-flex justify-content-between">
-                <button id="closeNeverAskedPopup" class="btn btn-outline-secondary px-4">Tamam</button>
-                <button id="givePermissionNeverAsked" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
+                <button id="closeNeverAskedPopup" class="btn btn-outline-secondary px-4 py-2" style="font-weight: 500; min-width: 120px;">Tamam</button>
+                <button id="givePermissionNeverAsked" class="btn text-white px-4 py-2" style="background-color: #00bed7; font-weight: 500; min-width: 120px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">İzin Ver</button>
             </div>
         </div>
     `;
@@ -396,19 +403,19 @@ function showRejectedPermissionPopup() {
     // Popup oluştur
     const modal = document.createElement('div');
     modal.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
-    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'; // Daha koyu arkaplan
     modal.style.zIndex = '9999';
     
     modal.innerHTML = `
-        <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
-            <div class="text-center mb-3">
-                <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
-                <h5 class="fw-bold">Konum İzni Gerekli</h5>
-                <p class="text-muted mb-3">Konum izni vermeniz lazım. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
+        <div class="bg-white p-5 rounded-3 shadow-lg" style="max-width: 450px; border: 2px solid #00bed7;">
+            <div class="text-center mb-4">
+                <i class="fas fa-map-marker-alt fa-4x text-pet-blue mb-3" style="color: #00bed7 !important;"></i>
+                <h4 class="fw-bold mb-3" style="color: #0096ab;">Konum İzni Gerekli</h4>
+                <p class="mb-4" style="font-size: 16px; line-height: 1.5;">Konum izni vermeniz lazım. Şehir adı girerek manuel olarak arama yapabilirsiniz veya konum izni vermeyi deneyebilirsiniz.</p>
             </div>
             <div class="d-flex justify-content-between">
-                <button id="closeRejectedPopup" class="btn btn-outline-secondary px-4">Tamam</button>
-                <button id="retryPermission" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
+                <button id="closeRejectedPopup" class="btn btn-outline-secondary px-4 py-2" style="font-weight: 500; min-width: 120px;">Tamam</button>
+                <button id="retryPermission" class="btn text-white px-4 py-2" style="background-color: #00bed7; font-weight: 500; min-width: 120px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">İzin Ver</button>
             </div>
         </div>
     `;
@@ -475,23 +482,32 @@ function showLocationError(message) {
     
     // Hata bildirimi göster
     const errorBanner = document.createElement('div');
-    errorBanner.className = 'alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+    errorBanner.className = 'alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-4';
+    errorBanner.style.zIndex = '10001'; // Diğer elementlerin üzerinde görünsün
+    errorBanner.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+    errorBanner.style.minWidth = '300px';
+    errorBanner.style.maxWidth = '500px';
+    errorBanner.style.border = '1px solid #f0ad4e';
     errorBanner.setAttribute('role', 'alert');
     errorBanner.innerHTML = `
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle me-3 text-warning" style="font-size: 24px;"></i>
+            <div class="flex-grow-1" style="font-weight: 500;">
+                ${message}
+            </div>
+            <button type="button" class="btn-close ms-2" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     `;
     
     document.body.appendChild(errorBanner);
     
-    // 5 saniye sonra otomatik kapat
+    // 7 saniye sonra otomatik kapat (daha uzun süre göster)
     setTimeout(() => {
         errorBanner.classList.remove('show');
         setTimeout(() => {
             errorBanner.remove();
         }, 500);
-    }, 5000);
+    }, 7000);
 }
 
 // Konum debug bilgisi göster
