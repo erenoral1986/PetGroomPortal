@@ -92,9 +92,49 @@ document.addEventListener('DOMContentLoaded', function() {
                                         }
                                     }
                                 }
-                            }).catch(error => {
-                                console.error('Adres güncellemesi sırasında hata:', error);
-                            });
+                            })
+                            
+                            // Gerçek mahalleyi seçen yardımcı fonksiyon
+                            function selectRealNeighborhood(neighborhood) {
+                                if (!neighborhood) return;
+                                
+                                console.log("Gerçek mahalle seçiliyor:", neighborhood);
+                                const districtSelect = document.getElementById('district');
+                                if (districtSelect) {
+                                    // Tam eşleşme arama
+                                    let found = false;
+                                    for (let i = 0; i < districtSelect.options.length; i++) {
+                                        const optionText = districtSelect.options[i].text.trim();
+                                        if (optionText === neighborhood) {
+                                            console.log("Tam eşleşme bulundu:", optionText);
+                                            districtSelect.selectedIndex = i;
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // Tam eşleşme bulunamadıysa, içeren bir değer ara
+                                    if (!found) {
+                                        for (let i = 0; i < districtSelect.options.length; i++) {
+                                            const optionText = districtSelect.options[i].text.trim();
+                                            if (optionText.includes(neighborhood) || neighborhood.includes(optionText)) {
+                                                console.log("Kısmi eşleşme bulundu:", optionText, "içinde", neighborhood);
+                                                districtSelect.selectedIndex = i;
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Hiç eşleşme bulunamadıysa 
+                                    if (!found) {
+                                        console.log("Mahalle listesinde bulunamadı:", neighborhood);
+                                    }
+                                }
+                            }
+                        }).catch(error => {
+                            console.error('Adres güncellemesi sırasında hata:', error);
+                        });
                         }
                     },
                     function(error) {
@@ -434,41 +474,107 @@ function showRejectedPermissionPopup() {
     });
 }
 
-// Konum hatası göster
-function showLocationError(message) {
-    console.error("Konum hatası:", message);
+// Kullanıcıdan konum izni isteyen popup
+function showPermissionRequestPopup() {
+    // Bu sayfada daha önce popup gösterilmiş mi kontrol et
+    if (window.popupShownOnThisPage) {
+        return;
+    }
     
-    // Hata bildirimi göster
-    const errorBanner = document.createElement('div');
-    errorBanner.className = 'alert alert-warning alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
-    errorBanner.setAttribute('role', 'alert');
-    errorBanner.innerHTML = `
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    // Popup gösterildiğini işaretle
+    window.popupShownOnThisPage = true;
+    
+    // Popup oluştur
+    const modal = document.createElement('div');
+    modal.className = 'position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center';
+    modal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    modal.style.zIndex = '9999';
+    
+    modal.innerHTML = `
+        <div class="bg-white p-4 rounded-3 shadow-lg" style="max-width: 400px;">
+            <div class="text-center mb-3">
+                <i class="fas fa-map-marker-alt fa-3x text-pet-blue mb-3"></i>
+                <h5 class="fw-bold">Konumunuzu kullanmamıza izin verin</h5>
+                <p class="text-muted mb-3">Size en yakın kuaförleri gösterebilmemiz için konumunuzu paylaşın.</p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button id="denyPermission" class="btn btn-outline-secondary px-4">Şimdi Değil</button>
+                <button id="allowPermission" class="btn bg-pet-blue text-white px-4">İzin Ver</button>
+            </div>
+        </div>
     `;
     
-    document.body.appendChild(errorBanner);
+    document.body.appendChild(modal);
     
-    // 5 saniye sonra otomatik kapat
-    setTimeout(() => {
-        errorBanner.classList.remove('show');
+    // İzin ver butonu - Chrome'un popup'ını göster
+    document.getElementById('allowPermission').addEventListener('click', function() {
+        modal.remove();
+        
+        // Chrome'un konum izni dialogunu göster
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                localStorage.setItem('locationPermissionGranted', 'true');
+                
+                // Tarayıcıdan gelen gerçek konum bilgisini kullan
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                
+                const locationInput = document.getElementById('location');
+                if (locationInput) {
+                    findNearestCity(latitude, longitude, locationInput);
+                }
+            },
+            function(error) {
+                if (error.code === error.PERMISSION_DENIED) {
+                    localStorage.setItem('locationPermissionGranted', 'false');
+                    showLocationError("Konum izni reddedildi");
+                    
+                    // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+                    const locationInput = document.getElementById('location');
+                    if (locationInput && locationInput.value.trim()) {
+                        const city = locationInput.value.trim();
+                        console.log("İzin soruldu ama reddedildi, manuel şehir için mahalleler yükleniyor: " + city);
+                        updateDistrictsByCity(city);
+                    }
+                }
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+    });
+    
+    // İzni reddet butonu - popup'ı kapat ve izni reddet
+    document.getElementById('denyPermission').addEventListener('click', function() {
+        localStorage.setItem('locationPermissionGranted', 'false');
+        modal.remove();
+        
+        // Eğer şehir seçildiyse o şehrin mahallelerini yükle
+        const locationInput = document.getElementById('location');
+        if (locationInput && locationInput.value.trim()) {
+            const city = locationInput.value.trim();
+            console.log("İzin isteği reddedildi, manuel şehir için mahalleler yükleniyor: " + city);
+            updateDistrictsByCity(city);
+        }
+    });
+}
+
+// Konum hatası olduğunda metin kutusunda hata göster
+function showLocationError(message) {
+    const locationInput = document.getElementById('location');
+    if (locationInput) {
+        locationInput.value = "";
+        locationInput.placeholder = message;
+        locationInput.disabled = false;
+        
+        // 3 saniye sonra normal placeholder'a dön
         setTimeout(() => {
-            errorBanner.remove();
-        }, 500);
-    }, 5000);
+            locationInput.placeholder = "Şehir ara";
+        }, 3000);
+    }
 }
 
-// Konum debug bilgisi göster
+// Test için konum koordinatlarını ve adres bilgilerini ekrana yazdırma
 function showLocationDebugInfo(latitude, longitude) {
-    console.log("Gerçek konum bilgisi alındı (debug):", latitude, longitude);
-}
-
-// En yakın şehri bul
-function findNearestCity(latitude, longitude, locationInput) {
-    if (!locationInput) return;
-    
-    // Tahmini şehirler ve koordinatları
+    // Türkiye'deki önemli şehirlerin koordinatları (enlem, boylam) ve isimlerini kontrol et
     const cities = [
         { name: "İstanbul", lat: 41.0082, lon: 28.9784 },
         { name: "Ankara", lat: 39.9334, lon: 32.8597 },
@@ -484,10 +590,6 @@ function findNearestCity(latitude, longitude, locationInput) {
     
     // İstanbul'daki önemli mahalleler
     const istanbulNeighborhoods = [
-        { name: 'Kadıköy', lat: 40.9927, lon: 29.0276 },
-        { name: 'Beşiktaş', lat: 41.0422, lon: 29.0093 },
-        { name: 'Şişli', lat: 41.0602, lon: 28.9877 },
-        { name: 'Üsküdar', lat: 41.0256, lon: 29.0156 },
         { name: 'Caferağa', lat: 40.9894, lon: 29.0342 },
         { name: 'Fenerbahçe', lat: 40.9703, lon: 29.0361 },
         { name: 'Koşuyolu', lat: 41.0128, lon: 29.0339 },
@@ -506,7 +608,7 @@ function findNearestCity(latitude, longitude, locationInput) {
         { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
     ];
     
-    // En yakın şehri bul
+    // En yakın şehri ve mahalleyi bul
     let closestCity = null;
     let minCityDistance = Infinity;
     let cityDistance = 0;
@@ -534,36 +636,269 @@ function findNearestCity(latitude, longitude, locationInput) {
         }
     }
     
-    // Input'u güncelle
-    locationInput.disabled = false;
+    // Debug bilgilerini göstermek için banner oluştur
+    const debugBanner = document.createElement('div');
+    debugBanner.className = 'position-fixed top-0 start-0 w-100 bg-dark text-white p-2';
+    debugBanner.style.zIndex = '9998';
+    
+    // Tahmini adres oluştur
+    let estimatedAddress = "";
     if (closestCity) {
-        console.log("En yakın şehir olarak tespit edildi:", closestCity.name);
-        locationInput.value = closestCity.name;
-        
-        // Şehre göre mahalleleri yükle
-        if (typeof updateDistrictsByCity === 'function') {
-            console.log("Şehir için mahalle verileri yükleniyor:", closestCity.name);
-            updateDistrictsByCity(closestCity.name).then(() => {
-                // Eğer İstanbul ise ve en yakın mahalle bulunduysa
-                if (closestCity.name === "İstanbul" && closestNeighborhood) {
-                    console.log("İstanbul için en yakın mahalle:", closestNeighborhood.name);
+        estimatedAddress = `${closestCity.name}`;
+        if (closestNeighborhood) {
+            estimatedAddress += `, ${closestNeighborhood.name} Mahallesi`;
+        }
+        estimatedAddress += ` (tahmini mesafe: ${minCityDistance.toFixed(1)} km)`;
+    }
+    
+    // Banner içeriği
+    debugBanner.innerHTML = `
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="mb-1">Konum Test Bilgileri (Sadece Test İçin)</h5>
+                    <p class="mb-1">Enlem: ${latitude}, Boylam: ${longitude}</p>
+                    <p class="mb-2">Tahmini adres: ${estimatedAddress}</p>
+                    <p class="mb-0" id="locationAddress">Gerçek adres bilgileri getiriliyor...</p>
+                    <button class="btn btn-sm btn-danger mt-2" id="closeDebugBanner">Kapat</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(debugBanner);
+    
+    // Kapatma butonu
+    document.getElementById('closeDebugBanner').addEventListener('click', function() {
+        debugBanner.remove();
+    });
+    
+    // Servis üzerinden adres bilgisini almayı dene
+    try {
+        // Nominatim servisini kullanarak adres bilgisini alma (açık kaynak)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`)
+        .then(response => response.json())
+        .then(data => {
+            const addressElement = document.getElementById('locationAddress');
+            if (addressElement) {
+                if (data.display_name) {
+                    addressElement.textContent = `Gerçek adres: ${data.display_name}`;
                     
-                    // Mahalle seçim kutusu
-                    const districtSelect = document.getElementById('district');
-                    if (districtSelect) {
-                        // En yakın mahalleyi dropdown'da seç
-                        for (let i = 0; i < districtSelect.options.length; i++) {
-                            if (districtSelect.options[i].text.includes(closestNeighborhood.name)) {
-                                console.log("Mahalle dropdown'da seçildi:", districtSelect.options[i].text);
-                                districtSelect.selectedIndex = i;
-                                break;
-                            }
+                    // Adres detaylarını da göster (varsa)
+                    if (data.address) {
+                        const addressDetails = [];
+                        if (data.address.road) addressDetails.push(data.address.road);
+                        if (data.address.neighbourhood) addressDetails.push(data.address.neighbourhood);
+                        if (data.address.suburb) addressDetails.push(data.address.suburb);
+                        if (data.address.city_district) addressDetails.push(data.address.city_district);
+                        if (data.address.city) addressDetails.push(data.address.city);
+                        if (data.address.state) addressDetails.push(data.address.state);
+                        if (data.address.country) addressDetails.push(data.address.country);
+                        
+                        if (addressDetails.length > 0) {
+                            const detailsElement = document.createElement('p');
+                            detailsElement.className = 'mb-0 small';
+                            detailsElement.textContent = `Adres detayları: ${addressDetails.join(', ')}`;
+                            addressElement.after(detailsElement);
+                        }
+                        
+                        // Gerçek adresten mahalle bilgisini alıp dropdown'da seç
+                        let realNeighborhood = null;
+                        
+                        // Önce neighbourhood bilgisini al
+                        if (data.address.neighbourhood) {
+                            realNeighborhood = data.address.neighbourhood;
+                        } 
+                        // Yoksa suburb bilgisini al
+                        else if (data.address.suburb) {
+                            realNeighborhood = data.address.suburb;
+                        }
+                        // Yoksa city_district bilgisini al
+                        else if (data.address.city_district) {
+                            realNeighborhood = data.address.city_district;
+                        }
+                        
+                        // Mahalle bilgisi bulunmuşsa ve İstanbul'daysa
+                        if (realNeighborhood && (data.address.city === 'İstanbul' || data.address.city === 'Istanbul')) {
+                            console.log("Gerçek adres mahallesi bulundu:", realNeighborhood);
+                            
+                            // Dropdown'u güncelle
+                            setTimeout(() => {
+                                const districtSelect = document.getElementById('district');
+                                if (districtSelect) {
+                                    for (let i = 0; i < districtSelect.options.length; i++) {
+                                        if (districtSelect.options[i].text.includes(realNeighborhood)) {
+                                            console.log("Mahalle dropdown'da seçildi (gerçek adres):", districtSelect.options[i].text);
+                                            districtSelect.selectedIndex = i;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }, 500); // Dropdown yüklenmesi için 0.5 saniye bekle
                         }
                     }
+                } else {
+                    addressElement.textContent = `Servis adresi döndürmedi, tahmini adres kullanılıyor.`;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Adres bilgisi alınamadı:', error);
+            const addressElement = document.getElementById('locationAddress');
+            if (addressElement) {
+                addressElement.textContent = `Adres bilgisi alınamadı, tahmini adres kullanılıyor.`;
+            }
+        });
+    } catch (error) {
+        console.error('Adres sorgusu sırasında hata:', error);
+    }
+}
+
+// Koordinatlardan en yakın şehri bul
+function findNearestCity(latitude, longitude, locationInput) {
+    // Konum bilgilerini localStorage'a kaydet (sürekli güncelleme için)
+    localStorage.setItem('userLatitude', latitude);
+    localStorage.setItem('userLongitude', longitude);
+    // Türkiye'nin büyük şehirleri
+    const turkishCities = [
+        { name: "İstanbul", lat: 41.0082, lon: 28.9784 },
+        { name: "Ankara", lat: 39.9334, lon: 32.8597 },
+        { name: "İzmir", lat: 38.4237, lon: 27.1428 },
+        { name: "Bursa", lat: 40.1885, lon: 29.0610 },
+        { name: "Antalya", lat: 36.8969, lon: 30.7133 },
+        { name: "Adana", lat: 37.0000, lon: 35.3213 },
+        { name: "Konya", lat: 37.8667, lon: 32.4833 },
+        { name: "Gaziantep", lat: 37.0662, lon: 37.3833 },
+        { name: "Mersin", lat: 36.8000, lon: 34.6333 },
+        { name: "Diyarbakır", lat: 37.9144, lon: 40.2306 },
+        { name: "Kayseri", lat: 38.7312, lon: 35.4787 },
+        { name: "Eskişehir", lat: 39.7767, lon: 30.5206 },
+        { name: "Samsun", lat: 41.2867, lon: 36.3300 },
+        { name: "Denizli", lat: 37.7736, lon: 29.0878 },
+        { name: "Şanlıurfa", lat: 37.1591, lon: 38.7969 },
+        { name: "Malatya", lat: 38.3552, lon: 38.3095 },
+        { name: "Erzurum", lat: 39.9000, lon: 41.2700 },
+        { name: "Trabzon", lat: 41.0050, lon: 39.7297 }
+    ];
+    
+    // İstanbul, Ankara ve İzmir için özel mahalle verileri
+    const istanbulNeighborhoods = [
+        { name: 'Caferağa', lat: 40.9894, lon: 29.0342 },
+        { name: 'Fenerbahçe', lat: 40.9703, lon: 29.0361 },
+        { name: 'Koşuyolu', lat: 41.0128, lon: 29.0339 },
+        { name: 'Abbasağa', lat: 41.0422, lon: 29.0097 },
+        { name: 'Bebek', lat: 41.0770, lon: 29.0418 },
+        { name: 'Etiler', lat: 41.0811, lon: 29.0333 },
+        { name: 'Levent', lat: 41.0825, lon: 29.0178 },
+        { name: 'Cihangir', lat: 41.0317, lon: 28.9833 },
+        { name: 'Galata', lat: 41.0256, lon: 28.9742 },
+        { name: 'Taksim', lat: 41.0370, lon: 28.9850 },
+        { name: 'Mecidiyeköy', lat: 41.0667, lon: 28.9956 },
+        { name: 'Erenköy', lat: 40.9717, lon: 29.0636 },
+        { name: 'Suadiye', lat: 40.9572, lon: 29.0681 },
+        { name: 'Bağcılar', lat: 41.0384, lon: 28.8558 },
+        { name: 'Bakırköy', lat: 40.9808, lon: 28.8772 },
+        { name: 'Fatih', lat: 41.0186, lon: 28.9394 }
+    ];
+    
+    const ankaraNeighborhoods = [
+        { name: 'Kızılay', lat: 39.9208, lon: 32.8541 },
+        { name: 'Çukurambar', lat: 39.9114, lon: 32.8119 },
+        { name: 'Bahçelievler', lat: 39.9217, lon: 32.8158 },
+        { name: 'Ümitköy', lat: 39.9047, lon: 32.6981 },
+        { name: 'Çayyolu', lat: 39.8894, lon: 32.6589 },
+        { name: 'Batıkent', lat: 39.9692, lon: 32.7306 }
+    ];
+    
+    const izmirNeighborhoods = [
+        { name: 'Alsancak', lat: 38.4370, lon: 27.1428 },
+        { name: 'Karşıyaka', lat: 38.4602, lon: 27.1100 },
+        { name: 'Bornova', lat: 38.4697, lon: 27.2137 },
+        { name: 'Göztepe', lat: 38.3922, lon: 27.0808 },
+        { name: 'Bostanlı', lat: 38.4464, lon: 27.0983 }
+    ];
+    
+    // En yakın şehri bul
+    let closestCity = null;
+    let minDistance = Number.MAX_VALUE;
+    
+    for (const city of turkishCities) {
+        const distance = haversineDistance(
+            latitude, longitude, 
+            city.lat, city.lon
+        );
+        
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestCity = city;
+        }
+    }
+    
+    // Sonucu göster
+    if (closestCity && locationInput) {
+        locationInput.value = closestCity.name;
+        locationInput.disabled = false;
+        
+        console.log("En yakın şehir bulundu:", closestCity.name);
+        
+        // Şehir için mahalleleri yükle ve en yakın mahalleyi seç
+        console.log("Şehir için mahalleler yükleniyor:", closestCity.name);
+        
+        // Mevcut updateDistrictsByCity fonksiyonunu çağır (cities.js'de tanımlı)
+        if (typeof updateDistrictsByCity === 'function') {
+            updateDistrictsByCity(closestCity.name).then(() => {
+                // Şehre bağlı olarak uygun mahalle datasını seç
+                let neighborhoodData = [];
+                if (closestCity.name === 'İstanbul') {
+                    neighborhoodData = istanbulNeighborhoods;
+                } else if (closestCity.name === 'Ankara') {
+                    neighborhoodData = ankaraNeighborhoods;
+                } else if (closestCity.name === 'İzmir') {
+                    neighborhoodData = izmirNeighborhoods;
                 }
                 
-                // Form otomatik olarak gönder
-                submitForm();
+                // Eğer bu şehir için mahalle verisi varsa, en yakın mahalleyi bul
+                if (neighborhoodData.length > 0) {
+                    let closestNeighborhood = null;
+                    let minNeighborhoodDistance = Infinity;
+                    
+                    for (const nh of neighborhoodData) {
+                        const distance = haversineDistance(latitude, longitude, nh.lat, nh.lon);
+                        if (distance < minNeighborhoodDistance) {
+                            minNeighborhoodDistance = distance;
+                            closestNeighborhood = nh.name;
+                        }
+                    }
+                    
+                    console.log("En yakın mahalle bulundu:", closestNeighborhood);
+                    
+                    // En yakın mahalleyi dropdown'da seç
+                    if (closestNeighborhood) {
+                        setTimeout(() => {
+                            const districtSelect = document.getElementById('district');
+                            if (districtSelect) {
+                                // Dropdown'da mahalleyi bul
+                                for (let i = 0; i < districtSelect.options.length; i++) {
+                                    // Tam adı veya adın bir parçasını içeriyor mu kontrol et
+                                    if (districtSelect.options[i].text.includes(closestNeighborhood)) {
+                                        districtSelect.selectedIndex = i;
+                                        console.log("Mahalle dropdown'da seçildi:", districtSelect.options[i].text);
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            // Form'u submit et
+                            submitForm();
+                        }, 1000); // Mahallelerin yüklenmesi için 1 saniye bekle
+                    } else {
+                        // Mahalle bulunamadıysa direk formu gönder
+                        submitForm();
+                    }
+                } else {
+                    // Eğer şehir için mahalle verisi yoksa, direk formu gönder
+                    submitForm();
+                }
             }).catch(error => {
                 console.error("Mahalle yüklerken hata:", error);
                 // Hata durumunda sadece form gönder
