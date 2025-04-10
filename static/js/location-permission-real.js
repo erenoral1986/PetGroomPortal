@@ -1,46 +1,32 @@
 // Global değişken tanımlaması
 window.popupShownOnThisPage = false;
 
-// Debug fonksiyonu - Konum izni durumunu sıfırla (Test için)
+// Geliştirici için: Konsola yazarak konum izni sıfırlama (Canlı sitede gizli, sadece geliştirme için)
+// Kullanım: console.js dosyasını açıp console.log(resetLocationPermission()) yazarak çalıştırılabilir
 function resetLocationPermission() {
     localStorage.removeItem('locationPermissionGranted');
     localStorage.removeItem('userLatitude');
     localStorage.removeItem('userLongitude');
     localStorage.removeItem('userCity');
     localStorage.removeItem('userNeighborhood');
-    console.log("Konum izni sıfırlandı");
-    
-    // Sayfa yenilemek için
-    window.location.reload();
+    console.log("Konum izni durumu sıfırlandı. Sayfayı yenileyin.");
+    return "Konum izni sıfırlandı!";
 }
 
-// Sayfa yüklendiğinde konum izni kontrolünü yap
+// Sayfa yüklendiğinde konum izni kontrolünü yap - sadece anasayfada çalışacak
 document.addEventListener('DOMContentLoaded', function() {
-    // Test için konum izni sıfırlama butonunu ekle (sadece geliştirme aşamasında)
-    const testModeEnabled = true; // Geliştirme aşamasında true, canlıya alırken false yapılacak
-    console.log("Test modu aktif, konum izni sıfırlama butonu eklenecek...");
+    // Sadece anasayfada konum izni iste
+    // URL kontrol edilerek sadece ana sayfada çalışması sağlanıyor
+    const isHomePage = window.location.pathname === '/' || 
+                        window.location.pathname === '/index' || 
+                        window.location.pathname === '/index.html';
     
-    if (testModeEnabled) {
-        // 1 saniye gecikme ile butonu ekleyerek potansiyel zamanlama sorunlarını önle
-        setTimeout(function() {
-            const resetButton = document.createElement('button');
-            resetButton.id = 'resetLocationPermission';
-            resetButton.textContent = 'Konum İzni Sıfırla (Test)';
-            resetButton.className = 'btn btn-danger position-fixed bottom-0 end-0 m-4';
-            resetButton.style.zIndex = '10000';
-            resetButton.style.fontSize = '16px';
-            resetButton.style.fontWeight = 'bold';
-            resetButton.style.padding = '10px 15px';
-            resetButton.style.cursor = 'pointer';
-            resetButton.style.border = '2px solid black';
-            resetButton.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
-            resetButton.onclick = resetLocationPermission;
-            document.body.appendChild(resetButton);
-            console.log("Test butonu eklendi: #resetLocationPermission");
-        }, 1000);
+    if (isHomePage) {
+        console.log("Anasayfadayız, konum izni kontrolü yapılacak...");
+        checkPermissionOnPageLoad();
+    } else {
+        console.log("Anasayfa dışındayız, konum izni kontrolü yapılmayacak.");
     }
-    
-    checkPermissionOnPageLoad();
     
     // Her 60 saniyede bir konumu güncelleme işlevi
     setInterval(function() {
