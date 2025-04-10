@@ -1,55 +1,134 @@
 <?php
-// Genel yardımcı fonksiyonlar
+/**
+ * Yardımcı fonksiyonlar
+ */
 
-// Kullanıcının giriş yapıp yapmadığını kontrol eder
+// Oturum başlat
+session_start();
+
+// Veritabanı bağlantısını dahil et
+require_once __DIR__ . '/../config/database.php';
+
+/**
+ * URL oluştur
+ * 
+ * @param string $path Yol
+ * @return string Tam URL
+ */
+function url($path = '') {
+    $base_url = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 
+                'https://' : 'http://';
+    $base_url .= $_SERVER['HTTP_HOST'];
+    
+    if (empty($path)) {
+        return $base_url;
+    }
+    
+    return $base_url . '/index.php?page=' . $path;
+}
+
+/**
+ * Yönlendirme yap
+ * 
+ * @param string $path Yönlendirilecek sayfa
+ * @return void
+ */
+function redirect($path = '') {
+    header('Location: ' . url($path));
+    exit;
+}
+
+/**
+ * Kullanıcı giriş yapmış mı kontrol et
+ * 
+ * @return bool Giriş durumu
+ */
 function is_logged_in() {
     return isset($_SESSION['user_id']);
 }
 
-// Oturum açmış kullanıcının yönetici veya salon sahibi olup olmadığını kontrol eder
-function is_admin() {
-    return isset($_SESSION['user_role']) && ($_SESSION['user_role'] == 'admin' || $_SESSION['user_role'] == 'salon_owner');
+/**
+ * Kullanıcı rolünü kontrol et
+ * 
+ * @param string $role Kontrol edilecek rol
+ * @return bool Rol doğru mu
+ */
+function has_role($role) {
+    return is_logged_in() && $_SESSION['user_role'] === $role;
 }
 
-// Girilen metni güvenli hale getirir (XSS saldırılarına karşı)
-function escape($string) {
-    return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
-}
-
-// GET isteklerinde kullanmak için URL oluşturma
-function url($page, $params = []) {
-    $url = "index.php?page=" . urlencode($page);
-    
-    foreach ($params as $key => $value) {
-        $url .= "&" . urlencode($key) . "=" . urlencode($value);
+/**
+ * Roller için yetki kontrolü
+ * 
+ * @param array $allowed_roles İzin verilen roller
+ * @return bool Yetkili mi
+ */
+function is_authorized($allowed_roles = []) {
+    if (!is_logged_in()) {
+        return false;
     }
     
-    return $url;
+    return in_array($_SESSION['user_role'], $allowed_roles);
 }
 
-// Aktif sayfayı kontrol etme
-function is_active($page) {
-    $current_page = isset($_GET['page']) ? $_GET['page'] : 'home';
-    return $current_page === $page ? 'active' : '';
+/**
+ * Giriş gerektiren sayfalar için kontrol
+ * 
+ * @param array $allowed_roles İzin verilen roller (boş ise tüm giriş yapmış kullanıcılara izin verilir)
+ * @return void
+ */
+function require_login($allowed_roles = []) {
+    if (!is_logged_in()) {
+        // Flash mesajı ayarla
+        set_flash_message('error', 'Bu sayfayı görüntülemek için giriş yapmalısınız.');
+        redirect('login');
+    }
+    
+    if (!empty($allowed_roles) && !is_authorized($allowed_roles)) {
+        // Flash mesajı ayarla
+        set_flash_message('error', 'Bu sayfayı görüntülemek için yetkiniz yok.');
+        redirect('home');
+    }
 }
 
-// Tarih formatını değiştirme
-function format_date($date) {
-    $timestamp = strtotime($date);
-    return date('d.m.Y', $timestamp);
+/**
+ * Güvenli metin çıktısı için kaçış
+ * 
+ * @param string $text Kaçış yapılacak metin
+ * @return string Güvenli metin
+ */
+function escape($text) {
+    return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
-// Saat formatını değiştirme
-function format_time($time) {
-    return date('H:i', strtotime($time));
+/**
+ * Şifreyi hash'le
+ * 
+ * @param string $password Hash'lenecek şifre
+ * @return string Hash'lenmiş şifre
+ */
+function hash_password($password) {
+    return password_hash($password, PASSWORD_DEFAULT);
 }
 
-// Para birimi formatını değiştirme
-function format_currency($amount) {
-    return number_format($amount, 2, ',', '.') . ' ₺';
+/**
+ * Şifre doğrulama
+ * 
+ * @param string $password Kontrol edilecek şifre
+ * @param string $hash Hash'lenmiş şifre
+ * @return bool Şifre doğru mu
+ */
+function check_password($password, $hash) {
+    return password_verify($password, $hash);
 }
 
-// Flash mesajları ayarlama
+/**
+ * Flash mesajı ayarla
+ * 
+ * @param string $type Mesaj tipi (success, error, warning, info)
+ * @param string $message Mesaj içeriği
+ * @return void
+ */
 function set_flash_message($type, $message) {
     $_SESSION['flash_message'] = [
         'type' => $type,
@@ -57,145 +136,203 @@ function set_flash_message($type, $message) {
     ];
 }
 
-// Flash mesajları gösterme
-function display_flash_message() {
-    if (isset($_SESSION['flash_message'])) {
-        $flash = $_SESSION['flash_message'];
-        echo '<div class="alert alert-' . escape($flash['type']) . ' alert-dismissible fade show" role="alert">';
-        echo escape($flash['message']);
-        echo '<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>';
-        echo '</div>';
-        
-        // Mesajı gösterdikten sonra sil
-        unset($_SESSION['flash_message']);
+/**
+ * Flash mesajını göster ve temizle
+ * 
+ * @return string HTML içeriği
+ */
+function get_flash_message() {
+    if (!isset($_SESSION['flash_message'])) {
+        return '';
     }
+    
+    $flash = $_SESSION['flash_message'];
+    unset($_SESSION['flash_message']);
+    
+    $type_class = 'alert-info';
+    switch ($flash['type']) {
+        case 'success':
+            $type_class = 'alert-success';
+            break;
+        case 'error':
+            $type_class = 'alert-danger';
+            break;
+        case 'warning':
+            $type_class = 'alert-warning';
+            break;
+    }
+    
+    return '<div class="alert ' . $type_class . ' alert-dismissible fade show" role="alert">
+                ' . escape($flash['message']) . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+            </div>';
 }
 
-// Sayfalar arası yönlendirme
-function redirect($page, $params = []) {
-    $url = url($page, $params);
-    header("Location: $url");
-    exit;
-}
-
-// En yakın uygun zamanı bulma yardımcı fonksiyonu
-function get_available_time_slots($salon_id, $date, $service_id) {
+/**
+ * Şehir için mahalleleri getir
+ * 
+ * @param string $city Şehir adı
+ * @return array Mahalle listesi
+ */
+function get_districts($city) {
     global $pdo;
     
-    // Gün adını bul (0: Pazartesi - 6: Pazar)
-    $day_of_week = date('N', strtotime($date)) - 1;
-    
-    // Salon çalışma saatlerini al
-    $stmt = $pdo->prepare("SELECT * FROM availability WHERE salon_id = ? AND day_of_week = ?");
-    $stmt->execute([$salon_id, $day_of_week]);
-    $availability = $stmt->fetchAll();
-    
-    if (empty($availability)) {
-        return []; // Bu gün için çalışma saati yok
-    }
-    
-    // Hizmet süresini al
-    $stmt = $pdo->prepare("SELECT duration FROM services WHERE id = ?");
-    $stmt->execute([$service_id]);
-    $service = $stmt->fetch();
-    $duration = $service['duration']; // dakika cinsinden
-    
-    // Mevcut randevuları al
-    $stmt = $pdo->prepare("SELECT start_time, end_time FROM appointments WHERE salon_id = ? AND date = ?");
-    $stmt->execute([$salon_id, $date]);
-    $appointments = $stmt->fetchAll();
-    
-    $time_slots = [];
-    
-    // Her çalışma saati aralığı için
-    foreach ($availability as $avail) {
-        $start = strtotime($avail['start_time']);
-        $end = strtotime($avail['end_time']);
-        
-        // 30 dakikalık aralıklarla kontrol et
-        for ($time = $start; $time <= ($end - $duration * 60); $time += 30 * 60) {
-            $slot_start = date('H:i:s', $time);
-            $slot_end = date('H:i:s', $time + $duration * 60);
-            
-            // Bu zaman dilimi müsait mi kontrol et
-            $is_available = true;
-            foreach ($appointments as $appointment) {
-                $apt_start = strtotime($appointment['start_time']);
-                $apt_end = strtotime($appointment['end_time']);
-                
-                // Çakışma kontrolü
-                if (($time >= $apt_start && $time < $apt_end) || 
-                    ($time + $duration * 60 > $apt_start && $time + $duration * 60 <= $apt_end) ||
-                    ($time <= $apt_start && $time + $duration * 60 >= $apt_end)) {
-                    $is_available = false;
-                    break;
-                }
-            }
-            
-            if ($is_available) {
-                $time_slots[] = [
-                    'start_time' => $slot_start,
-                    'end_time' => $slot_end,
-                    'display_time' => date('H:i', $time)
-                ];
-            }
-        }
-    }
-    
-    return $time_slots;
-}
-
-// Şehir listesini alma
-function get_cities() {
-    return [
-        'Adana', 'Adıyaman', 'Afyonkarahisar', 'Ağrı', 'Amasya', 'Ankara', 'Antalya', 'Artvin', 'Aydın', 'Balıkesir',
-        'Bilecik', 'Bingöl', 'Bitlis', 'Bolu', 'Burdur', 'Bursa', 'Çanakkale', 'Çankırı', 'Çorum', 'Denizli',
-        'Diyarbakır', 'Edirne', 'Elazığ', 'Erzincan', 'Erzurum', 'Eskişehir', 'Gaziantep', 'Giresun', 'Gümüşhane', 'Hakkari',
-        'Hatay', 'Isparta', 'Mersin', 'İstanbul', 'İzmir', 'Kars', 'Kastamonu', 'Kayseri', 'Kırklareli', 'Kırşehir',
-        'Kocaeli', 'Konya', 'Kütahya', 'Malatya', 'Manisa', 'Kahramanmaraş', 'Mardin', 'Muğla', 'Muş', 'Nevşehir',
-        'Niğde', 'Ordu', 'Rize', 'Sakarya', 'Samsun', 'Siirt', 'Sinop', 'Sivas', 'Tekirdağ', 'Tokat',
-        'Trabzon', 'Tunceli', 'Şanlıurfa', 'Uşak', 'Van', 'Yozgat', 'Zonguldak', 'Aksaray', 'Bayburt', 'Karaman',
-        'Kırıkkale', 'Batman', 'Şırnak', 'Bartın', 'Ardahan', 'Iğdır', 'Yalova', 'Karabük', 'Kilis', 'Osmaniye',
-        'Düzce'
-    ];
-}
-
-// Şehre göre mahalleler
-function get_districts($city) {
-    $neighborhoods = [
-        'İstanbul' => [
-            'Acıbadem', 'Adatepe', 'Alemdağ', 'Alibeyköy', 'Altunizade', 'Ambarlı', 'Anadoluhisarı', 'Arnavutköy', 
-            'Atakent', 'Ataköy', 'Atalar', 'Ataşehir', 'Ayazağa', 'Ayazma', 'Aydınlı', 'Bahçeköy', 'Bahçelievler', 
-            'Bahçeşehir', 'Balat', 'Balmumcu', 'Basınköy', 'Batı Ataşehir', 'Bağlarbaşı', 'Başakşehir', 
-            'Bebek', 'Beyazıtağa', 'Beykoz', 'Beylerbeyi', 'Beyoğlu', 'Bostancı'
-        ],
-        'Ankara' => [
-            'Akyurt', 'Altındağ', 'Ayaş', 'Bala', 'Beypazarı', 'Çankaya', 'Çubuk', 'Elmadağ', 'Etimesgut', 
-            'Gölbaşı', 'Güdül', 'Haymana', 'Kalecik', 'Kazan', 'Keçiören', 'Kızılcahamam', 'Mamak', 'Nallıhan', 
-            'Polatlı', 'Pursaklar', 'Sincan', 'Şereflikoçhisar', 'Yenimahalle'
-        ],
-        'İzmir' => [
-            'Aliağa', 'Balçova', 'Bayındır', 'Bayraklı', 'Bergama', 'Beydağ', 'Bornova', 'Buca', 'Çeşme', 
-            'Çiğli', 'Dikili', 'Foça', 'Gaziemir', 'Güzelbahçe', 'Karabağlar', 'Karaburun', 'Karşıyaka', 
-            'Kemalpaşa', 'Kınık', 'Kiraz', 'Konak', 'Menderes', 'Menemen', 'Narlıdere', 'Ödemiş'
-        ],
-        'Antalya' => [
-            'Aksu', 'Alanya', 'Altınkum', 'Arapsuyu', 'Aspendos', 'Bahçelievler', 'Belek', 'Boğaçay', 
-            'Demre', 'Deniz', 'Dokuma', 'Duraliler', 'Düden', 'Elmali', 'Etiler', 'Fabrikalar', 'Fener', 
-            'Gazipaşa', 'Göksu', 'Güllük', 'Güzeloba', 'Hurma', 'Kaleiçi', 'Kaş', 'Kemer', 'Kepez', 'Konakli', 
-            'Konyaaltı', 'Kundu', 'Kuzdere', 'Lara', 'Liman', 'Manavgat', 'Meltem'
-        ]
-    ];
-    
+    // Şehir adı güvenlik kontrolü
     $city = trim($city);
     
-    if (isset($neighborhoods[$city])) {
-        $districts = $neighborhoods[$city];
-        sort($districts); // Alfabetik sırala
-        return $districts;
+    // Önbellek anahtarı oluştur
+    $cache_key = 'districts_' . strtolower(str_replace(' ', '_', $city));
+    
+    // Önbellekte varsa oradan döndür
+    if (isset($_SESSION[$cache_key])) {
+        return $_SESSION[$cache_key];
     }
     
-    return []; // Şehir bulunamadıysa boş dizi döndür
+    // Veritabanından mahalleleri getir
+    // Bu örnekte sabit veriler kullanılıyor, gerçek uygulamada veritabanından çekilecek
+    $istanbul_districts = ['Adalar', 'Bakırköy', 'Beşiktaş', 'Beykoz', 'Beyoğlu', 'Fatih', 'Kadıköy', 'Kartal', 'Maltepe', 'Pendik', 'Sarıyer', 'Şişli', 'Ümraniye', 'Üsküdar', 'Zeytinburnu'];
+    $ankara_districts = ['Altındağ', 'Çankaya', 'Etimesgut', 'Keçiören', 'Mamak', 'Sincan', 'Yenimahalle'];
+    $izmir_districts = ['Alsancak', 'Bornova', 'Çiğli', 'Karşıyaka', 'Konak'];
+    $antalya_districts = ['Aksu', 'Döşemealtı', 'Kepez', 'Konyaaltı', 'Lara', 'Muratpaşa'];
+    
+    $districts = [];
+    
+    switch (mb_strtolower($city, 'UTF-8')) {
+        case 'istanbul':
+            $districts = $istanbul_districts;
+            break;
+        case 'ankara':
+            $districts = $ankara_districts;
+            break;
+        case 'izmir':
+            $districts = $izmir_districts;
+            break;
+        case 'antalya':
+            $districts = $antalya_districts;
+            break;
+        default:
+            // Diğer şehirler için varsayılan mahalleler
+            $districts = ['Merkez'];
+    }
+    
+    // Önbelleğe kaydet
+    $_SESSION[$cache_key] = $districts;
+    
+    return $districts;
 }
 
+/**
+ * Mevcut sayfayı al
+ * 
+ * @return string Sayfa adı
+ */
+function get_current_page() {
+    return $_GET['page'] ?? 'home';
+}
+
+/**
+ * Tarihi formatlı göster
+ * 
+ * @param string $date Tarih
+ * @param string $format Format
+ * @return string Formatlanmış tarih
+ */
+function format_date($date, $format = 'd.m.Y') {
+    return date($format, strtotime($date));
+}
+
+/**
+ * Saati formatlı göster
+ * 
+ * @param string $time Saat
+ * @param string $format Format
+ * @return string Formatlanmış saat
+ */
+function format_time($time, $format = 'H:i') {
+    return date($format, strtotime($time));
+}
+
+/**
+ * Para birimini formatlı göster
+ * 
+ * @param float $amount Tutar
+ * @return string Formatlanmış tutar
+ */
+function format_money($amount) {
+    return number_format($amount, 2, ',', '.') . ' ₺';
+}
+
+/**
+ * Salon bulmak için aranan şehir ve mahalle bilgisini al
+ * 
+ * @return array Şehir ve mahalle bilgisi
+ */
+function get_salon_search_params() {
+    $location = $_GET['location'] ?? null;
+    $district = $_GET['district'] ?? 'all';
+    $pet_type = $_GET['pet_type'] ?? 'all';
+    
+    return [
+        'location' => $location,
+        'district' => $district,
+        'pet_type' => $pet_type
+    ];
+}
+
+/**
+ * Salon listesini getir
+ * 
+ * @param array $params Arama parametreleri
+ * @return array Salon listesi
+ */
+function get_salons($params) {
+    global $pdo;
+    
+    $location = $params['location'] ?? null;
+    $district = $params['district'] ?? 'all';
+    $pet_type = $params['pet_type'] ?? 'all';
+    
+    // Parametreler boşsa veya geçersizse boş dizi döndür
+    if (empty($location)) {
+        return [];
+    }
+    
+    // Sorgu hazırla
+    $sql = "SELECT s.* FROM salons s";
+    $params = [];
+    
+    // Filtreler
+    $where_conditions = [];
+    
+    // Şehir filtresi
+    $where_conditions[] = "s.city LIKE :city";
+    $params[':city'] = $location;
+    
+    // Pet tipi filtresi
+    if ($pet_type !== 'all') {
+        $sql .= " JOIN services srv ON s.id = srv.salon_id";
+        $where_conditions[] = "(srv.pet_type = :pet_type OR srv.pet_type = 'both')";
+        $params[':pet_type'] = $pet_type;
+    }
+    
+    // Mahalle filtresi
+    if ($district !== 'all') {
+        $where_conditions[] = "s.address LIKE :district";
+        $params[':district'] = "%$district%";
+    }
+    
+    // WHERE koşullarını ekle
+    if (!empty($where_conditions)) {
+        $sql .= " WHERE " . implode(" AND ", $where_conditions);
+    }
+    
+    // Tekrarlanan sonuçları önlemek için DISTINCT kullan
+    $sql = "SELECT DISTINCT s.* FROM (" . $sql . ") AS s";
+    
+    // Sorguyu çalıştır
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    
+    return $stmt->fetchAll();
+}
 ?>

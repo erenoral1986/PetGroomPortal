@@ -1,67 +1,76 @@
 <?php
-// Oturum başlatma
-session_start();
+/**
+ * Pet Kuaför - Ana Giriş Dosyası
+ * 
+ * Yönlendirme işlevselliğini yönetir ve ilgili sayfa dosyasını yükler
+ */
 
-// Veritabanı bağlantısı
-require_once 'config/database.php';
-
-// Helper fonksiyonları
+// Yardımcı fonksiyonları yükle
 require_once 'includes/functions.php';
 
-// Site başlık
-$site_title = "PetKuaför - Evcil Hayvan Bakım ve Kuaför Hizmetleri";
+// Mevcut sayfayı al
+$page = $_GET['page'] ?? 'home';
 
-// Sayfa tespiti
-$page = isset($_GET['page']) ? $_GET['page'] : 'home';
+// Geçerli sayfaları tanımla
+$valid_pages = [
+    'home', 'services', 'salons', 'salon_detail', 'login', 'register', 'logout', 
+    'book_appointment', 'profile', 'bookings', 'about', 'contact',
+    'admin_dashboard', 'admin_services', 'admin_availability', 'admin_appointments'
+];
 
-// Sayfa içeriğini yükle
-ob_start();
-switch ($page) {
-    case 'home':
-        require_once 'pages/home.php';
-        break;
-    case 'salons':
-        require_once 'pages/salons.php';
-        break;
-    case 'salon_detail':
-        require_once 'pages/salon_detail.php';
-        break;
-    case 'booking':
-        require_once 'pages/booking.php';
-        break;
-    case 'login':
-        require_once 'pages/login.php';
-        break;
-    case 'register':
-        require_once 'pages/register.php';
-        break;
-    case 'profile':
-        require_once 'pages/profile.php';
-        break;
-    case 'bookings':
-        require_once 'pages/bookings.php';
-        break;
-    case 'admin':
-        require_once 'admin/dashboard.php';
-        break;
-    case 'admin_services':
-        require_once 'admin/services.php';
-        break;
-    case 'admin_appointments':
-        require_once 'admin/appointments.php';
-        break;
-    case 'admin_availability':
-        require_once 'admin/availability.php';
-        break;
-    case 'logout':
-        require_once 'includes/logout.php';
-        break;
-    default:
-        require_once 'pages/home.php';
-        break;
+// Sayfa parametresi güvenliği
+$page = in_array($page, $valid_pages) ? $page : 'home';
+
+// Özel yetki gerektiren sayfalar için kontrol
+$admin_pages = ['admin_dashboard', 'admin_services', 'admin_availability', 'admin_appointments'];
+$salon_owner_pages = ['admin_dashboard', 'admin_services', 'admin_availability', 'admin_appointments'];
+$customer_pages = ['profile', 'bookings'];
+
+// Sayfa yetki kontrolleri
+if (in_array($page, $admin_pages) && !has_role('admin')) {
+    // Admin yetkisi gerektiren sayfa
+    set_flash_message('error', 'Bu sayfayı görüntülemek için yönetici yetkisine sahip olmalısınız.');
+    redirect('home');
 }
-$content = ob_get_clean();
 
-// Ana şablonu yükle
-require_once 'includes/layout.php';
+if (in_array($page, $salon_owner_pages) && !has_role('salon_owner') && !has_role('admin')) {
+    // Salon sahibi yetkisi gerektiren sayfa
+    set_flash_message('error', 'Bu sayfayı görüntülemek için salon sahibi olmalısınız.');
+    redirect('home');
+}
+
+if (in_array($page, $customer_pages) && !is_logged_in()) {
+    // Kullanıcı girişi gerektiren sayfa
+    set_flash_message('error', 'Bu sayfayı görüntülemek için giriş yapmalısınız.');
+    redirect('login');
+}
+
+// Özel sayfalar için işlemler
+if ($page === 'logout') {
+    // Çıkış işlemi
+    session_unset();
+    session_destroy();
+    
+    // Yeni oturum başlat ve çıkış mesajı göster
+    session_start();
+    set_flash_message('success', 'Başarıyla çıkış yaptınız.');
+    redirect('home');
+    exit;
+}
+
+// Header'ı yükle
+include 'includes/header.php';
+
+// Sayfa dosyasını yükle
+$page_path = 'pages/' . $page . '.php';
+
+if (file_exists($page_path)) {
+    include $page_path;
+} else {
+    // Sayfa bulunamazsa 404 hatası göster
+    include 'pages/404.php';
+}
+
+// Footer'ı yükle
+include 'includes/footer.php';
 ?>

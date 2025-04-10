@@ -1,926 +1,291 @@
-/* Pet Kuaför Styles */
+/**
+ * Pet Kuaför Ana Stil Dosyası
+ */
 
 :root {
-  --color-pet-blue: #1a9cb7;
-  --color-pet-teal: #30c9c9;
-  --color-pet-blue-dark: #167f95; /* Koyu mavi, hover için */
-  --color-pet-turquoise: #27D1C5; /* Turkuaz, hover için */
-  --color-pet-pink: #ff6b8b;
-  --color-pet-orange: #ff9666;
-  --color-pet-yellow: #ffd166;
-  --color-pet-green: #4ecca3;
-  
-  /* Bootstrap'a uyumluluk için eski değişken adlarını da tutalım */
-  --pet-blue: #1a9cb7;
-  --pet-teal: #30c9c9;
-  --pet-blue-dark: #167f95;
-  --pet-turquoise: #27D1C5;
-  --pet-pink: #ff6b8b;
-  --pet-orange: #ff9666;
-  --pet-yellow: #ffd166;
-  --pet-green: #4ecca3;
+    /* Pet kuaför renk değişkenleri */
+    --pet-blue: #0096ab;   /* Ana mavi renk - "Pet" kelimesi */
+    --pet-teal: #00bed7;   /* Ana turkuaz renk - "Kuaför" kelimesi */
+    --pet-light-blue: #7fd9e8; /* Açık mavi - hover ve vurgular için */
+    --pet-dark-blue: #00798a; /* Koyu mavi - gölgeler için */
+    --pet-pink: #ff6b8b; /* Pembe - aksan rengi */
 }
 
-/* Responsive düzeltmeler - sağa kaymayı önle */
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Mobil için daha iyi görünüm */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 15px;
-    padding-right: 15px;
-    width: 100%;
-  }
-  
-  .row {
-    margin-left: -10px;
-    margin-right: -10px;
-  }
-  
-  .col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12, 
-  .col-sm, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12,
-  .col-md, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12,
-  .col-lg, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-}
-
-/* Hizmetlerimiz bölümünde başlık çizgisini kaldır */
-#hizmetlerimiz-divider {
-  display: none !important;
-}
-
-/* Hide all dividers under 'Hizmetlerimiz' heading */
-section h2.text-pet-blue + .bg-pet-teal {
-  display: none !important;
-}
-
-/* Hizmetlerimiz başlığı altındaki tüm çizgiler */
-h2.fs-1.fw-bold.text-pet-blue + .bg-pet-teal.mx-auto.my-3 {
-  display: none !important;
-}
-
-/* Kedi Bakımı için özel stiller */
-.position-absolute.d-none.d-lg-block i.fas.fa-cat {
-  color: #ff6b8b !important;
-}
-
-/* Başlık altı çizgileri temizlik */
-.text-center.mb-5 h2.text-pet-blue + div.bg-pet-teal {
-  display: none !important;
-}
-
-/* Yeni aşırı net çizgi temizleme */
-section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2 {
-  border-bottom: none !important;
-  position: relative;
-}
-
-section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::after,
-section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::before {
-  content: none !important;
-  display: none !important;
-}
-
-/* Diğer tüm çizgiler için */
-section .text-center.mb-5 h2::after,
-section .text-center.mb-5 h2::before {
-  content: none !important;
-  display: none !important;
-}
-
-/* Tam ekran sırasında hizmetlerimiz başlığı altındaki çizgi için özel kural */
-@media (min-width: 1200px) {
-  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2,
-  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::before,
-  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2::after,
-  section h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2 * {
-    border: none !important;
-    border-bottom: none !important;
-    border-top: none !important;
-    text-decoration: none !important;
-    box-shadow: none !important;
-  }
-  
-  h2.fs-1.fw-bold.text-pet-blue.mb-3.pb-2 {
-    display: inline-block !important;
-  }
-}
-
-/* Kedi resmi görsel için */
-.cat-grooming-image {
-  background-image: url('https://petkuaforlerim.com/assets/images/cat-grooming.jpg') !important;
-  background-size: cover !important;
-  background-position: center !important;
-}
-
-/* Hizmetlerimiz bölümü için özel stiller */
-#hizmetlerimiz-heading {
-  border: none !important;
-  border-bottom: none !important;
-  border-top: none !important;
-  text-decoration: none !important;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* Hizmetlerimiz bölümü - bölümler arası çizgi sorunu fix */
-.mt-0 {
-  border-top: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-.no-border {
-  border: none !important;
-  border-bottom: none !important;
-  border-top: none !important;
-  text-decoration: none !important;
-  box-shadow: none !important;
-}
-
-/* Form ve Hizmetlerimiz bölümü arasında çizgi fix */
-.container section:nth-of-type(1) {
-  margin-top: 0 !important;
-  border-top: none !important;
-}
-
-/* Bu önemli */
-.py-12.mt-0.mb-5::before,
-.py-12.mt-0.mb-5::after {
-  display: none !important;
-  content: none !important;
-  height: 0 !important;
-  border: none !important;
-  border-top: none !important;
-  border-bottom: none !important;
-}
-
-/* Global Styles */
+/* Genel stil ayarları */
 body {
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    background-color: #f9fafb;
-    line-height: 1.6;
-    width: 100%;
-    max-width: 100%;
+    font-family: 'Nunito', sans-serif;
     overflow-x: hidden;
 }
 
-/* Görsel düzeltmeleri */
-img, .img-fluid {
-    max-width: 100%;
-    height: auto;
+/* Pet Kuaför marka renklerini ayarla */
+.pet-blue {
+    color: var(--pet-blue);
 }
 
-/* Ana içerik container */
-.main-content {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
+.pet-teal {
+    color: var(--pet-teal);
 }
 
-a {
-    text-decoration: none;
-    color: var(--color-pet-blue);
-}
-
-/* Background Colors */
 .bg-pet-blue {
-    background-color: var(--color-pet-blue);
+    background-color: var(--pet-blue);
 }
 
 .bg-pet-teal {
-    background-color: var(--color-pet-teal);
+    background-color: var(--pet-teal);
 }
 
-.bg-pet-pink {
-    background-color: var(--color-pet-pink);
-}
-
-.bg-pet-orange {
-    background-color: var(--color-pet-orange);
-}
-
-.bg-pet-green {
-    background-color: var(--color-pet-green);
-}
-
-.bg-pet-yellow {
-    background-color: var(--color-pet-yellow);
-}
-
-/* Background with opacity */
-.bg-pet-blue\/5 {
-    background-color: rgba(26, 156, 183, 0.05);
-}
-
-.bg-pet-blue\/10 {
-    background-color: rgba(26, 156, 183, 0.1);
-}
-
-.bg-pet-teal\/10 {
-    background-color: rgba(48, 201, 201, 0.1);
-}
-
-.bg-pet-pink\/10 {
-    background-color: rgba(255, 107, 139, 0.1);
-}
-
-.bg-pet-orange\/10 {
-    background-color: rgba(255, 150, 102, 0.1);
-}
-
-/* Text Colors */
 .text-pet-blue {
-    color: var(--color-pet-blue);
+    color: var(--pet-blue) !important;
 }
 
 .text-pet-teal {
-    color: var(--color-pet-teal);
+    color: var(--pet-teal) !important;
 }
 
-.text-pet-pink {
-    color: var(--color-pet-pink);
+/* Pet Kuaför marka stil */
+.pet-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
 }
 
-.text-pet-orange {
-    color: var(--color-pet-orange);
+/* Navbar stil */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.text-pet-green {
-    color: var(--color-pet-green);
-}
-
-.text-pet-yellow {
-    color: var(--color-pet-yellow);
-}
-
-.text-white {
-    color: #ffffff;
-}
-
-.text-secondary {
-    color: #6c757d;
-}
-
-.text-sm {
-    font-size: 0.875rem;
-}
-
-/* Border Colors */
-.border-pet-blue {
-    border-color: var(--color-pet-blue);
-}
-
-.border-pet-teal {
-    border-color: var(--color-pet-teal);
-}
-
-.border-pet-pink {
-    border-color: var(--color-pet-pink);
-}
-
-/* Hover States */
-.hover-text-pet-blue:hover {
-    color: var(--color-pet-blue);
-}
-
-.hover-text-pet-teal:hover {
-    color: var(--color-pet-teal);
-}
-
-.hover-text-white:hover {
-    color: #ffffff;
-}
-
-.hover-bg-pet-blue:hover {
-    background-color: var(--color-pet-blue);
-    color: #ffffff;
-}
-
-.hover-bg-pet-teal:hover {
-    background-color: var(--color-pet-teal);
-    color: #ffffff;
-}
-
-.hover-bg-light:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-/* Gradients */
-.bg-gradient-to-b {
-    background-image: linear-gradient(to bottom, var(--gradient-stops));
-}
-
-.from-pet-blue\/5 {
-    --gradient-stops: rgba(26, 156, 183, 0.05), var(--gradient-to);
-}
-
-.to-white {
-    --gradient-to: #fff;
-}
-
-/* Header */
-.navbar-brand img {
-    max-height: 50px;
-}
-
-/* Hero Section */
-.hero-section {
-    position: relative;
-    background: linear-gradient(to bottom, rgba(26, 156, 183, 0.05), rgba(255, 255, 255, 1));
-    padding: 8rem 0 6rem;
-}
-
-.hero-image {
-    position: relative;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.hero-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.info-card {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.info-card-icon {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin-right: 1rem;
-}
-
-/* Features Section */
-.feature-card {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 2rem;
-    text-align: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.feature-icon {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    margin: 0 auto;
-    background-color: rgba(255, 107, 107, 0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Services Section */
-.service-card {
-    background-color: white;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-}
-
-.service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.service-card img {
-    height: 200px;
-    object-fit: cover;
-}
-
-/* Steps Section */
-.step-card {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    text-align: center;
-    position: relative;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.step-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.step-number {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    margin: 0 auto 1rem;
-}
-
-.step-circle {
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(to right bottom, var(--color-pet-blue), var(--color-pet-teal));
-    border-radius: 50%;
-    color: white;
-    font-size: 1.8rem;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* CTA Section */
-.cta-section {
-    background: linear-gradient(to right, rgba(255, 107, 107, 0.1), rgba(26, 83, 92, 0.1));
-    border: 1px solid rgba(255, 107, 107, 0.2);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-    border-radius: 1rem;
-    padding: 4rem 2rem;
-}
-
-/* Footer */
-.footer {
-    padding: 5rem 0 0;
-    background-color: #f8f9fa;
-}
-
-.footer-title {
-    color: var(--color-pet-blue);
-    font-weight: bold;
-    margin-bottom: 1.5rem;
-}
-
-.footer-social a {
-    display: inline-flex;
-    width: 2.5rem;
-    height: 2.5rem;
-    background-color: var(--color-pet-blue);
-    color: white;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    margin-right: 0.75rem;
-    transition: all 0.3s ease;
-}
-
-.footer-social a:hover {
-    background-color: var(--color-pet-teal);
-    transform: translateY(-3px);
-}
-
-.footer ul li {
-    margin-bottom: 0.5rem;
-}
-
-.footer ul li a {
-    color: #666;
-    transition: all 0.3s ease;
-}
-
-.footer-link:hover {
-    color: #ffffff !important;
-    text-decoration: none;
-}
-
-.footer-contact-item {
-    display: flex;
-    margin-bottom: 1rem;
-}
-
-.footer-contact-icon {
-    background-color: rgba(26, 156, 183, 0.1);
-    color: var(--color-pet-blue);
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 0.75rem;
-}
-
-.footer-contact-item div {
-    color: #666;
-}
-
-.footer-bottom {
-    padding: 2rem 0;
-    margin-top: 4rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.footer-bottom a {
-    color: #666;
-    transition: all 0.3s ease;
-}
-
-.footer-bottom a:hover {
-    color: #ffffff !important;
-}
-
-/* Scroll to Top Button */
-.scroll-to-top {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    width: 3rem;
-    height: 3rem;
-    background-color: var(--color-pet-blue);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.scroll-to-top.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.scroll-to-top:hover {
-    background-color: var(--color-pet-teal);
-    transform: translateY(-3px);
-}
-
-/* Buttons */
-.btn-pet-blue {
-    background-color: var(--color-pet-blue);
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.btn-pet-blue:hover {
-    background-color: var(--color-pet-blue-dark);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.btn-outline-pet-blue {
-    background-color: transparent;
-    color: var(--color-pet-blue);
-    border: 2px solid var(--color-pet-blue);
-    border-radius: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    font-weight: bold;
-    transition: all 0.3s ease;
-}
-
-.btn-outline-pet-blue:hover {
-    background-color: var(--color-pet-blue);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-/* Ana mavi butonlar */
-.bg-pet-blue {
-    background-color: var(--color-pet-blue);
-}
-
-.bg-pet-blue:hover {
-    background-color: var(--color-pet-turquoise) !important; /* Turkuaz (tiffany mavisi) */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Kenarlıklı butonlar */
-.border-pet-blue {
-    border-color: var(--color-pet-blue);
-}
-
-.btn.border-pet-blue {
-    color: var(--color-pet-blue);
-    background-color: transparent;
-    transition: all 0.3s ease;
-}
-
-.btn.border-pet-blue:hover {
-    background-color: var(--color-pet-blue) !important;
-    color: white !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Servis butonları */
-.service-btn {
-    transition: all 0.3s ease;
-}
-
-.service-btn:hover {
-    background-color: var(--color-pet-turquoise) !important; /* Turkuaz (tiffany mavisi) */
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-/* Forms */
-.form-control:focus {
-    border-color: var(--color-pet-blue);
-    box-shadow: 0 0 0 0.25rem rgba(26, 156, 183, 0.25);
-}
-
-/* Admin Dashboard */
-.admin-sidebar {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.admin-sidebar .nav-link {
-    color: #666;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-    transition: all 0.3s ease;
-}
-
-.admin-sidebar .nav-link:hover {
-    background-color: rgba(26, 156, 183, 0.1);
-    color: var(--color-pet-blue);
-}
-
-.admin-sidebar .nav-link.active {
-    background-color: var(--color-pet-blue);
-    color: white;
-}
-
-.admin-sidebar .nav-link i {
-    margin-right: 0.75rem;
-}
-
-.admin-content {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.admin-card {
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
-}
-
-.admin-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.admin-card-icon {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    margin-right: 1rem;
-}
-
-/* Tailwind-like Helpers */
-.relative {
-    position: relative;
-}
-
-.absolute {
-    position: absolute;
-}
-
-.transform {
-    transform: var(--tw-transform);
-}
-
-.-translate-x-1\/2 {
-    --tw-transform: translateX(-50%);
-}
-
-.-translate-y-1\/2 {
-    --tw-transform: translateY(-50%);
-}
-
-.translate-x-1\/4 {
-    --tw-transform: translateX(25%);
-}
-
-.-translate-x-1\/4 {
-    --tw-transform: translateX(-25%);
-}
-
-.w-100 {
-    width: 100%;
-}
-
-.h-100 {
-    height: 100%;
-}
-
-.w-8 {
-    width: 2rem;
-}
-
-.h-8 {
-    width: 2rem;
-}
-
-.h-10 {
-    height: 2.5rem;
-}
-
-.w-10 {
-    width: 2.5rem;
-}
-
-.h-16 {
-    height: 4rem;
-}
-
-.py-12 {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-}
-
-.my-12 {
-    margin-top: 3rem;
-    margin-bottom: 3rem;
-}
-
-.ms-12 {
-    margin-left: 3rem !important;
-}
-
-.space-y-2 > * + * {
-    margin-top: 0.5rem;
-}
-
-.space-y-3 > * + * {
-    margin-top: 0.75rem;
-}
-
-.transition {
-    transition: all 0.3s ease;
-}
-
-.rounded-pill {
-    border-radius: 9999px;
-}
-
-.rounded-lg {
-    border-radius: 0.5rem;
-}
-
-.rounded-full {
-    border-radius: 9999px;
-}
-
-.shadow-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.bg-gray-800 {
-    background-color: #1f2937;
-}
-
-.border-secondary {
-    border-color: #6c757d;
-}
-
-.active {
-    color: #00bed7 !important;
+.navbar-nav .nav-link {
     font-weight: 600;
+    transition: color 0.3s;
 }
 
-/* City List Styles */
-#cityList {
-    display: none;
+.navbar-nav .nav-link:hover {
+    color: var(--pet-teal);
+}
+
+.navbar-nav .nav-link.active {
+    color: var(--pet-teal);
+}
+
+/* Buton hover efektleri */
+.btn-primary, .bg-pet-blue, .bg-pet-teal {
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .bg-pet-blue:hover {
+    background-color: var(--pet-teal) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 190, 215, 0.3);
+}
+
+.bg-pet-teal:hover {
+    background-color: var(--pet-blue) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 150, 171, 0.3);
+}
+
+/* Footer stilleri */
+.footer a:hover {
+    color: var(--pet-teal) !important;
+}
+
+/* Hero bölümü */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../img/pet-banner.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+}
+
+/* Şehir listesi dropdown stil */
+.city-dropdown {
+    position: relative;
+}
+
+.city-list {
     position: absolute;
-    width: 100%;
-    max-width: 100%;
+    top: 100%;
     left: 0;
-    right: 0;
-    background-color: white;
-    overflow-x: hidden;
-    border: 1px solid #ddd;
+    width: 100%;
     max-height: 300px;
     overflow-y: auto;
-    z-index: 1000;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    left: 0;
-    right: 0;
+    background-color: var(--bs-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0.375rem;
+    z-index: 1000;
+    display: none;
 }
 
 .city-item {
-    padding: 0.75rem 1rem;
+    padding: 10px 15px;
     cursor: pointer;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .city-item:hover {
-    background-color: #f8f9fa;
+    background-color: rgba(0, 190, 215, 0.1);
+    color: var(--pet-teal);
 }
 
-.city-item:last-child {
-    border-bottom: none;
+/* Salon kartları */
+.salon-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: 100%;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
+.salon-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.salon-card .card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+.salon-card .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Randevu formu */
+.booking-form .form-control:focus {
+    border-color: var(--pet-teal);
+    box-shadow: 0 0 0 0.25rem rgba(0, 190, 215, 0.25);
+}
+
+.time-slot {
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.time-slot:hover {
+    background-color: rgba(0, 190, 215, 0.1);
+    border-color: var(--pet-teal);
+}
+
+.time-slot.selected {
+    background-color: var(--pet-teal);
+    color: white;
+    border-color: var(--pet-teal);
+}
+
+.time-slot.unavailable {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+/* Profil sayfası */
+.profile-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../img/profile-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 50px 0;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--pet-teal);
+}
+
+/* Yorumlar */
+.review-card {
+    border-left: 4px solid var(--pet-teal);
+}
+
+.star-rating .fa-star {
+    color: #ffc107;
+}
+
+.star-rating .fa-star.text-muted {
+    color: #6c757d !important;
+}
+
+/* Yönetici paneli */
+.admin-sidebar {
+    height: calc(100vh - 70px);
+    position: sticky;
+    top: 70px;
+}
+
+.admin-sidebar .nav-link {
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+    transition: all 0.2s;
+}
+
+.admin-sidebar .nav-link:hover {
+    background-color: rgba(0, 190, 215, 0.1);
+}
+
+.admin-sidebar .nav-link.active {
+    background-color: var(--pet-blue);
+    color: white;
+}
+
+/* Salon detay sayfası */
+.salon-detail-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../img/salon-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 70px 0;
+    color: white;
+}
+
+.service-card {
+    transition: transform 0.3s;
+    height: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-3px);
+}
+
+/* Mobil ve tablet için stil düzenlemeleri */
+@media (max-width: 992px) {
+    .navbar-nav {
+        padding-top: 1rem;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.5rem 0;
+    }
+    
     .hero-section {
-        padding: 6rem 0 4rem;
+        padding: 60px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .pet-brand {
+        font-size: 1.25rem;
     }
     
-    .hidden-md {
-        display: none;
+    .hero-section {
+        padding: 40px 0;
     }
     
-    /* Responsive form düzeltmeleri */
-    form {
-        width: 100%;
-        max-width: 100%;
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
     }
-    
-    form .form-control, 
-    form .form-select, 
-    form .btn {
-        width: 100%;
-        max-width: 100%;
-    }
-    
-    /* Responsive tablo düzeltmeleri */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Dropdown menüleri düzelt */
-    .dropdown-menu {
-        width: 100%;
-        max-width: 100%;
-        left: 0;
-        right: 0;
-    }
-    
-    /* Servis kartları için düzeltme */
-    .service-card {
-        margin-bottom: 20px;
-    }
-    
-    /* Footer için düzeltme */
-    footer {
-        text-align: center;
-    }
-    
-    footer .row > div {
-        margin-bottom: 25px;
-    }
-    
-    /* Randevu formu ve detaylar için */
-    .booking-details, 
-    .booking-form {
-        padding: 15px;
-    }
+}
+
+/* Konum izni popup */
+.location-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
 }
