@@ -35,8 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
                             .then(data => {
                                 if (data.address) {
                                     let realNeighborhood = null;
+                                    let realCity = null;
                                     
-                                    // Önce neighbourhood bilgisini al
+                                    // Şehir bilgisini al
+                                    if (data.address.city) {
+                                        realCity = data.address.city;
+                                    } else if (data.address.state) {
+                                        realCity = data.address.state;
+                                    }
+                                    
+                                    // Önce neighbourhood bilgisini al (en doğru mahalle bilgisi)
                                     if (data.address.neighbourhood) {
                                         realNeighborhood = data.address.neighbourhood;
                                     } 
@@ -48,25 +56,82 @@ document.addEventListener('DOMContentLoaded', function() {
                                     else if (data.address.city_district) {
                                         realNeighborhood = data.address.city_district;
                                     }
+                                    // Yoksa quarter bilgisini al
+                                    else if (data.address.quarter) {
+                                        realNeighborhood = data.address.quarter;
+                                    }
                                     
-                                    // Mahalle bilgisi bulunmuşsa ve mahalle seçim kutusu varsa
+                                    // Adres bilgisini localStorage'a kaydet (sayfa yenilenmesi için)
+                                    if (realCity) {
+                                        localStorage.setItem('userCity', realCity);
+                                    }
                                     if (realNeighborhood) {
-                                        console.log("Yeni gerçek mahalle bulundu:", realNeighborhood);
+                                        localStorage.setItem('userNeighborhood', realNeighborhood);
+                                    }
+                                    
+                                    // Eğer şehir ve mahalle bilgisi bulunmuşsa...
+                                    if (realCity && realNeighborhood) {
+                                        console.log("Gerçek konum bilgileri:", realCity, realNeighborhood);
                                         
-                                        // Dropdown'u güncelle
-                                        const districtSelect = document.getElementById('district');
-                                        if (districtSelect) {
-                                            for (let i = 0; i < districtSelect.options.length; i++) {
-                                                if (districtSelect.options[i].text.includes(realNeighborhood)) {
-                                                    console.log("Yeni mahalle bilgisine göre dropdown güncellendi:", districtSelect.options[i].text);
-                                                    districtSelect.selectedIndex = i;
-                                                    break;
-                                                }
+                                        // Şehir seçimini güncelle
+                                        const locationInput = document.getElementById('location');
+                                        if (locationInput && locationInput.value !== realCity) {
+                                            locationInput.value = realCity;
+                                            
+                                            // Şehir için mahalleleri yükle
+                                            if (typeof updateDistrictsByCity === 'function') {
+                                                console.log("Şehire göre mahalleleri yüklüyorum:", realCity);
+                                                updateDistrictsByCity(realCity).then(() => {
+                                                    // Mahalleler yüklendikten sonra gerçek mahalleyi seç
+                                                    selectRealNeighborhood(realNeighborhood);
+                                                });
                                             }
+                                        } else {
+                                            // Sadece mahalle seçimini güncelle (şehir zaten doğru)
+                                            selectRealNeighborhood(realNeighborhood);
                                         }
                                     }
                                 }
                             })
+                            
+                            // Gerçek mahalleyi seçen yardımcı fonksiyon
+                            function selectRealNeighborhood(neighborhood) {
+                                if (!neighborhood) return;
+                                
+                                console.log("Gerçek mahalle seçiliyor:", neighborhood);
+                                const districtSelect = document.getElementById('district');
+                                if (districtSelect) {
+                                    // Tam eşleşme arama
+                                    let found = false;
+                                    for (let i = 0; i < districtSelect.options.length; i++) {
+                                        const optionText = districtSelect.options[i].text.trim();
+                                        if (optionText === neighborhood) {
+                                            console.log("Tam eşleşme bulundu:", optionText);
+                                            districtSelect.selectedIndex = i;
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // Tam eşleşme bulunamadıysa, içeren bir değer ara
+                                    if (!found) {
+                                        for (let i = 0; i < districtSelect.options.length; i++) {
+                                            const optionText = districtSelect.options[i].text.trim();
+                                            if (optionText.includes(neighborhood) || neighborhood.includes(optionText)) {
+                                                console.log("Kısmi eşleşme bulundu:", optionText, "içinde", neighborhood);
+                                                districtSelect.selectedIndex = i;
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Hiç eşleşme bulunamadıysa 
+                                    if (!found) {
+                                        console.log("Mahalle listesinde bulunamadı:", neighborhood);
+                                    }
+                                }
+                            }
                             .catch(error => {
                                 console.error('Adres güncellemesi sırasında hata:', error);
                             });
@@ -132,8 +197,81 @@ function getGeolocation() {
             // Test için konum bilgilerini ekrana yazdır
             showLocationDebugInfo(latitude, longitude);
             
-            // En yakın şehri bul
-            findNearestCity(latitude, longitude, locationInput);
+            // Konum bilgisini localStorage'a kaydet
+            localStorage.setItem('userLatitude', latitude);
+            localStorage.setItem('userLongitude', longitude);
+            
+            // Gerçek adres bilgilerini al ve en yakın şehri bul
+            console.log("Gerçek adres bilgisi alınıyor...");
+            
+            // Önce Nominatim API ile gerçek adres bilgisini almayı dene
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Adres verileri alındı:", data);
+                
+                if (data.address) {
+                    let realCity = null;
+                    let realNeighborhood = null;
+                    
+                    // Şehir bilgisini al
+                    if (data.address.city) {
+                        realCity = data.address.city;
+                    } else if (data.address.state) {
+                        realCity = data.address.state;
+                    }
+                    
+                    // Mahalle bilgisini al
+                    if (data.address.neighbourhood) {
+                        realNeighborhood = data.address.neighbourhood;
+                    } else if (data.address.suburb) {
+                        realNeighborhood = data.address.suburb;
+                    } else if (data.address.quarter) {
+                        realNeighborhood = data.address.quarter;
+                    } else if (data.address.city_district) {
+                        realNeighborhood = data.address.city_district;
+                    }
+                    
+                    // Adres bilgisini localStorage'a kaydet
+                    if (realCity) {
+                        localStorage.setItem('userCity', realCity);
+                        console.log("Gerçek şehir tespit edildi:", realCity);
+                        
+                        if (locationInput) {
+                            locationInput.value = realCity;
+                            locationInput.disabled = false;
+                            
+                            // Şehre göre mahalle bilgisini yükle
+                            if (typeof updateDistrictsByCity === 'function') {
+                                console.log("Şehre göre mahalleleri yüklüyorum:", realCity);
+                                updateDistrictsByCity(realCity).then(() => {
+                                    // Mahalle bilgisi varsa seç
+                                    if (realNeighborhood) {
+                                        localStorage.setItem('userNeighborhood', realNeighborhood);
+                                        selectRealNeighborhood(realNeighborhood);
+                                    }
+                                    
+                                    // Form otomatik olarak gönderilsin
+                                    console.log("Form otomatik olarak gönderiliyor...");
+                                    submitForm();
+                                });
+                            }
+                        }
+                    } else {
+                        // Gerçek şehir bulunamadıysa en yakınını bul
+                        console.log("Gerçek şehir bilgisi bulunamadı, en yakın şehri buluyorum...");
+                        findNearestCity(latitude, longitude, locationInput);
+                    }
+                } else {
+                    // Gerçek adres bilgisi alınamazsa en yakın şehri bul
+                    console.log("Adres bilgisi alınamadı, en yakın şehri buluyorum...");
+                    findNearestCity(latitude, longitude, locationInput);
+                }
+            })
+            .catch(error => {
+                console.error("Adres bilgisi alınırken hata oluştu:", error);
+                findNearestCity(latitude, longitude, locationInput);
+            });
             
             // İzin durumunu kaydet
             localStorage.setItem('locationPermissionGranted', 'true');
