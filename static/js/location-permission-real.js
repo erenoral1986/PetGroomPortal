@@ -18,12 +18,17 @@ function resetLocationPermission() {
 document.addEventListener('DOMContentLoaded', function() {
     // Test için konum izni sıfırlama butonunu ekle (sadece geliştirme aşamasında)
     const testModeEnabled = true; // Geliştirme aşamasında true, canlıya alırken false yapılacak
+    console.log("Test modu aktif, konum izni sıfırlama butonu eklenecek...");
     
     if (testModeEnabled) {
         const resetButton = document.createElement('button');
         resetButton.textContent = 'Konum İzni Sıfırla (Test)';
         resetButton.className = 'btn btn-sm btn-danger position-fixed bottom-0 end-0 m-3';
-        resetButton.style.zIndex = '9999';
+        resetButton.style.zIndex = '10000';
+        resetButton.style.fontSize = '14px';
+        resetButton.style.fontWeight = 'bold';
+        resetButton.style.padding = '8px 12px';
+        resetButton.style.cursor = 'pointer';
         resetButton.onclick = resetLocationPermission;
         document.body.appendChild(resetButton);
     }
