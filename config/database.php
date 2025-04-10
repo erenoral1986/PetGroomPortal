@@ -1,35 +1,34 @@
 <?php
+/**
+ * Veritabanı bağlantı ayarları
+ * 
+ * PHPMyAdmin ile kullanılacak veritabanı bağlantı bilgileri
+ */
+
 // Veritabanı bağlantı bilgileri
-$host = 'localhost'; // Veritabanı sunucusu
+$host = 'localhost';      // Veritabanı sunucusu
 $db_name = 'petkuafor_db'; // Veritabanı adı
-$username = 'root'; // Kullanıcı adı (genellikle localhost'ta root)
-$password = ''; // Şifre (genellikle localhost'ta boş)
+$username = 'root';       // Veritabanı kullanıcı adı
+$password = '';           // Veritabanı şifresi
+$charset = 'utf8mb4';     // Karakter seti
 
-// PDO kullanarak veritabanı bağlantısı oluştur
+// DSN (Data Source Name) oluştur
+$dsn = "mysql:host=$host;dbname=$db_name;charset=$charset";
+
+// PDO seçenekleri ayarla
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,   // Hataları exception olarak göster
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,         // Varsayılan getirme modu
+    PDO::ATTR_EMULATE_PREPARES   => false,                    // Emüle edilmiş prepares yerine gerçek prepares kullan
+    PDO::ATTR_PERSISTENT         => true,                     // Kalıcı bağlantı kullan (performans için)
+];
+
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db_name;charset=utf8mb4", $username, $password);
-    
-    // Hata modunu belirle
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Varsayılan fetch modunu belirle
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    
-    // Emülasyon modunu kapat
-    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-    
-} catch(PDOException $e) {
-    // Hata mesajını göster
-    die("Veritabanı bağlantı hatası: " . $e->getMessage());
+    // PDO bağlantısını oluştur
+    $pdo = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $e) {
+    // Hata durumunda göster
+    die('Veritabanı bağlantısı başarısız oldu: ' . $e->getMessage());
 }
 
-// Admin girişi için hash kontrolü
-function check_password($password, $hashed_password) {
-    return password_verify($password, $hashed_password);
-}
-
-// Yeni şifre hash'leme
-function hash_password($password) {
-    return password_hash($password, PASSWORD_DEFAULT);
-}
 ?>
