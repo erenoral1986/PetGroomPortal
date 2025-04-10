@@ -1,5 +1,33 @@
+// Global değişken tanımlaması
+window.popupShownOnThisPage = false;
+
+// Debug fonksiyonu - Konum izni durumunu sıfırla (Test için)
+function resetLocationPermission() {
+    localStorage.removeItem('locationPermissionGranted');
+    localStorage.removeItem('userLatitude');
+    localStorage.removeItem('userLongitude');
+    localStorage.removeItem('userCity');
+    localStorage.removeItem('userNeighborhood');
+    console.log("Konum izni sıfırlandı");
+    
+    // Sayfa yenilemek için
+    window.location.reload();
+}
+
 // Sayfa yüklendiğinde konum izni kontrolünü yap
 document.addEventListener('DOMContentLoaded', function() {
+    // Test için konum izni sıfırlama butonunu ekle (sadece geliştirme aşamasında)
+    const testModeEnabled = true; // Geliştirme aşamasında true, canlıya alırken false yapılacak
+    
+    if (testModeEnabled) {
+        const resetButton = document.createElement('button');
+        resetButton.textContent = 'Konum İzni Sıfırla (Test)';
+        resetButton.className = 'btn btn-sm btn-danger position-fixed bottom-0 end-0 m-3';
+        resetButton.style.zIndex = '9999';
+        resetButton.onclick = resetLocationPermission;
+        document.body.appendChild(resetButton);
+    }
+    
     checkPermissionOnPageLoad();
     
     // Her 60 saniyede bir konumu güncelleme işlevi
@@ -357,6 +385,8 @@ function showRejectedPermissionPopup() {
     
     // Popup gösterildiğini işaretle
     window.popupShownOnThisPage = true;
+    
+    console.log("Konum izni reddedildi popup oluşturuluyor...");
     
     // Popup oluştur
     const modal = document.createElement('div');
