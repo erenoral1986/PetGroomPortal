@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randevu Al - PetKuaför</title>
+    
+    <!-- CSS dosyaları -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+    <!-- Üst Navigasyon -->
+    <header class="bg-white shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <!-- Logo -->
+                <a class="navbar-brand" href="index.html">
+                    <span class="fw-bold text-pet-blue">Pet<span class="text-pet-teal">Kuaför</span></span>
+                </a>
+                
+                <!-- Mobil Menü Butonu -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <!-- Menü Linkleri -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Ana Sayfa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="services.html">Hizmetlerimiz</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="booking.html">Randevu Al</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">Hakkımızda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">İletişim</a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Giriş/Kayıt Butonları -->
+                    <div class="d-flex">
+                        <a href="login.html" class="btn btn-outline-primary me-2">Giriş Yap</a>
+                        <a href="register.html" class="btn btn-primary">Kayıt Ol</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Ana İçerik -->
+    <main>
+        <!-- Başlık Bölümü -->
+        <section class="bg-light py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <h1 class="display-5 fw-bold mb-3">Randevu Al</h1>
+                        <p class="lead mb-0">Evcil hayvanınız için en uygun hizmeti ve zamanı seçin</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Randevu Formu -->
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    <!-- Randevu Seçimi -->
+                    <div class="col-lg-8 mb-4 mb-lg-0">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body p-4">
+                                <h2 class="h4 mb-4">Randevu Detayları</h2>
+                                
+                                <form id="booking-form" class="needs-validation" novalidate>
+                                    <!-- Kuaför Seçimi -->
+                                    <div class="mb-4">
+                                        <label for="salon" class="form-label">Kuaför Seçin</label>
+                                        <select class="form-select" id="salon" required>
+                                            <option value="" selected disabled>Kuaför seçin</option>
+                                            <option value="1">PetKuaför Kadıköy</option>
+                                            <option value="2">PetKuaför Nişantaşı</option>
+                                            <option value="3">PetKuaför Ataşehir</option>
+                                            <option value="4">PetKuaför Bakırköy</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Lütfen bir kuaför seçin.
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Hizmet Seçimi -->
+                                    <div class="mb-4">
+                                        <label for="service" class="form-label">Hizmet Seçin</label>
+                                        <select class="form-select" id="service" required data-service="true">
+                                            <option value="" selected disabled>Hizmet seçin</option>
+                                            <option value="1" data-price="150" data-duration="60">Temel Bakım Paketi</option>
+                                            <option value="2" data-price="250" data-duration="90">Premium Tıraş</option>
+                                            <option value="3" data-price="350" data-duration="120">Komple Bakım Paketi</option>
+                                            <option value="4" data-price="120" data-duration="45">Tırnak Kesimi ve Kulak Temizliği</option>
+                                            <option value="5" data-price="200" data-duration="60">Kedi Bakımı</option>
+                                        </select>
+                                        <div class="invalid-feedback">
+                                            Lütfen bir hizmet seçin.
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Tarih ve Saat Seçimi -->
+                                    <div class="row mb-4">
+                                        <div class="col-md-6 mb-3 mb-md-0">
+                                            <label for="date" class="form-label">Tarih Seçin</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text bg-white"><i class="fas fa-calendar text-primary"></i></span>
+                                                <input type="text" class="form-control" id="date" placeholder="Tarih seçin" required>
+                                                <div class="invalid-feedback">
+                                                    Lütfen bir tarih seçin.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="time" class="form-label">Saat Seçin</label>
+                                            <select class="form-select" id="time" required>
+                                                <option value="" selected disabled>Önce tarih seçin</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Lütfen bir saat seçin.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Evcil Hayvan Bilgileri -->
+                                    <h3 class="h5 mb-3">Evcil Hayvan Bilgileri</h3>
+                                    
+                                    <div class="mb-3">
+                                        <label for="pet_name" class="form-label">Evcil Hayvanınızın Adı</label>
+                                        <input type="text" class="form-control" id="pet_name" placeholder="Evcil hayvanınızın adı" required>
+                                        <div class="invalid-feedback">
+                                            Lütfen evcil hayvanınızın adını girin.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-md-6 mb-3 mb-md-0">
+                                            <label for="pet_type" class="form-label">Evcil Hayvan Türü</label>
+                                            <select class="form-select" id="pet_type" required>
+                                                <option value="" selected disabled>Tür seçin</option>
+                                                <option value="dog">Köpek</option>
+                                                <option value="cat">Kedi</option>
+                                                <option value="other">Diğer</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Lütfen evcil hayvanınızın türünü seçin.
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="pet_breed" class="form-label">Irkı (İsteğe Bağlı)</label>
+                                            <input type="text" class="form-control" id="pet_breed" placeholder="Evcil hayvanınızın ırkı">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Özel Notlar -->
+                                    <div class="mb-4">
+                                        <label for="notes" class="form-label">Özel Notlar (İsteğe Bağlı)</label>
+                                        <textarea class="form-control" id="notes" rows="3" placeholder="Varsa özel isteklerinizi veya dikkat edilmesi gereken hususları belirtin"></textarea>
+                                    </div>
+                                    
+                                    <!-- Randevu Butonu -->
+                                    <div class="d-grid d-md-flex justify-content-md-end">
+                                        <button type="submit" class="btn btn-primary px-4 py-2">Randevu Oluştur</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Randevu Özeti -->
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm position-sticky" style="top: 20px;">
+                            <div class="card-body p-4">
+                                <h2 class="h4 mb-4">Randevu Özeti</h2>
+                                
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <h3 class="h6 text-muted mb-1">Hizmet</h3>
+                                    <p class="h5 mb-0" id="summary-service">-</p>
+                                </div>
+                                
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <h3 class="h6 text-muted mb-1">Tarih</h3>
+                                    <p class="h5 mb-0" id="summary-date">-</p>
+                                </div>
+                                
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <h3 class="h6 text-muted mb-1">Saat</h3>
+                                    <p class="h5 mb-0" id="summary-time">-</p>
+                                </div>
+                                
+                                <div class="mb-3 pb-3 border-bottom">
+                                    <h3 class="h6 text-muted mb-1">Süre</h3>
+                                    <p class="h5 mb-0">
+                                        <span id="service-duration">-</span>
+                                    </p>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h3 class="h6 text-muted mb-1">Fiyat</h3>
+                                    <p class="h4 text-primary fw-bold mb-0" id="summary-price">-</p>
+                                </div>
+                                
+                                <div class="alert alert-info d-flex" role="alert">
+                                    <i class="fas fa-info-circle me-2 mt-1"></i>
+                                    <div>
+                                        <small>Randevu oluşturmak için lütfen tüm alanları doldurun. Randevunuzu en geç 24 saat öncesinde iptal edebilirsiniz.</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Alt Bilgi / Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Logo ve Kısa Açıklama -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="mb-4">
+                        <span class="h4 fw-bold text-white">Pet<span class="text-info">Kuaför</span></span>
+                    </div>
+                    <p class="text-white-50 mb-4">
+                        Evcil hayvanınız için profesyonel bakım ve kuaför hizmetleri sunan platformumuzda, sevimli dostunuza en iyi hizmeti vermekten gurur duyuyoruz.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 hover-text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-white-50 hover-text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white-50 hover-text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white-50 hover-text-white">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hızlı Linkler -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="mb-4 text-info">Hızlı Linkler</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-white-50 text-decoration-none hover-text-white">Ana Sayfa</a></li>
+                        <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none hover-text-white">Hizmetlerimiz</a></li>
+                        <li class="mb-2"><a href="booking.html" class="text-white-50 text-decoration-none hover-text-white">Randevu Al</a></li>
+                        <li class="mb-2"><a href="about.html" class="text-white-50 text-decoration-none hover-text-white">Hakkımızda</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-white-50 text-decoration-none hover-text-white">İletişim</a></li>
+                    </ul>
+                </div>
+
+                <!-- Hizmetler -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="mb-4 text-info">Hizmetlerimiz</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none hover-text-white">Temel Bakım Paketi</a></li>
+                        <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none hover-text-white">Premium Bakım</a></li>
+                        <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none hover-text-white">Köpek Kuaförü</a></li>
+                        <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none hover-text-white">Kedi Bakımı</a></li>
+                        <li class="mb-2"><a href="services.html" class="text-white-50 text-decoration-none hover-text-white">Özel Irklar İçin Bakım</a></li>
+                    </ul>
+                </div>
+
+                <!-- İletişim Bilgileri -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="mb-4 text-info">İletişim</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3 d-flex">
+                            <i class="fas fa-map-marker-alt mt-1 me-3 text-info"></i>
+                            <span>Bahçelievler Mah. Atatürk Cad. No:123, İstanbul, Türkiye</span>
+                        </li>
+                        <li class="mb-3 d-flex">
+                            <i class="fas fa-phone-alt me-3 text-info"></i>
+                            <span>+90 (212) 123 45 67</span>
+                        </li>
+                        <li class="mb-3 d-flex">
+                            <i class="fas fa-envelope me-3 text-info"></i>
+                            <span>info@petkuafor.com</span>
+                        </li>
+                        <li class="mb-3 d-flex">
+                            <i class="fas fa-clock me-3 text-info"></i>
+                            <span>Pazartesi - Cumartesi: 09:00 - 19:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-4 border-secondary">
+
+            <!-- Alt Footer -->
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <p class="text-white-50 mb-0">
+                        &copy; <script>document.write(new Date().getFullYear())</script> PetKuaför - Tüm Hakları Saklıdır.
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#" class="text-white-50 text-decoration-none hover-text-white">Gizlilik Politikası</a></li>
+                        <li class="list-inline-item ms-3"><a href="#" class="text-white-50 text-decoration-none hover-text-white">Kullanım Şartları</a></li>
+                        <li class="list-inline-item ms-3"><a href="#" class="text-white-50 text-decoration-none hover-text-white">Çerez Politikası</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Dosyaları -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/tr.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Flatpickr tarih seçici
+            flatpickr("#date", {
+                locale: "tr",
+                dateFormat: "d-m-Y",
+                minDate: "today",
+                disable: [
+                    function(date) {
+                        // Pazar günleri devre dışı bırak
+                        return date.getDay() === 0;
+                    }
+                ],
+                onChange: function(selectedDates, dateStr) {
+                    updateAvailableTimeSlots(dateStr);
+                }
+            });
+            
+            // Hizmet seçimi değiştiğinde
+            const serviceSelect = document.getElementById('service');
+            if(serviceSelect) {
+                serviceSelect.addEventListener('change', function() {
+                    updateServiceInfo();
+                });
+            }
+            
+            // Form doğrulama
+            const form = document.getElementById('booking-form');
+            if(form) {
+                form.addEventListener('submit', function(event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    } else {
+                        // Gerçek bir uygulamada burada form verileri işlenecek
+                        event.preventDefault();
+                        alert('Randevunuz oluşturuldu! Teşekkür ederiz.');
+                    }
+                    
+                    form.classList.add('was-validated');
+                });
+            }
+        });
+        
+        // Hizmet bilgilerini güncelleme
+        function updateServiceInfo() {
+            const serviceSelect = document.getElementById('service');
+            if (!serviceSelect) return;
+            
+            const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+            const price = selectedOption.getAttribute('data-price') || '0';
+            const duration = selectedOption.getAttribute('data-duration') || '0';
+            
+            // Fiyat ve süre bilgilerini güncelleme
+            const durationElement = document.getElementById('service-duration');
+            
+            if (durationElement) {
+                durationElement.textContent = `${duration} dk`;
+            }
+            
+            // Randevu özetini güncelleme
+            updateSummary();
+        }
+        
+        // Mevcut zaman dilimlerini güncelleme
+        function updateAvailableTimeSlots(selectedDate) {
+            const timeSelect = document.getElementById('time');
+            if (!timeSelect) return;
+            
+            // Gerçek uygulamada burada seçilen tarihe göre AJAX ile 
+            // uygun zaman dilimleri çekilebilir
+            
+            // Örnek olarak sabit zaman dilimleri
+            const availableTimes = [
+                '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+                '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
+                '16:00', '16:30', '17:00', '17:30', '18:00'
+            ];
+            
+            // Tüm mevcut seçenekleri temizle
+            timeSelect.innerHTML = '';
+            
+            // Bir seçenek ekle talimatı
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Saat seçin';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            timeSelect.appendChild(defaultOption);
+            
+            // Mevcut saatleri ekle
+            availableTimes.forEach(time => {
+                const option = document.createElement('option');
+                option.value = time;
+                option.textContent = time;
+                timeSelect.appendChild(option);
+            });
+            
+            // Zaman seçimine olay dinleyicisi ekle
+            timeSelect.addEventListener('change', function() {
+                updateSummary();
+            });
+            
+            // Randevu özetini güncelleme
+            updateSummary();
+        }
+        
+        // Randevu özetini güncelleme
+        function updateSummary() {
+            const summaryService = document.getElementById('summary-service');
+            const summaryDate = document.getElementById('summary-date');
+            const summaryTime = document.getElementById('summary-time');
+            const summaryPrice = document.getElementById('summary-price');
+            
+            const serviceSelect = document.getElementById('service');
+            const dateInput = document.getElementById('date');
+            const timeSelect = document.getElementById('time');
+            
+            if (summaryService && serviceSelect && serviceSelect.value) {
+                const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+                summaryService.textContent = selectedOption.textContent;
+            } else if (summaryService) {
+                summaryService.textContent = '-';
+            }
+            
+            if (summaryDate && dateInput && dateInput.value) {
+                // Tarihi formatla
+                const dateParts = dateInput.value.split('-');
+                const date = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                summaryDate.textContent = date.toLocaleDateString('tr-TR', options);
+            } else if (summaryDate) {
+                summaryDate.textContent = '-';
+            }
+            
+            if (summaryTime && timeSelect && timeSelect.value) {
+                summaryTime.textContent = timeSelect.value;
+            } else if (summaryTime) {
+                summaryTime.textContent = '-';
+            }
+            
+            if (summaryPrice && serviceSelect && serviceSelect.value) {
+                const selectedOption = serviceSelect.options[serviceSelect.selectedIndex];
+                const price = selectedOption.getAttribute('data-price') || '0';
+                
+                // Fiyatı formatla
+                const formattedPrice = new Intl.NumberFormat('tr-TR', {
+                    style: 'currency',
+                    currency: 'TRY',
+                    minimumFractionDigits: 2
+                }).format(price);
+                
+                summaryPrice.textContent = formattedPrice;
+            } else if (summaryPrice) {
+                summaryPrice.textContent = '-';
+            }
+        }
+    </script>
+</body>
+</html>
