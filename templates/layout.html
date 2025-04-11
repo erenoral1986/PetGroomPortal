@@ -44,7 +44,7 @@
                         <a href="{{ url_for('salons') }}" class="text-decoration-none me-4 hover-menu {{ 'active' if request.path == url_for('salons') }}" style="color: #333;">Hizmetlerimiz</a>
                         <a href="{{ url_for('salons') }}" class="text-decoration-none me-4 hover-menu" style="color: #333;">Randevu Al</a>
                         <a href="#" class="text-decoration-none me-4 hover-menu" style="color: #333;">Hakkımızda</a>
-                        <a href="#" class="text-decoration-none me-4 hover-menu" style="color: #333;">İletişim</a>
+                        <a href="{{ url_for('contact') }}" class="text-decoration-none me-4 hover-menu {{ 'active' if request.path == url_for('contact') }}" style="color: #333;">İletişim</a>
 
                         <style>
                             .hover-menu:hover {
