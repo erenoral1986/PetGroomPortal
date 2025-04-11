@@ -98,7 +98,7 @@
                             </div>
                         </div>
                     {% else %}
-                        <a href="{{ url_for('login') }}" class="text-decoration-none me-3" style="color: #333;">Giriş Yap</a>
+                        <a href="#" class="text-decoration-none me-3" style="color: #333;" data-bs-toggle="modal" data-bs-target="#loginModal">Giriş Yap</a>
                         <a href="{{ url_for('register') }}" class="btn btn-sm text-white rounded-0 px-3 bg-pet-blue">Kayıt Ol</a>
                     {% endif %}
                 </div>
@@ -226,6 +226,43 @@
                         <li class="mb-2"><a href="{{ url_for('salons') }}" class="text-white-50 footer-link">Özel Irklar İçin Bakım</a></li>
                     </ul>
                 </div>
+
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow-sm">
+            <div class="p-4 border-bottom">
+                <h4 class="text-pet-blue fw-bold mb-0">Giriş Yap</h4>
+            </div>
+            <div class="p-4">
+                <form method="POST" action="{{ url_for('login') }}" id="loginForm">
+                    {{ form.hidden_tag() if form }}
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="E-posta adresiniz" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Şifre</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Şifreniz" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">Beni Hatırla</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn bg-pet-blue text-white py-2 fw-medium">Giriş Yap</button>
+                    </div>
+                </form>
+            </div>
+            <div class="p-4 border-top bg-light rounded-bottom-4 text-center">
+                <p class="mb-0 text-secondary">
+                    Hesabınız yok mu? <a href="{{ url_for('register') }}" class="text-pet-blue fw-medium text-decoration-none">Kayıt Ol</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <!-- İletişim Bilgileri -->
                 <div class="col-md-3">

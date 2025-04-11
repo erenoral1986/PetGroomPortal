@@ -107,3 +107,34 @@ function formatTime(timeString) {
     const options = { hour: '2-digit', minute: '2-digit' };
     return new Date(`2000-01-01T${timeString}`).toLocaleTimeString(undefined, options);
 }
+
+
+// Login form AJAX handling
+document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch(loginForm.action, {
+                method: 'POST',
+                body: new FormData(loginForm),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Giriş başarısız. Lütfen bilgilerinizi kontrol edin.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            });
+        });
+    }
+});

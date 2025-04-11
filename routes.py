@@ -64,27 +64,33 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        remember = request.form.get('remember') == 'on'
         
-        if user and user.check_password(form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
+        user = User.query.filter_by(email=email).first()
+        
+        if user and user.check_password(password):
+            login_user(user, remember=remember)
             
-            # Redirect based on user role
-            if user.role == 'salon_owner':
-                if next_page:
-                    return redirect(next_page)
-                return redirect(url_for('admin_dashboard'))
-            else:
-                if next_page:
-                    return redirect(next_page)
-                return redirect(url_for('index'))
-        else:
-            flash('Login unsuccessful. Please check email and password.', 'danger')
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'success': True})
+            
+            next_page = request.args.get('next')
+            if next_page:
+                return redirect(next_page)
+            return redirect(url_for('index' if user.role != 'salon_owner' else 'admin_dashboard'))
+        
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({
+                'success': False,
+                'message': 'Email veya şifre hatalı.'
+            })
+        
+        flash('Giriş başarısız. Lütfen email ve şifrenizi kontrol edin.', 'danger')
     
-    return render_template('login.html', title='Login', form=form, **get_base_data())
+    return render_template('login.html', title='Giriş Yap', form=LoginForm(), **get_base_data())
 
 # User logout
 @app.route('/logout')
