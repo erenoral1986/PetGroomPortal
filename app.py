@@ -41,16 +41,19 @@ login_manager.login_message_category = 'info'
 
 
 # Google OAuth Configuration
-os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'  # Development only
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "your-client-id")
-GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET", "your-client-secret")
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+
+if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+    print("WARNING: Google OAuth credentials not found in environment variables!")
 
 # Set up Google OAuth
 google_bp = make_google_blueprint(
     client_id=GOOGLE_CLIENT_ID,
     client_secret=GOOGLE_CLIENT_SECRET,
     scope=['profile', 'email'],
-    redirect_to='google_authorized'
+    redirect_url='/login/google/authorized',
+    offline=True
 )
 app.register_blueprint(google_bp, url_prefix='/login')
 
