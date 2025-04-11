@@ -53,11 +53,13 @@ google_bp = make_google_blueprint(
 )
 app.register_blueprint(google_bp, url_prefix='/login')
 
-@google.authorized_handler
-def google_authorized(resp):
-    if resp is None or 'access_token' not in resp:
+@app.route('/login/google/authorized')
+def google_authorized():
+    if not google.authorized:
         flash('Google ile giriş başarısız.', 'danger')
         return redirect(url_for('index'))
+        
+    resp = google.get('/oauth2/v2/userinfo')
 
     access_token = resp['access_token']
     resp = google.get('/oauth2/v2/userinfo', token=access_token)
