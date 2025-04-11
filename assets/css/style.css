@@ -1,0 +1,39 @@
+
+:root {
+    --pet-blue: #1a9cb7;
+    --pet-teal: #30c9c9;
+    --pet-pink: #ff6b8b;
+    --pet-orange: #ff9666;
+    --pet-yellow: #ffd166;
+    --pet-green: #4ecca3;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    padding-top: 76px;
+}
+
+.min-vh-85 {
+    min-height: 85vh;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--pet-blue);
+    border-color: var(--pet-blue);
+}
+
+.btn-primary:hover {
+    background-color: var(--pet-teal);
+    border-color: var(--pet-teal);
+}
+
+/* Navbar Styles */
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--pet-blue);
+}
