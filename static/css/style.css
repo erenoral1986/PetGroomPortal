@@ -329,8 +329,49 @@ a {
 }
 
 /* Header */
+header {
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    transition: all 0.3s ease;
+}
+
 .navbar-brand img {
     max-height: 50px;
+}
+
+.main-content {
+    padding-top: 80px;
+}
+
+.hover-menu {
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.hover-menu::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: var(--color-pet-blue);
+    transition: width 0.3s ease;
+}
+
+.hover-menu:hover::after,
+.hover-menu.active::after {
+    width: 100%;
+}
+
+.hover-menu.active {
+    color: var(--color-pet-blue) !important;
+    font-weight: 600;
 }
 
 /* Hero Section */
