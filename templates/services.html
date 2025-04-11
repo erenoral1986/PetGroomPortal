@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 
 {% block title %}Hizmetlerimiz - PetKuaför{% endblock %}
@@ -6,12 +5,9 @@
 {% block content %}
 <div class="container py-5">
     <h1 class="text-center text-pet-blue mb-5">Hizmetlerimiz</h1>
-    
-    <!-- Kedi Hizmetleri -->
-    <div class="row mb-5">
-        <h2 class="text-pet-teal mb-4">Kedi Bakım Hizmetleri</h2>
-        
-        <!-- Tırnak Kesimi -->
+
+    <div class="row">
+        <!-- Kedi Bakım Hizmetleri -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/cat-grooming.jpg') }}" class="card-img-top" alt="Kedi Tırnak Kesimi">
@@ -27,7 +23,6 @@
             </div>
         </div>
 
-        <!-- Kulak Temizliği -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/cat-grooming.jpg') }}" class="card-img-top" alt="Kedi Kulak Temizliği">
@@ -43,13 +38,12 @@
             </div>
         </div>
 
-        <!-- Banyo -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/cat-grooming.jpg') }}" class="card-img-top" alt="Kedi Banyosu">
                 <div class="card-body">
                     <h5 class="card-title">Kedilere Banyo Yaptırılması</h5>
-                    <p class="card-text">Kedi dostu şampuanlar ve tekniklerde banyo hizmeti.</p>
+                    <p class="card-text">Kedi dostu şampuanlar ve özel banyo hizmeti.</p>
                     <ul class="list-unstyled mb-4">
                         <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Özel şampuanlar</li>
                         <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Hassas yıkama</li>
@@ -58,13 +52,8 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Köpek Hizmetleri -->
-    <div class="row mb-5">
-        <h2 class="text-pet-teal mb-4">Köpek Bakım Hizmetleri</h2>
-        
-        <!-- Tırnak Kesimi -->
+        <!-- Köpek Bakım Hizmetleri -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/dog-grooming.jpg') }}" class="card-img-top" alt="Köpek Tırnak Kesimi">
@@ -80,7 +69,6 @@
             </div>
         </div>
 
-        <!-- Kulak Temizliği -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/dog-grooming.jpg') }}" class="card-img-top" alt="Köpek Kulak Temizliği">
@@ -96,7 +84,6 @@
             </div>
         </div>
 
-        <!-- Tüy Kesimi -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/dog-grooming.jpg') }}" class="card-img-top" alt="Köpek Tüy Kesimi">
@@ -111,13 +98,8 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Genel Bakım Hizmetleri -->
-    <div class="row">
-        <h2 class="text-pet-teal mb-4">Genel Bakım Hizmetleri</h2>
-        
-        <!-- Göz Temizliği -->
+        <!-- Ek Bakım Hizmetleri -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Göz Temizliği">
@@ -133,7 +115,6 @@
             </div>
         </div>
 
-        <!-- Fırçalama -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
                 <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Fırçalama">
