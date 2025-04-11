@@ -1,44 +1,45 @@
+
 {% extends "layout.html" %}
 
-{% block title %}Login - PetKuaför{% endblock %}
+{% block title %}Giriş Yap - PetKuaför{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Log In</h4>
+            <div class="bg-white rounded-4 shadow-sm">
+                <div class="p-4 border-bottom">
+                    <h4 class="text-pet-blue fw-bold mb-0">Giriş Yap</h4>
                 </div>
-                <div class="card-body">
+                <div class="p-4">
                     <form method="POST" action="">
                         {{ form.hidden_tag() }}
                         
                         <div class="mb-3">
                             {{ form.email.label(class="form-label") }}
                             {% if form.email.errors %}
-                                {{ form.email(class="form-control is-invalid") }}
+                                {{ form.email(class="form-control is-invalid", placeholder="E-posta adresiniz") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.email.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                {{ form.email(class="form-control") }}
+                                {{ form.email(class="form-control", placeholder="E-posta adresiniz") }}
                             {% endif %}
                         </div>
                         
                         <div class="mb-3">
                             {{ form.password.label(class="form-label") }}
                             {% if form.password.errors %}
-                                {{ form.password(class="form-control is-invalid") }}
+                                {{ form.password(class="form-control is-invalid", placeholder="Şifreniz") }}
                                 <div class="invalid-feedback">
                                     {% for error in form.password.errors %}
                                         {{ error }}
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                {{ form.password(class="form-control") }}
+                                {{ form.password(class="form-control", placeholder="Şifreniz") }}
                             {% endif %}
                         </div>
                         
@@ -47,13 +48,15 @@
                             {{ form.remember.label(class="form-check-label") }}
                         </div>
                         
-                        <div class="d-grid">
-                            {{ form.submit(class="btn btn-primary") }}
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn bg-pet-blue text-white py-2 fw-medium") }}
                         </div>
                     </form>
                 </div>
-                <div class="card-footer text-center">
-                    <small>Need an account? <a href="{{ url_for('register') }}">Register</a></small>
+                <div class="p-4 border-top bg-light rounded-bottom-4 text-center">
+                    <p class="mb-0 text-secondary">
+                        Hesabınız yok mu? <a href="{{ url_for('register') }}" class="text-pet-blue fw-medium text-decoration-none">Kayıt Ol</a>
+                    </p>
                 </div>
             </div>
         </div>
