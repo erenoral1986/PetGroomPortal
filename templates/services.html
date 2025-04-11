@@ -1,4 +1,3 @@
-
 {% extends "layout.html" %}
 
 {% block title %}Hizmetlerimiz - PetKuaför{% endblock %}
@@ -10,122 +9,48 @@
     <div class="row g-4">
         <!-- Kedi Bakım Hizmetleri -->
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
+            <div class="service-card-new">
+                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming">
                 <div class="card-body">
-                    <h5 class="card-title">Kedilerde Tırnak Kesimi</h5>
-                    <p class="card-text">Profesyonel ekipmanlarla güvenli ve konforlu tırnak kesim hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Ağrısız kesim</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Steril ekipman</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Uzman personel</li>
+                    <h5 class="card-title">Yıkama ve Bakım</h5>
+                    <p class="card-text">Evcil hayvanınız için özel şampuanlar ve ürünlerle profesyonel yıkama ve bakım hizmetleri.</p>
+                    <ul class="service-list">
+                        <li><i class="fas fa-check"></i>Irka özel şampuanlar</li>
+                        <li><i class="fas fa-check"></i>Tüy bakımı ve tarama</li>
+                        <li><i class="fas fa-check"></i>Tırnak kesimi</li>
+                        <li><i class="fas fa-check"></i>Kulak temizliği</li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
+            <div class="service-card-new">
+                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming">
                 <div class="card-body">
-                    <h5 class="card-title">Kedilerde Kulak Temizliği</h5>
-                    <p class="card-text">Hijyenik ve hassas kulak temizleme hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Özel temizleme solüsyonları</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Enfeksiyon kontrolü</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Düzenli bakım</li>
+                    <h5 class="card-title">Tüy Kesimi</h5>
+                    <p class="card-text">Evcil hayvanınızın ırkına ve ihtiyaçlarına özel profesyonel tüy kesim hizmetleri.</p>
+                    <ul class="service-list">
+                        <li><i class="fas fa-check"></i>Irka özel kesim stilleri</li>
+                        <li><i class="fas fa-check"></i>Profesyonel ekipmanlar</li>
+                        <li><i class="fas fa-check"></i>Hijyenik ortam</li>
+                        <li><i class="fas fa-check"></i>Özel tasarım kesimler</li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
+            <div class="service-card-new">
+                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming">
                 <div class="card-body">
-                    <h5 class="card-title">Kedilere Banyo Yaptırılması</h5>
-                    <p class="card-text">Kedi dostu şampuanlar ve özel banyo hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Özel şampuanlar</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Hassas yıkama</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Profesyonel kurutma</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Köpek Bakım Hizmetleri -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Köpeklerde Tırnak Kesimi</h5>
-                    <p class="card-text">Güvenli ve profesyonel tırnak kesim hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Uzman kesim</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Güvenli ekipman</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Konforlu ortam</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Köpeklerde Kulak Temizliği</h5>
-                    <p class="card-text">Detaylı ve hijyenik kulak bakım hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Derin temizlik</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Sağlık kontrolü</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Bakım önerileri</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Köpeklerde Tüy Kesimi</h5>
-                    <p class="card-text">Irka özel profesyonel tüy kesim ve şekillendirme.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Irka özel kesim</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Modern ekipman</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Şekillendirme</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Ek Bakım Hizmetleri -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Göz Temizleme</h5>
-                    <p class="card-text">Hassas göz çevresi temizlik ve bakım hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Özel solüsyonlar</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Hassas temizlik</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Düzenli kontrol</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/pet-grooming.jpg') }}" class="card-img-top" alt="Pet Grooming" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title">Fırçalama İşlemleri</h5>
-                    <p class="card-text">Düzenli tüy bakımı ve fırçalama hizmeti.</p>
-                    <ul class="list-unstyled mb-0">
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Tüy bakımı</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Ölü tüy temizliği</li>
-                        <li class="mb-2"><i class="fas fa-check text-pet-teal me-2"></i>Düğüm açma</li>
+                    <h5 class="card-title">Spa ve Özel Bakım</h5>
+                    <p class="card-text">Evcil hayvanınızın kendini özel hissetmesi için lüks spa ve bakım hizmetleri.</p>
+                    <ul class="service-list">
+                        <li><i class="fas fa-check"></i>Aromaterapi</li>
+                        <li><i class="fas fa-check"></i>Masaj terapisi</li>
+                        <li><i class="fas fa-check"></i>Cilt ve tüy maskeleri</li>
+                        <li><i class="fas fa-check"></i>Lüks bakım ürünleri</li>
                     </ul>
                 </div>
             </div>

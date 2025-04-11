@@ -440,12 +440,59 @@ header {
 }
 
 /* Services Section */
-.service-card {
-    background-color: white;
+.service-card-new {
+    background-color: #f8fdfe;
     border-radius: 1rem;
     overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
+    height: 100%;
+    border: none;
+    padding: 2rem;
+}
+
+.service-card-new .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.service-card-new .card-title {
+    color: var(--color-pet-blue);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.service-card-new .card-text {
+    color: #666;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.service-card-new .service-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.service-card-new .service-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+.service-card-new .service-list li i {
+    color: var(--color-pet-teal);
+    margin-right: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.service-card-new:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .service-card:hover {
