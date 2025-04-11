@@ -374,14 +374,14 @@
                         Hemen Salon Bul
                     </a>
                     {% if not current_user.is_authenticated %}
-                    <a href="{{ url_for('register') }}" class="btn border-2 border-pet-blue text-pet-blue px-5 py-3 fw-bold rounded-pill">
+                    <a href="#" class="btn border-2 border-pet-blue text-pet-blue px-5 py-3 fw-bold rounded-pill" data-bs-toggle="modal" data-bs-target="#registerModal">
                         Üye Ol
                     </a>
                     {% endif %}
                 </div>
                 {% if not current_user.is_authenticated %}
                 <p class="mt-4 text-center text-secondary">
-                    Zaten üye misiniz? <a href="{{ url_for('login') }}" class="text-pet-blue fw-medium">Giriş Yap</a>
+                    Zaten üye misiniz? <a href="#" class="text-pet-blue fw-medium" data-bs-toggle="modal" data-bs-target="#loginModal">Giriş Yap</a>
                 </p>
                 {% endif %}
             </div>
