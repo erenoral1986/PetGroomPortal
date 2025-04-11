@@ -1,11 +1,12 @@
 import os
 import logging
 
-from flask import Flask
+from flask import Flask, flash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
-from flask_login import LoginManager
+from flask_login import LoginManager, login_user, current_user
+from flask_dance.contrib.google import make_google_blueprint, google
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -38,13 +39,51 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
+
+# Assuming GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are environment variables
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.environ.get("GOOGLE_CLIENT_SECRET")
+
+# Set up Google OAuth
+google_bp = make_google_blueprint(
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    scope=['profile', 'email'],
+    redirect_url='/login/google/authorized'
+)
+app.register_blueprint(google_bp, url_prefix='/login')
+
+@google.authorized_handler
+def google_authorized(resp):
+    if resp is None or 'access_token' not in resp:
+        flash('Google ile giriş başarısız.', 'danger')
+        return redirect(url_for('index'))
+
+    access_token = resp['access_token']
+    resp = google.get('/oauth2/v2/userinfo', token=access_token)
+    if resp.ok:
+        google_info = resp.json()
+        user = User.query.filter_by(email=google_info['email']).first()
+        if user:
+            login_user(user)
+            flash('Google ile giriş başarılı!', 'success')
+            return redirect(url_for('index'))  # Redirect to your home page
+        else:
+            # Handle new user registration if needed.  This is a simplified example
+            flash('Google hesabınız ile kayıtlı değilsiniz.', 'warning')
+            return redirect(url_for('register')) # Redirect to registration page.
+    else:
+        flash('Google bilgileri alınamadı.', 'danger')
+        return redirect(url_for('index'))
+
+
 # Import models and routes after app is created to avoid circular imports
 with app.app_context():
     # Import models
     from models import User, Salon, Service, Appointment, Availability
-    
+
     # Create all tables
     db.create_all()
-    
+
     # Import routes
     from routes import *
