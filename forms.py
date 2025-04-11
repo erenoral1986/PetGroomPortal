@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField, FloatField, TimeField, IntegerField, DateField, HiddenField
-from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError, Optional
+from wtforms.validators import DataRequired, Email, Length, EqualTo, ValidationError
 from models import User
 
 class RegistrationForm(FlaskForm):
@@ -12,12 +12,12 @@ class RegistrationForm(FlaskForm):
     last_name = StringField('Last Name', validators=[DataRequired()])
     phone = StringField('Phone Number', validators=[DataRequired()])
     submit = SubmitField('Sign Up')
-    
+
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
             raise ValidationError('Username is already taken. Please choose another one.')
-            
+
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
@@ -97,3 +97,10 @@ class ProfileUpdateForm(FlaskForm):
     phone = StringField('Phone Number', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Update Profile')
+
+class ContactForm(FlaskForm):
+    name = StringField('Adınız Soyadınız', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    subject = StringField('Konu', validators=[DataRequired()])
+    message = TextAreaField('Mesajınız', validators=[DataRequired(), Length(min=10)])
+    submit = SubmitField('Mesaj Gönder')
