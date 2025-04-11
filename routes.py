@@ -617,6 +617,10 @@ def admin_edit_salon():
                           form=form, salon=salon, **get_base_data())
 
 # Admin manage services
+@app.route('/services')
+def services():
+    return render_template('services.html', **get_base_data())
+
 @app.route('/admin/services', methods=['GET', 'POST'])
 @login_required
 def admin_services():
