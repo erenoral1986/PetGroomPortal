@@ -137,4 +137,36 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    const registerForm = document.getElementById('registerForm');
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch(registerForm.action, {
+                method: 'POST',
+                body: new FormData(registerForm),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Kayıt başarılı, giriş modalını göster
+                    var registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                    var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+                    registerModal.hide();
+                    loginModal.show();
+                    alert('Kayıt başarılı! Şimdi giriş yapabilirsiniz.');
+                } else {
+                    alert(data.message || 'Kayıt sırasında bir hata oluştu. Lütfen bilgilerinizi kontrol edin.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+            });
+        });
+    }
 });

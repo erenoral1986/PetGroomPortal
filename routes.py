@@ -39,24 +39,53 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     
-    form = RegistrationForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        phone = request.form.get('phone')
+
+        # Basit doğrulama
+        if User.query.filter_by(username=username).first():
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'success': False, 'message': 'Bu kullanıcı adı zaten kullanılıyor.'})
+            flash('Bu kullanıcı adı zaten kullanılıyor.', 'danger')
+            return redirect(url_for('register'))
+
+        if User.query.filter_by(email=email).first():
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'success': False, 'message': 'Bu email adresi zaten kayıtlı.'})
+            flash('Bu email adresi zaten kayıtlı.', 'danger')
+            return redirect(url_for('register'))
+
+        if password != confirm_password:
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({'success': False, 'message': 'Şifreler eşleşmiyor.'})
+            flash('Şifreler eşleşmiyor.', 'danger')
+            return redirect(url_for('register'))
+
         user = User(
-            username=form.username.data,
-            email=form.email.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            phone=form.phone.data,
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
             role='customer'
         )
-        user.set_password(form.password.data)
+        user.set_password(password)
         db.session.add(user)
         db.session.commit()
         
-        flash('Your account has been created! You can now log in.', 'success')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'success': True})
+            
+        flash('Hesabınız oluşturuldu! Şimdi giriş yapabilirsiniz.', 'success')
         return redirect(url_for('login'))
     
-    return render_template('register.html', title='Register', form=form, **get_base_data())
+    return render_template('register.html', title='Register', form=RegistrationForm(), **get_base_data())
 
 # User login
 @app.route('/login', methods=['GET', 'POST'])
