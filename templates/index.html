@@ -146,99 +146,96 @@
         <div class="text-center mb-5">
             <h2 class="fs-1 fw-bold text-pet-blue mb-3 no-border" id="hizmetlerimiz-heading">Hizmetlerimiz</h2>
             <p class="text-secondary mx-auto" style="max-width: 600px;">
-                Evcil hayvanınız için sunduğumuz profesyonel bakım hizmetlerini keşfedin. Her türlü evcil hayvan için özel bakım seçenekleri sunuyoruz.
+                Evcil hayvanınız için sunduğumuz profesyonel bakım hizmetlerini keşfedin. Kedi ve köpekleriniz için özel bakım seçenekleri sunuyoruz.
             </p>
         </div>
         
         <div class="row g-4">
-            <!-- Hizmet 1 -->
-            <div class="col-md-4 mb-4">
+            <!-- Kedi Bakım Hizmetleri -->
+            <div class="col-md-6 mb-4">
                 <div class="bg-white rounded-lg shadow-sm h-100 overflow-hidden hover-shadow-lg transition-all">
-                    <div class="bg-pet-blue/10 p-5 d-flex align-items-center justify-content-center" style="height: 192px;">
-                        <i class="fas fa-bath fa-4x text-pet-blue"></i>
+                    <div class="position-relative">
+                        <img src="{{ url_for('static', filename='img/cat-grooming.jpg') }}" alt="Kedi Bakımı" class="w-100" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 bg-pet-blue text-white px-3 py-2 rounded-bottom-end">
+                            <h4 class="h5 mb-0">Kedi Bakım Hizmetleri</h4>
+                        </div>
                     </div>
                     <div class="p-4">
-                        <h3 class="fw-bold fs-5 text-pet-blue mb-2">Yıkama ve Bakım</h3>
-                        <p class="text-secondary mb-3">Evcil hayvanınız için özel şampuanlar ve ürünlerle profesyonel yıkama ve bakım hizmetleri.</p>
                         <ul class="list-unstyled mb-4">
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Irka özel şampuanlar
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-cut text-pet-teal me-3"></i> Tırnak Kesimi
                             </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Tüy bakımı ve tarama
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-ear text-pet-teal me-3"></i> Kulak Temizliği
                             </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Tırnak kesimi
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-bath text-pet-teal me-3"></i> Banyo Hizmeti
                             </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Kulak temizliği
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-heart text-pet-teal me-3"></i> Temel Bakım Paketi
+                            </li>
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-eye text-pet-teal me-3"></i> Göz Temizliği
+                            </li>
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-brush text-pet-teal me-3"></i> Fırçalama
                             </li>
                         </ul>
                         <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3 service-btn">
-                            Daha Fazla Bilgi
+                            Randevu Al
                         </a>
                     </div>
                 </div>
             </div>
             
-            <!-- Hizmet 2 -->
-            <div class="col-md-4 mb-4">
+            <!-- Köpek Bakım Hizmetleri -->
+            <div class="col-md-6 mb-4">
                 <div class="bg-white rounded-lg shadow-sm h-100 overflow-hidden hover-shadow-lg transition-all">
-                    <div class="bg-pet-teal/10 p-5 d-flex align-items-center justify-content-center" style="height: 192px;">
-                        <i class="fas fa-cut fa-4x text-pet-teal"></i>
+                    <div class="position-relative">
+                        <img src="{{ url_for('static', filename='img/dog-grooming.jpg') }}" alt="Köpek Bakımı" class="w-100" style="height: 250px; object-fit: cover;">
+                        <div class="position-absolute top-0 start-0 bg-pet-teal text-white px-3 py-2 rounded-bottom-end">
+                            <h4 class="h5 mb-0">Köpek Bakım Hizmetleri</h4>
+                        </div>
                     </div>
                     <div class="p-4">
-                        <h3 class="fw-bold fs-5 text-pet-blue mb-2">Tüy Kesimi</h3>
-                        <p class="text-secondary mb-3">Evcil hayvanınızın ırkına ve ihtiyaçlarına özel profesyonel tüy kesim hizmetleri.</p>
                         <ul class="list-unstyled mb-4">
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Irka özel kesim stilleri
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-cut text-pet-teal me-3"></i> Tırnak Kesimi
                             </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Profesyonel ekipmanlar
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-ear text-pet-teal me-3"></i> Kulak Temizliği
                             </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Hijyenik ortam
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-bath text-pet-teal me-3"></i> Banyo Hizmeti
                             </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Özel tasarım kesimler
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-scissors text-pet-teal me-3"></i> Tüy Kesimi
+                            </li>
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-heart text-pet-teal me-3"></i> Temel Bakım Paketi
+                            </li>
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-eye text-pet-teal me-3"></i> Göz Temizliği
+                            </li>
+                            <li class="d-flex align-items-center text-secondary mb-3">
+                                <i class="fas fa-brush text-pet-teal me-3"></i> Fırçalama
                             </li>
                         </ul>
-                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3 service-btn">
-                            Daha Fazla Bilgi
+                        <a href="{{ url_for('salons') }}" class="btn bg-pet-teal text-white w-100 py-2 rounded-3 service-btn">
+                            Randevu Al
                         </a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Hizmet 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="bg-white rounded-lg shadow-sm h-100 overflow-hidden hover-shadow-lg transition-all">
-                    <div class="bg-pet-pink/10 p-5 d-flex align-items-center justify-content-center" style="height: 192px;">
-                        <i class="fas fa-spa fa-4x text-pet-pink"></i>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="fw-bold fs-5 text-pet-blue mb-2">Spa ve Özel Bakım</h3>
-                        <p class="text-secondary mb-3">Evcil hayvanınızın kendini özel hissetmesi için lüks spa ve bakım hizmetleri.</p>
-                        <ul class="list-unstyled mb-4">
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Aromaterapi
-                            </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Masaj terapisi
-                            </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Cilt ve tüy maskeleri
-                            </li>
-                            <li class="d-flex align-items-center text-secondary mb-2">
-                                <i class="fas fa-check text-pet-teal me-2"></i> Lüks bakım ürünleri
-                            </li>
-                        </ul>
-                        <a href="{{ url_for('salons') }}" class="btn bg-pet-blue text-white w-100 py-2 rounded-3 service-btn">
-                            Daha Fazla Bilgi
-                        </a>
-                    </div>
-                </div>
+        </div>
+        
+        <!-- Genel Bakım Bilgileri -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <h3 class="fs-2 text-pet-blue mb-4">Profesyonel Bakım Standartları</h3>
+                <p class="text-secondary mb-5">
+                    Her evcil hayvan için özel olarak tasarlanmış bakım hizmetlerimiz, uzman personelimiz tarafından en yüksek hijyen standartlarında gerçekleştirilmektedir.
+                </p>
             </div>
         </div>
         
