@@ -47,6 +47,8 @@ class Salon(db.Model):
     opens_at = db.Column(db.Time)
     closes_at = db.Column(db.Time)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    rating = db.Column(db.Float, default=0.0)
+    review_count = db.Column(db.Integer, default=0)
     
     # Relationships
     services = db.relationship('Service', backref='salon', lazy=True)

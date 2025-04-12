@@ -1,10 +1,11 @@
+
 {% extends "layout.html" %}
 
-{% block title %}Pet Grooming Salons - PetKuaför{% endblock %}
+{% block title %}Pet Kuaförü Bul - PetKuaför{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="mb-4">Find Pet Grooming Salons</h1>
+    <h1 class="mb-4 text-pet-blue">Pet Kuaförü Bul</h1>
     
     <!-- Search Form -->
     <div class="row justify-content-center mb-5">
@@ -19,7 +20,6 @@
                                 <i class="fas fa-map-marker-alt text-muted"></i>
                             </span>
                             {{ form.location(class="form-control border-start-0 py-3", id="location", placeholder="Şehir ara", autocomplete="off", value=location if location else "") }}
-                            <!-- Şehir listesi dropdown -->
                             <div id="cityList" class="position-absolute bg-white shadow-lg rounded-3 mt-1 overflow-auto hidden" 
                                  style="top: 100%; left: 39px; right: 0; max-height: 300px; z-index: 1000; display: none; width: calc(100% - 39px); border: 1px solid #ddd;">
                             </div>
@@ -53,18 +53,27 @@
     <div class="row">
         {% if location %}
             <div class="col-12">
-                <h4 class="mb-4">Showing results for: {{ location }}</h4>
+                <h4 class="mb-4">Arama Sonuçları: {{ location }}</h4>
             </div>
         {% endif %}
         
         {% if salons %}
-            {% for salon in salons %}
+            {% for salon in salons|sort(attribute='rating', reverse=true) %}
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card card-salon h-100">
                         <div class="card-body">
+                            <div class="salon-rating mb-2">
+                                {% for i in range(salon.rating|default(0)|round|int) %}
+                                    <i class="fas fa-star text-warning"></i>
+                                {% endfor %}
+                                {% for i in range(5 - salon.rating|default(0)|round|int) %}
+                                    <i class="far fa-star text-warning"></i>
+                                {% endfor %}
+                                <span class="ms-2 text-muted">({{ salon.review_count|default(0) }} değerlendirme)</span>
+                            </div>
                             <h5 class="card-title">{{ salon.name }}</h5>
                             <p class="card-text">
-                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ salon.address }}, {{ salon.city }}, {{ salon.zip_code }}
+                                <i class="fas fa-map-marker-alt me-2 text-primary"></i>{{ salon.address }}, {{ salon.city }}
                             </p>
                             <p class="card-text">
                                 <i class="fas fa-phone me-2 text-primary"></i>{{ salon.phone }}
@@ -72,11 +81,11 @@
                             {% if salon.opens_at and salon.closes_at %}
                                 <p class="card-text">
                                     <i class="fas fa-clock me-2 text-primary"></i>
-                                    {{ salon.opens_at.strftime('%I:%M %p') }} - {{ salon.closes_at.strftime('%I:%M %p') }}
+                                    {{ salon.opens_at.strftime('%H:%M') }} - {{ salon.closes_at.strftime('%H:%M') }}
                                 </p>
                             {% endif %}
                             <p class="card-text">{{ salon.description|truncate(100) }}</p>
-                            <a href="{{ url_for('salon_detail', salon_id=salon.id) }}" class="btn btn-primary mt-auto">View Details</a>
+                            <a href="{{ url_for('salon_detail', salon_id=salon.id) }}" class="btn btn-primary mt-2">Detayları Gör</a>
                         </div>
                     </div>
                 </div>
@@ -84,9 +93,9 @@
         {% else %}
             <div class="col-12 text-center py-5">
                 <i class="fas fa-search fa-3x mb-3 text-muted"></i>
-                <h4 class="text-muted">No salons found</h4>
-                <p>Try searching for a different location or browse all available salons.</p>
-                <a href="{{ url_for('salons') }}" class="btn btn-outline-primary mt-2">Browse All Salons</a>
+                <h4 class="text-muted">Kuaför bulunamadı</h4>
+                <p>Farklı bir konum için arama yapabilir veya tüm kuaförleri görebilirsiniz.</p>
+                <a href="{{ url_for('salons') }}" class="btn btn-outline-primary mt-2">Tüm Kuaförleri Gör</a>
             </div>
         {% endif %}
     </div>

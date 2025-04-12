@@ -440,12 +440,30 @@ header {
 }
 
 /* Services Section */
-.service-card {
+.service-card,
+.card-salon {
     background-color: white;
     border-radius: 1rem;
     overflow: hidden;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transition: all 0.3s ease;
+}
+
+.card-salon {
+    border: none;
+}
+
+.card-salon:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.salon-rating {
+    font-size: 0.9rem;
+}
+
+.salon-rating .fa-star {
+    font-size: 1rem;
 }
 
 .service-card:hover {
