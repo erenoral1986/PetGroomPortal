@@ -1,7 +1,8 @@
+
 <?php
 require_once 'header.php';
 
-// Sample salon data as PHP array
+// Örnek kuaför verileri
 $salons = [
     [
         'id' => 1,
@@ -32,29 +33,63 @@ $salons = [
         'closes_at' => '20:00',
         'image' => 'static/img/salon2.jpg',
         'services' => ['Kedi Bakımı', 'Köpek Bakımı', 'Spa & Masaj']
+    ],
+    [
+        'id' => 3,
+        'name' => 'PetLux Beauty',
+        'address' => 'İstiklal Caddesi No:78',
+        'district' => 'Beyoğlu',
+        'city' => 'İstanbul',
+        'rating' => 4.7,
+        'review_count' => 178,
+        'phone' => '0212 987 65 43',
+        'description' => 'Lüks pet bakım hizmetleri',
+        'opens_at' => '09:00',
+        'closes_at' => '21:00',
+        'image' => 'static/img/salon3.jpg',
+        'services' => ['Kedi Bakımı', 'Köpek Bakımı', 'Özel Bakım']
+    ],
+    [
+        'id' => 4,
+        'name' => 'Pet Style Studio',
+        'address' => 'Teşvikiye Caddesi No:157',
+        'district' => 'Nişantaşı',
+        'city' => 'İstanbul',
+        'rating' => 4.9,
+        'review_count' => 245,
+        'phone' => '0212 444 55 66',
+        'description' => 'Lüks pet güzellik ve bakım merkezi',
+        'opens_at' => '10:00',
+        'closes_at' => '20:00',
+        'image' => 'static/img/salon1.jpg',
+        'services' => ['Premium Kedi Bakımı', 'Premium Köpek Bakımı', 'Spa Terapisi']
     ]
 ];
 
-// Filter and sort logic
+// Filtreleme mantığı
 $location = isset($_GET['location']) ? $_GET['location'] : '';
 $district = isset($_GET['district']) ? $_GET['district'] : '';
+$filtered_salons = $salons;
 
+// Eğer filtreleme varsa
 if (!empty($location) || !empty($district)) {
-    $salons = array_filter($salons, function($salon) use ($location, $district) {
-        $locationMatch = empty($location) || strtolower($salon['city']) === strtolower($location);
-        $districtMatch = empty($district) || $district === 'Tüm Mahalleler' || 
-                        stripos($salon['district'], $district) !== false;
+    $filtered_salons = array_filter($salons, function($salon) use ($location, $district) {
+        $locationMatch = empty($location) || 
+                        strtolower($salon['city']) === strtolower($location);
+        $districtMatch = empty($district) || 
+                        $district === 'Tüm Mahalleler' || 
+                        strtolower($salon['district']) === strtolower($district);
         return $locationMatch && $districtMatch;
     });
 }
 
-// Sort by rating
-usort($salons, function($a, $b) {
+// Puanlamaya göre sırala
+usort($filtered_salons, function($a, $b) {
     return $b['rating'] <=> $a['rating'];
 });
 
-// Convert filtered salons to JSON for JavaScript
-$salonsJson = json_encode($salons);
+// JSON'a çevir
+$salonsJson = json_encode(array_values($filtered_salons));
 ?>
 
 <main class="py-5">
@@ -104,7 +139,7 @@ const salons = <?php echo $salonsJson; ?>;
 // Render salon cards
 function renderSalons(salonsData) {
     const resultsContainer = document.getElementById('salonResults');
-
+    
     if (salonsData.length === 0) {
         resultsContainer.innerHTML = `
             <div class="col-12 text-center py-5">
@@ -119,6 +154,7 @@ function renderSalons(salonsData) {
     resultsContainer.innerHTML = salonsData.map(salon => `
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100 shadow-sm">
+                <img src="${salon.image}" class="card-img-top" alt="${salon.name}" style="height: 200px; object-fit: cover;">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <h5 class="card-title mb-0">${salon.name}</h5>
@@ -130,7 +166,7 @@ function renderSalons(salonsData) {
                         <span class="ms-1 text-muted">(${salon.review_count})</span>
                     </div>
                     <p class="card-text">
-                        <i class="fas fa-map-marker-alt text-primary me-2"></i>${salon.address}
+                        <i class="fas fa-map-marker-alt text-primary me-2"></i>${salon.address}, ${salon.district}
                     </p>
                     <p class="card-text">
                         <i class="fas fa-clock text-primary me-2"></i>${salon.opens_at} - ${salon.closes_at}
@@ -155,11 +191,11 @@ renderSalons(salons);
 
 // Update districts based on selected city
 document.getElementById('location').addEventListener('change', function() {
-    const city = this.value.trim();
+    const city = this.value.toLowerCase();
     const districtSelect = document.getElementById('district');
-
-    if (city.toLowerCase() === 'istanbul') {
-        fetch('/get_districts', {
+    
+    if (city === 'istanbul') {
+        fetch('/get_districts.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -168,9 +204,10 @@ document.getElementById('location').addEventListener('change', function() {
         })
         .then(response => response.json())
         .then(data => {
-            districtSelect.innerHTML = data.districts.map(district => 
-                `<option value="${district}">${district}</option>`
-            ).join('');
+            districtSelect.innerHTML = `<option value="Tüm Mahalleler">Tüm Mahalleler</option>` +
+                data.districts.map(district => 
+                    `<option value="${district}">${district}</option>`
+                ).join('');
         })
         .catch(error => console.error('Error:', error));
     }
