@@ -1,4 +1,3 @@
-
 <?php
 require_once 'header.php';
 
@@ -87,6 +86,10 @@ else if (!empty($location) && !empty($district)) {
         return strcasecmp($salon['city'], $location) === 0 && 
                strcasecmp($salon['district'], $district) === 0;
     });
+} else if (!empty($district) && $district !== 'Tüm Mahalleler'){
+    $filtered_salons = array_filter($salons, function($salon) use ($district){
+        return strcasecmp($salon['district'], $district) === 0;
+    });
 }
 
 // Sonuçları diziye dönüştür
@@ -148,7 +151,7 @@ const salons = <?php echo $salonsJson; ?>;
 // Render salon cards
 function renderSalons(salonsData) {
     const resultsContainer = document.getElementById('salonResults');
-    
+
     if (salonsData.length === 0) {
         resultsContainer.innerHTML = `
             <div class="col-12 text-center py-5">
@@ -202,7 +205,7 @@ renderSalons(salons);
 document.getElementById('location').addEventListener('change', function() {
     const city = this.value.toLowerCase();
     const districtSelect = document.getElementById('district');
-    
+
     if (city === 'istanbul') {
         fetch('/get_districts.php', {
             method: 'POST',
