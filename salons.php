@@ -108,19 +108,14 @@ if (!empty($district) && $district !== 'Tüm Mahalleler') {
         <div class="card shadow-sm mb-5">
             <div class="card-body p-4">
                 <h4 class="mb-4">Pet Kuaförü Bul</h4>
-                <form action="" method="get" class="row g-3" id="searchForm" onsubmit="return validateForm()">
-                <script>
-                function validateForm() {
-                    return true; // Her zaman form gönderilmesine izin ver
-                }
-                </script>
+                <form action="" method="post" class="row g-3" id="searchForm">
                     <div class="col-md-4">
                         <div class="input-group">
                             <span class="input-group-text bg-light border-end-0">
                                 <i class="fas fa-map-marker-alt text-muted"></i>
                             </span>
                             <input type="text" name="location" id="location" class="form-control border-start-0" 
-                                   placeholder="Şehir (İsteğe bağlı)" autocomplete="off">
+                                   placeholder="Şehir (İsteğe bağlı)" autocomplete="off" novalidate>
                         </div>
                     </div>
                     <div class="col-md-4">
