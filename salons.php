@@ -71,17 +71,26 @@ $location = isset($_GET['location']) ? $_GET['location'] : '';
 $district = isset($_GET['district']) ? $_GET['district'] : '';
 $filtered_salons = $salons;
 
-// Eğer filtreleme varsa
-if (!empty($location) || !empty($district)) {
-    $filtered_salons = array_filter($salons, function($salon) use ($location, $district) {
-        $locationMatch = empty($location) || 
-                        strtolower($salon['city']) === strtolower($location);
-        $districtMatch = empty($district) || 
-                        $district === 'Tüm Mahalleler' || 
-                        strtolower($salon['district']) === strtolower($district);
-        return $locationMatch && $districtMatch;
+// Varsayılan olarak tüm salonları göster
+if (empty($location) && empty($district)) {
+    $filtered_salons = $salons;
+}
+// Sadece şehir seçiliyse
+else if (!empty($location) && (empty($district) || $district === 'Tüm Mahalleler')) {
+    $filtered_salons = array_filter($salons, function($salon) use ($location) {
+        return strcasecmp($salon['city'], $location) === 0;
     });
 }
+// Hem şehir hem mahalle seçiliyse
+else if (!empty($location) && !empty($district)) {
+    $filtered_salons = array_filter($salons, function($salon) use ($location, $district) {
+        return strcasecmp($salon['city'], $location) === 0 && 
+               strcasecmp($salon['district'], $district) === 0;
+    });
+}
+
+// Sonuçları diziye dönüştür
+$filtered_salons = array_values($filtered_salons);
 
 // Puanlamaya göre sırala
 usort($filtered_salons, function($a, $b) {
