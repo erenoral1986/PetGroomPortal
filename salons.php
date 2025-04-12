@@ -80,8 +80,25 @@ $salons = [
     ]
 ];
 
-// Filtreleme kaldırıldı, tüm kuaförler gösteriliyor
+// Filtreleme mantığı güncellendi
+$location = isset($_GET['location']) ? $_GET['location'] : '';
+$district = isset($_GET['district']) ? $_GET['district'] : '';
+
 $filtered_salons = $salons;
+
+// Şehir seçilmişse filtreleme yap
+if (!empty($location) && $location !== '') {
+    $filtered_salons = array_filter($salons, function($salon) use ($location) {
+        return strcasecmp($salon['city'], $location) === 0;
+    });
+}
+// Mahalle seçilmişse
+if (!empty($district) && $district !== 'Tüm Mahalleler') {
+    $filtered_salons = array_filter($filtered_salons, function($salon) use ($district) {
+        return strcasecmp($salon['district'], $district) === 0;
+    });
+}
+
 
 ?>
 
