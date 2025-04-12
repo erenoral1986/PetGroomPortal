@@ -98,7 +98,7 @@ $filtered_salons = $salons;
                                 <i class="fas fa-map-marker-alt text-muted"></i>
                             </span>
                             <input type="text" name="location" id="location" class="form-control border-start-0" 
-                                   placeholder="Şehir">
+                                   placeholder="Şehir (İsteğe bağlı)">
                         </div>
                     </div>
                     <div class="col-md-4">
