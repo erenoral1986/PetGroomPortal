@@ -81,13 +81,13 @@ $salons = [
 ];
 
 // Filtreleme mantığı güncellendi
-$location = isset($_GET['location']) ? $_GET['location'] : '';
+$location = isset($_GET['location']) ? trim($_GET['location']) : '';
 $district = isset($_GET['district']) ? $_GET['district'] : '';
 
 $filtered_salons = $salons;
 
-// Şehir seçilmişse filtreleme yap
-if (!empty($location) && $location !== '') {
+// Şehir seçilmişse ve boş değilse filtreleme yap
+if (!empty($location)) {
     $filtered_salons = array_filter($salons, function($salon) use ($location) {
         return strcasecmp($salon['city'], $location) === 0;
     });
@@ -115,7 +115,7 @@ if (!empty($district) && $district !== 'Tüm Mahalleler') {
                                 <i class="fas fa-map-marker-alt text-muted"></i>
                             </span>
                             <input type="text" name="location" id="location" class="form-control border-start-0" 
-                                   placeholder="Şehir (İsteğe bağlı)">
+                                   placeholder="Şehir (İsteğe bağlı)" autocomplete="off" required="false">
                         </div>
                     </div>
                     <div class="col-md-4">
