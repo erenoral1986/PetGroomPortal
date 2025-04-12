@@ -80,6 +80,9 @@ $salons = [
     ]
 ];
 
+// Filtreleme kaldırıldı, tüm kuaförler gösteriliyor
+$filtered_salons = $salons;
+
 ?>
 
 <main class="py-5">
@@ -117,7 +120,7 @@ $salons = [
 
         <!-- Results Section -->
         <div class="row" id="salonResults">
-            <?php foreach ($salons as $salon): ?>
+            <?php foreach ($filtered_salons as $salon): ?>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm border-0">
                         <img src="<?php echo $salon['image']; ?>" class="card-img-top" alt="<?php echo $salon['name']; ?>" 
