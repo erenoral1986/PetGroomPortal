@@ -56,9 +56,12 @@ $location = isset($_GET['location']) ? $_GET['location'] : '';
 $district = isset($_GET['district']) ? $_GET['district'] : '';
 $pet_type = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
-// Filter salons
-if ($location || $district) {
-    $salons = array_filter($salons, function($salon) use ($location, $district) {
+// Check if any filter is applied
+$is_filtered = !empty($location) || !empty($district) || ($pet_type && $pet_type !== 'all');
+
+// Filter salons if filters are applied
+if ($is_filtered) {
+    $salons = array_filter($salons, function($salon) use ($location, $district, $pet_type) {
         $locationMatch = empty($location) || 
                         stripos($salon['city'], $location) !== false || 
                         stripos($salon['address'], $location) !== false;
@@ -68,7 +71,7 @@ if ($location || $district) {
     });
 }
 
-// Sort by rating
+// Always sort by rating (descending)
 usort($salons, function($a, $b) {
     return $b['rating'] <=> $a['rating'];
 });
@@ -112,6 +115,16 @@ usort($salons, function($a, $b) {
 
         <!-- Results -->
         <div class="row">
+            <?php if ($is_filtered): ?>
+                <div class="col-12">
+                    <h4 class="mb-4">Arama Sonuçları: <?php echo htmlspecialchars($location); ?></h4>
+                </div>
+            <?php else: ?>
+                <div class="col-12">
+                    <h4 class="mb-4">En İyi Değerlendirilen Kuaförler</h4>
+                </div>
+            <?php endif; ?>
+            
             <?php if (!empty($salons)): ?>
                 <?php foreach ($salons as $salon): ?>
                     <div class="col-md-6 col-lg-4 mb-4">
