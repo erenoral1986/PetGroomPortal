@@ -137,7 +137,8 @@ $is_filtered = !empty($location) || !empty($district) || ($pet_type && $pet_type
 // Filter salons if filters are applied
 if ($is_filtered) {
     $salons = array_filter($salons, function($salon) use ($location, $district, $pet_type) {
-        $locationMatch = empty($location) || 
+        // Eğer konum İstanbul ise, tüm salonları göster (çünkü hepsi İstanbul'da)
+        $locationMatch = strtolower($location) === 'istanbul' || 
                         stripos($salon['city'], $location) !== false || 
                         stripos($salon['address'], $location) !== false;
         $districtMatch = empty($district) || $district === 'Tüm Mahalleler' || 
