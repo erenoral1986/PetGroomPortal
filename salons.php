@@ -156,32 +156,31 @@ function renderSalons(salonsData) {
 
     resultsContainer.innerHTML = salonsData.map(salon => `
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="${salon.image}" class="card-img-top" alt="${salon.name}" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <h5 class="card-title mb-0">${salon.name}</h5>
-                        <span class="badge bg-primary">${salon.rating.toFixed(1)}</span>
+            <div class="card h-100 shadow-sm border-0">
+                <img src="${salon.image}" class="card-img-top" alt="${salon.name}" style="height: 250px; object-fit: cover; border-radius: 15px;">
+                <div class="card-body px-0">
+                    <h5 class="card-title mb-3">${salon.name}</h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="me-2">
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-1 fw-bold">${salon.rating.toFixed(1)}</span>
+                        </div>
+                        <span class="text-muted">(${salon.review_count} değerlendirme)</span>
                     </div>
-                    <div class="mb-2">
-                        ${Array(Math.floor(salon.rating)).fill('<i class="fas fa-star text-warning"></i>').join('')}
-                        ${salon.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt text-warning"></i>' : ''}
-                        <span class="ms-1 text-muted">(${salon.review_count})</span>
-                    </div>
-                    <p class="card-text">
-                        <i class="fas fa-map-marker-alt text-primary me-2"></i>${salon.address}, ${salon.district}
-                    </p>
-                    <p class="card-text">
-                        <i class="fas fa-clock text-primary me-2"></i>${salon.opens_at} - ${salon.closes_at}
-                    </p>
-                    <div class="mb-3">
-                        <small class="text-muted">Hizmetler:</small><br>
+                    <ul class="list-unstyled mb-4">
                         ${salon.services.map(service => 
-                            `<span class="badge bg-light text-dark me-1">${service}</span>`
+                            `<li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                ${service}
+                            </li>`
                         ).join('')}
+                    </ul>
+                    <div class="d-flex justify-content-between align-items-center text-muted mb-3">
+                        <small><i class="fas fa-map-marker-alt me-2"></i>${salon.district}</small>
+                        <small><i class="fas fa-clock me-2"></i>${salon.opens_at} - ${salon.closes_at}</small>
                     </div>
-                    <a href="salon_detail.php?id=${salon.id}" class="btn btn-outline-primary w-100">
-                        Detayları Gör
+                    <a href="salon_detail.php?id=${salon.id}" class="btn btn-primary w-100 rounded-pill">
+                        Randevu Al
                     </a>
                 </div>
             </div>
