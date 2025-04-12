@@ -70,23 +70,14 @@ $location = isset($_GET['location']) ? $_GET['location'] : '';
 $district = isset($_GET['district']) ? $_GET['district'] : '';
 $filtered_salons = $salons;
 
-// Varsayılan olarak tüm salonları göster
-if (empty($location) && empty($district)) {
-    $filtered_salons = $salons;
-}
-// Sadece şehir seçiliyse
-else if (!empty($location) && (empty($district) || $district === 'Tüm Mahalleler')) {
+// Eğer şehir seçildiyse filtreleme yap
+if (!empty($location)) {
     $filtered_salons = array_filter($salons, function($salon) use ($location) {
         return strcasecmp($salon['city'], $location) === 0;
     });
 }
-// Hem şehir hem mahalle seçiliyse
-else if (!empty($location) && !empty($district)) {
-    $filtered_salons = array_filter($salons, function($salon) use ($location, $district) {
-        return strcasecmp($salon['city'], $location) === 0 && 
-               strcasecmp($salon['district'], $district) === 0;
-    });
-} else if (!empty($district) && $district !== 'Tüm Mahalleler'){
+// Sadece ilçe seçiliyse
+else if (!empty($district) && $district !== 'Tüm Mahalleler'){
     $filtered_salons = array_filter($salons, function($salon) use ($district){
         return strcasecmp($salon['district'], $district) === 0;
     });
