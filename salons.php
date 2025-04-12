@@ -132,17 +132,21 @@ $district = isset($_GET['district']) ? $_GET['district'] : '';
 $pet_type = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
 // Check if any filter is applied
-$is_filtered = !empty($location) || !empty($district) || ($pet_type && $pet_type !== 'all');
+$is_filtered = (!empty($location) && $location !== 'istanbul') || 
+               (!empty($district) && $district !== 'Tüm Mahalleler') || 
+               (!empty($pet_type) && $pet_type !== 'all');
 
-// Filter salons if filters are applied
+// Filter salons if specific filters are applied
 if ($is_filtered) {
     $salons = array_filter($salons, function($salon) use ($location, $district, $pet_type) {
-        // Eğer konum İstanbul ise, tüm salonları göster (çünkü hepsi İstanbul'da)
-        $locationMatch = strtolower($location) === 'istanbul' || 
-                        stripos($salon['city'], $location) !== false || 
+        $locationMatch = empty($location) || 
+                        strtolower($location) === strtolower($salon['city']) ||
                         stripos($salon['address'], $location) !== false;
-        $districtMatch = empty($district) || $district === 'Tüm Mahalleler' || 
+                        
+        $districtMatch = empty($district) || 
+                        $district === 'Tüm Mahalleler' || 
                         stripos($salon['district'], $district) !== false;
+                        
         return $locationMatch && $districtMatch;
     });
 }
